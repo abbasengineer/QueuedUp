@@ -1,6 +1,5 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
-//require("firebase/auth");
 
 const express = require("express");
 const app = express();
@@ -144,13 +143,6 @@ app.post("/signup", (request, response) => {
     });
 });
 
-var provider = new firebase.auth.GoogleAuthProvider(); // for Google login
-
-// UCSC emails only
-provider.setCustomParameters({
-  hd: "ucsc.edu",
-});
-
 // login route
 app.get("/login", () => {
   let user = firebase.auth().currentUser;
@@ -158,6 +150,13 @@ app.get("/login", () => {
   if (user) {
     return response.status(200).json({ msg: `User is already logged in` });
   }
+
+  let provider = new firebase.auth.GoogleAuthProvider(); // for Google login
+
+  // UCSC emails only
+  provider.setCustomParameters({
+    hd: "ucsc.edu",
+  });
 
   firebase
     .auth()
