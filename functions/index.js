@@ -6,7 +6,7 @@ const app = express();
 
 admin.initializeApp();
 
-var firebaseConfig = {
+const firebaseConfig = {
   apiKey: "AIzaSyCUyneAX3spOSDSoNcM4a7Rwcz1SVDZ0ko",
   authDomain: "queuedup-123.firebaseapp.com",
   databaseURL: "https://queuedup-123.firebaseio.com",
@@ -20,7 +20,9 @@ var firebaseConfig = {
 const firebase = require("firebase");
 firebase.initializeApp(firebaseConfig);
 
-app.get("/posts", (request, response) => {
+
+// Route for retreiving posts from firestore
+app.get("/getposts", (request, response) => {
   admin
     .firestore()
     .collection("posts")
@@ -34,20 +36,24 @@ app.get("/posts", (request, response) => {
           postID: doc.id,
           username: doc.data().username,
           content: doc.data().content,
-          createdAt: doc.data().createdAt,
+          createdAt: new Date().toISOString()
+          //createdAt: doc.data().createdAt,
         });
       });
 
       return response.json(posts);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 });
 
-app.post("/post", (request, response) => {
+
+// Route for inserting a new post
+app.post("/addpost", (request, response) => {
   const newPost = {
     username: request.body.username,
     content: request.body.content,
-    createdAt: admin.firestore.Timestamp.fromDate(new Date()),
+    createdAt: new Date().toISOString()
+    //createdAt: admin.firestore.Timestamp.fromDate(new Date()),
   };
 
   admin
@@ -65,7 +71,7 @@ app.post("/post", (request, response) => {
     });
 });
 
-// sign up route
+// signup route
 app.post("/signup", (request, response) => {
   const newUser = {
     fullName: request.body.fullName,
@@ -87,7 +93,7 @@ app.post("/signup", (request, response) => {
       if (doc.exists) {
         return response
           .status(400)
-          .json({ username: "username already in use" });
+          .json({ username: "Username already in use" });
       } else {
         return firebase
           .auth()
@@ -105,7 +111,8 @@ app.post("/signup", (request, response) => {
         fullName: newUser.fullName,
         username: newUser.username,
         email: newUser.email,
-        createdAt: admin.firestore.Timestamp.fromDate(new Date()),
+        createdAt: new Date().toISOString()
+        //createdAt: admin.firestore.Timestamp.fromDate(new Date()),
       };
 
       return admin
@@ -120,7 +127,7 @@ app.post("/signup", (request, response) => {
       console.error(err);
 
       if (err.code === "auth/email-already-in-use") {
-        return response.status(400).json({ email: "email already in use" });
+        return response.status(400).json({ email: "E-mail already in use" });
       } else {
         return response.status(500).json({ error: err.code });
       }
