@@ -1,5 +1,6 @@
 const functions = require("firebase-functions");
 const admin = require("firebase-admin");
+//require("firebase/auth");
 
 const express = require("express");
 const app = express();
@@ -20,7 +21,8 @@ var firebaseConfig = {
 const firebase = require("firebase");
 firebase.initializeApp(firebaseConfig);
 
-app.get("/posts", (request, response) => {
+// route for retrieving posts from firestore
+app.get("/getposts", (request, response) => {
   admin
     .firestore()
     .collection("posts")
@@ -43,11 +45,12 @@ app.get("/posts", (request, response) => {
     .catch((err) => console.log(err));
 });
 
-app.post("/post", (request, response) => {
+// route for creating a new post
+app.post("/addpost", (request, response) => {
   const newPost = {
     username: request.body.username,
     content: request.body.content,
-    createdAt: admin.firestore.Timestamp.fromDate(new Date()),
+    createdAt: new Date().toISOString(),
   };
 
   admin
@@ -65,19 +68,39 @@ app.post("/post", (request, response) => {
     });
 });
 
-// sign up route
+const isBlank = (string) => {
+  if (string.trim() === "") return true;
+  else return false;
+};
+
+// signup route (for first time users, after Google login)
 app.post("/signup", (request, response) => {
+  let user = firebase.auth().currentUser;
+
+  if (!user) {
+    return response.status(403).json({ error: "Must login with Google first" });
+  }
+
   const newUser = {
     fullName: request.body.fullName,
     username: request.body.username,
-    email: request.body.email,
-    password: request.body.password,
-    confirmPassword: request.body.confirmPassword,
   };
 
   let token;
   let userID;
 
+  // user may have kept a field blank
+  let blank = {};
+
+  newUser.forEach((element) => {
+    if (isBlank(element)) {
+      empty.element = "Field cannot be blank";
+    }
+  });
+
+  if (Object.keys(blank).length > 0) return response.status(400).json(blank);
+
+  // check database for username
   admin
     .firestore()
     .doc(`/users/${newUser.username}`)
@@ -87,11 +110,9 @@ app.post("/signup", (request, response) => {
       if (doc.exists) {
         return response
           .status(400)
-          .json({ username: "username already in use" });
+          .json({ username: "Username already in use" });
       } else {
-        return firebase
-          .auth()
-          .createUserWithEmailAndPassword(newUser.email, newUser.password);
+        return firebase.auth().currentUser;
       }
     })
     .then((data) => {
@@ -100,12 +121,13 @@ app.post("/signup", (request, response) => {
     })
     .then((idToken) => {
       token = idToken;
+
       const userCredentials = {
         userID,
         fullName: newUser.fullName,
         username: newUser.username,
-        email: newUser.email,
-        createdAt: admin.firestore.Timestamp.fromDate(new Date()),
+        email: firebase.auth().currentUser.email,
+        createdAt: new Date().toISOString(),
       };
 
       return admin
@@ -118,12 +140,43 @@ app.post("/signup", (request, response) => {
     })
     .catch((err) => {
       console.error(err);
+      return result.status(403).json({ error: err.code, msg: err.message });
+    });
+});
 
-      if (err.code === "auth/email-already-in-use") {
-        return response.status(400).json({ email: "email already in use" });
-      } else {
-        return response.status(500).json({ error: err.code });
+var provider = new firebase.auth.GoogleAuthProvider(); // for Google login
+
+// UCSC emails only
+provider.setCustomParameters({
+  hd: "ucsc.edu",
+});
+
+// login route
+app.get("/login", () => {
+  let user = firebase.auth().currentUser;
+
+  if (user) {
+    return response.status(200).json({ msg: `User is already logged in` });
+  }
+
+  firebase
+    .auth()
+    .signInWithPopup(provider)
+    .then(function (credential) {
+      //user = result.user; // signed in user info
+      //userID = user.uid;
+
+      let isNew = credential.additionalUserInfo.isNewUser;
+
+      if (isNew) {
+        /*
+        TODO: redirect to signup
+        */
       }
+    })
+    .catch(function (err) {
+      console.error(err);
+      return result.status(403).json({ error: err.code, msg: err.message });
     });
 });
 
