@@ -67,7 +67,19 @@ app.post("/addpost", (request, response) => {
     });
 });
 
-// signup route
+const isBlank = (string) => {
+  if (string.trim() === "") return true;
+  return false;
+};
+
+const isUCSCEmail = (email) => {
+  const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@ucsc.edu$/;
+
+  if (email.match(regex)) return true;
+  return false;
+};
+
+// route for signing up
 app.post("/signup", (request, response) => {
   const newUser = {
     fullName: request.body.fullName,
@@ -77,6 +89,21 @@ app.post("/signup", (request, response) => {
     confirmPassword: request.body.confirmPassword,
   };
 
+  let errors = {};
+
+  if (isBlank(newUser.fullName)) errors.fullName = "Must provide full name";
+  if (isBlank(newUser.username)) errors.username = "Must provide username";
+
+  if (isBlank(newUser.email)) errors.email = "Must provide email";
+  else if (!isUCSCEmail(newUser.email))
+    errors.email = "Must use @ucsc.edu email";
+
+  if (isBlank(newUser.password)) errors.password = "Must provide password";
+  if (isBlank(newUser.confirmPassword))
+    errors.confirmPassword = "Must confirm password";
+
+  if (Object.keys(errors).length > 0) return response.status(400).json(errors);
+
   let token;
   let userID;
 
@@ -85,31 +112,34 @@ app.post("/signup", (request, response) => {
     .doc(`/users/${newUser.username}`)
     .get()
     .then((doc) => {
-      // unique usernames only!
-      if (doc.exists) {
+      if (doc.exists)
         return response
           .status(400)
           .json({ username: "Username already taken" });
-      } else {
-        return firebase
-          .auth()
-          .createUserWithEmailAndPassword(newUser.email, newUser.password);
-      }
+
+      return firebase
+        .auth()
+        .createUserWithEmailAndPassword(newUser.email, newUser.password);
     })
-    .then((data) => {
-      userID = data.user.uid;
-      return data.user.getIdToken();
+    .then((credential) => {
+      userID = credential.user.uid;
+      token = credential.user.getIdToken();
+
+      return token;
     })
-    .then((idToken) => {
-      token = idToken;
+    .then((IDToken) => {
+      token = IDToken;
+
+      // build user document
       const userCredentials = {
         userID,
         fullName: newUser.fullName,
-        username: newUser.username,
         email: newUser.email,
+        username: newUser.username,
         createdAt: new Date().toISOString(),
       };
 
+      // create and store in database
       return admin
         .firestore()
         .doc(`/users/${newUser.username}`)
@@ -121,11 +151,41 @@ app.post("/signup", (request, response) => {
     .catch((err) => {
       console.error(err);
 
-      if (err.code === "auth/email-already-in-use") {
+      if (err.code === "auth/email-already-in-use")
         return response.status(400).json({ email: "Email already in use" });
-      } else {
-        return response.status(500).json({ error: err.code });
-      }
+
+      return response
+        .status(500)
+        .json({ error: err.code, message: err.message });
+    });
+});
+
+// route for logging in
+app.post("/login", (request, response) => {
+  const existingUser = {
+    email: request.body.email,
+    password: request.body.password,
+  };
+
+  let errors = {};
+
+  if (isBlank(existingUser.email)) errors.email = "Must provide email";
+  if (isBlank(existingUser.password)) errors.password = "Must provide password";
+
+  if (Object.keys(errors).length > 0) return response.status(400).json(errors);
+
+  firebase
+    .auth()
+    .signInWithEmailAndPassword(existingUser.email, existingUser.password)
+    .then((credential) => {
+      return credential.user.getIdToken();
+    })
+    .then((token) => {
+      return response.json({ token });
+    })
+    .catch((err) => {
+      console.error(err);
+      return response.status(403).json({ info: "Incorrect login information" });
     });
 });
 
