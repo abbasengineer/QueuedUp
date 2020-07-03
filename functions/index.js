@@ -20,8 +20,7 @@ const firebaseConfig = {
 const firebase = require("firebase");
 firebase.initializeApp(firebaseConfig);
 
-
-// Route for retreiving posts from firestore
+// route for retreiving posts from firestore
 app.get("/getposts", (request, response) => {
   admin
     .firestore()
@@ -36,8 +35,7 @@ app.get("/getposts", (request, response) => {
           postID: doc.id,
           username: doc.data().username,
           content: doc.data().content,
-          createdAt: new Date().toISOString()
-          //createdAt: doc.data().createdAt,
+          createdAt: new Date().toISOString(),
         });
       });
 
@@ -46,14 +44,12 @@ app.get("/getposts", (request, response) => {
     .catch((err) => console.error(err));
 });
 
-
-// Route for inserting a new post
+// route for inserting a new post
 app.post("/addpost", (request, response) => {
   const newPost = {
     username: request.body.username,
     content: request.body.content,
-    createdAt: new Date().toISOString()
-    //createdAt: admin.firestore.Timestamp.fromDate(new Date()),
+    createdAt: new Date().toISOString(),
   };
 
   admin
@@ -62,7 +58,7 @@ app.post("/addpost", (request, response) => {
     .add(JSON.parse(JSON.stringify(newPost)))
     .then((doc) => {
       response.json({
-        msg: `success: created document ${doc.id}`,
+        msg: `created document ${doc.id}`,
       });
     })
     .catch((err) => {
@@ -93,7 +89,7 @@ app.post("/signup", (request, response) => {
       if (doc.exists) {
         return response
           .status(400)
-          .json({ username: "Username already in use" });
+          .json({ username: "Username already taken" });
       } else {
         return firebase
           .auth()
@@ -111,8 +107,7 @@ app.post("/signup", (request, response) => {
         fullName: newUser.fullName,
         username: newUser.username,
         email: newUser.email,
-        createdAt: new Date().toISOString()
-        //createdAt: admin.firestore.Timestamp.fromDate(new Date()),
+        createdAt: new Date().toISOString(),
       };
 
       return admin
@@ -127,7 +122,7 @@ app.post("/signup", (request, response) => {
       console.error(err);
 
       if (err.code === "auth/email-already-in-use") {
-        return response.status(400).json({ email: "E-mail already in use" });
+        return response.status(400).json({ email: "Email already in use" });
       } else {
         return response.status(500).json({ error: err.code });
       }
