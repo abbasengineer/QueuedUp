@@ -4,7 +4,9 @@ const admin = require("firebase-admin");
 const express = require("express");
 const app = express();
 
-var firebaseConfig = {
+admin.initializeApp();
+
+const firebaseConfig = {
   apiKey: "AIzaSyCUyneAX3spOSDSoNcM4a7Rwcz1SVDZ0ko",
   authDomain: "queuedup-123.firebaseapp.com",
   databaseURL: "https://queuedup-123.firebaseio.com",
@@ -16,21 +18,10 @@ var firebaseConfig = {
 };
 
 const firebase = require("firebase");
-
+const { auth } = require("firebase-admin");
 firebase.initializeApp(firebaseConfig);
 
-// user will stay logged in until they explicitly log out
-firebase
-  .auth()
-  .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-  .then(function () {
-    let provider = new firebase.auth.GoogleAuthProvider();
-
-    return firebase.auth().signInWithPopup(provider);
-  })
-  .catch((err) => console.log(err));
-
-// route for retrieving posts from firestore
+// route for retreiving posts from firestore
 app.get("/getposts", (request, response) => {
   admin
     .firestore()
@@ -45,16 +36,16 @@ app.get("/getposts", (request, response) => {
           postID: doc.id,
           username: doc.data().username,
           content: doc.data().content,
-          createdAt: doc.data().createdAt,
+          createdAt: new Date().toISOString(),
         });
       });
 
       return response.json(posts);
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 });
 
-// route for creating a new post
+// route for inserting a new post
 app.post("/addpost", (request, response) => {
   const newPost = {
     username: request.body.username,
@@ -68,7 +59,7 @@ app.post("/addpost", (request, response) => {
     .add(JSON.parse(JSON.stringify(newPost)))
     .then((doc) => {
       response.json({
-        msg: `success: created document ${doc.id}`,
+        msg: `created document ${doc.id}`,
       });
     })
     .catch((err) => {
@@ -79,66 +70,77 @@ app.post("/addpost", (request, response) => {
 
 const isBlank = (string) => {
   if (string.trim() === "") return true;
-  else return false;
+  return false;
 };
 
-// signup route (for first time users, after Google login)
+const isUCSCEmail = (email) => {
+  const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@ucsc.edu$/;
+
+  if (email.match(regex)) return true;
+  return false;
+};
+
+// route for signing up
 app.post("/signup", (request, response) => {
-  let user = firebase.auth().currentUser;
-
-  if (!user) {
-    return response.status(403).json({ error: "Must login with Google first" });
-  }
-
   const newUser = {
     fullName: request.body.fullName,
     username: request.body.username,
+    email: request.body.email,
+    password: request.body.password,
+    confirmPassword: request.body.confirmPassword,
   };
+
+  let errors = {};
+
+  if (isBlank(newUser.fullName)) errors.fullName = "Must provide full name";
+  if (isBlank(newUser.username)) errors.username = "Must provide username";
+
+  if (isBlank(newUser.email)) errors.email = "Must provide email";
+  else if (!isUCSCEmail(newUser.email))
+    errors.email = "Must use @ucsc.edu email";
+
+  if (isBlank(newUser.password)) errors.password = "Must provide password";
+  if (isBlank(newUser.confirmPassword))
+    errors.confirmPassword = "Must confirm password";
+
+  if (Object.keys(errors).length > 0) return response.status(400).json(errors);
 
   let token;
   let userID;
 
-  // user may have kept a field blank
-  let blank = {};
-
-  newUser.forEach((element) => {
-    if (isBlank(element)) {
-      empty.element = "Field cannot be blank";
-    }
-  });
-
-  if (Object.keys(blank).length > 0) return response.status(400).json(blank);
-
-  // check database for username
   admin
     .firestore()
     .doc(`/users/${newUser.username}`)
     .get()
     .then((doc) => {
-      // unique usernames only!
-      if (doc.exists) {
+      if (doc.exists)
         return response
           .status(400)
-          .json({ username: "Username already in use" });
-      } else {
-        return firebase.auth().currentUser;
-      }
-    })
-    .then((data) => {
-      userID = data.user.uid;
-      return data.user.getIdToken();
-    })
-    .then((idToken) => {
-      token = idToken;
+          .json({ username: "Username already taken" });
 
+      return firebase
+        .auth()
+        .createUserWithEmailAndPassword(newUser.email, newUser.password);
+    })
+    .then((credential) => {
+      userID = credential.user.uid;
+      token = credential.user.getIdToken();
+
+      return token;
+    })
+    .then((IDToken) => {
+      token = IDToken;
+
+      // build user document
       const userCredentials = {
         userID,
         fullName: newUser.fullName,
+        email: newUser.email,
         username: newUser.username,
-        email: firebase.auth().currentUser.email,
         createdAt: new Date().toISOString(),
       };
 
+      // create and store in database
       return admin
         .firestore()
         .doc(`/users/${newUser.username}`)
@@ -149,43 +151,42 @@ app.post("/signup", (request, response) => {
     })
     .catch((err) => {
       console.error(err);
-      return result.status(403).json({ error: err.code, msg: err.message });
+
+      if (err.code === "auth/email-already-in-use")
+        return response.status(400).json({ email: "Email already in use" });
+
+      return response
+        .status(500)
+        .json({ error: err.code, message: err.message });
     });
 });
 
-// login route
-app.get("/login", () => {
-  let user = firebase.auth().currentUser;
+// route for logging in
+app.post("/login", (request, response) => {
+  const existingUser = {
+    email: request.body.email,
+    password: request.body.password,
+  };
 
-  if (user) {
-    return response.status(200).json({ msg: `User is already logged in` });
-  }
+  let errors = {};
 
-  let provider = new firebase.auth.GoogleAuthProvider(); // for Google login
+  if (isBlank(existingUser.email)) errors.email = "Must provide email";
+  if (isBlank(existingUser.password)) errors.password = "Must provide password";
 
-  // UCSC emails only
-  provider.setCustomParameters({
-    hd: "ucsc.edu",
-  });
+  if (Object.keys(errors).length > 0) return response.status(400).json(errors);
 
   firebase
     .auth()
-    .signInWithPopup(provider)
-    .then(function (credential) {
-      //user = result.user; // signed in user info
-      //userID = user.uid;
-
-      let isNew = credential.additionalUserInfo.isNewUser;
-
-      if (isNew) {
-        /*
-        TODO: redirect to signup
-        */
-      }
+    .signInWithEmailAndPassword(existingUser.email, existingUser.password)
+    .then((credential) => {
+      return credential.user.getIdToken();
     })
-    .catch(function (err) {
+    .then((token) => {
+      return response.json({ token });
+    })
+    .catch((err) => {
       console.error(err);
-      return result.status(403).json({ error: err.code, msg: err.message });
+      return response.status(403).json({ info: "Incorrect login information" });
     });
 });
 
