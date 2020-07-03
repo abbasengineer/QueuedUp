@@ -18,7 +18,6 @@ const firebaseConfig = {
 };
 
 const firebase = require("firebase");
-const { auth } = require("firebase-admin");
 firebase.initializeApp(firebaseConfig);
 
 // route for retreiving posts from firestore
