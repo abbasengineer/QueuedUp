@@ -4,8 +4,6 @@ const admin = require("firebase-admin");
 const express = require("express");
 const app = express();
 
-admin.initializeApp();
-
 var firebaseConfig = {
   apiKey: "AIzaSyCUyneAX3spOSDSoNcM4a7Rwcz1SVDZ0ko",
   authDomain: "queuedup-123.firebaseapp.com",
@@ -18,7 +16,19 @@ var firebaseConfig = {
 };
 
 const firebase = require("firebase");
+
 firebase.initializeApp(firebaseConfig);
+
+// user will stay logged in until they explicitly log out
+firebase
+  .auth()
+  .setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  .then(function () {
+    let provider = new firebase.auth.GoogleAuthProvider();
+
+    return firebase.auth().signInWithPopup(provider);
+  })
+  .catch((err) => console.log(err));
 
 // route for retrieving posts from firestore
 app.get("/getposts", (request, response) => {
