@@ -44,10 +44,70 @@ app.get("/getposts", (request, response) => {
     .catch((err) => console.error(err));
 });
 
+// with Express, use this middleware as an arg to a route; decides if to proceed
+const authenticate = (request, response, next) => {
+  let IDToken;
+
+  // by convention, "Bearer " (before authorization token in an HTTP request)
+  // authenticates the API request, granting access to the bearer
+  if (
+    request.headers.authorization &&
+    request.headers.authorization.startsWith("Bearer ")
+  )
+    IDToken = request.headers.authorization.split("Bearer ")[1];
+  else {
+    console.error("Unauthorized: no token found");
+    return response.status(403).json({ error: "Unauthorized: no token found" });
+  }
+
+  admin
+    .auth()
+    .verifyIdToken(IDToken)
+    .then((decodedToken) => {
+      // decodedToken holds the user data inside our token -- add it to our
+      // request objects so when the request proceeds forward to some route,
+      // our request will have user data
+      request.user = decodedToken;
+      console.log(decodedToken);
+
+      // limit our result to 1 document
+      return admin
+        .firestore()
+        .collection("users")
+        .where("userID", "==", request.user.uid)
+        .limit(1)
+        .get();
+    })
+    .then((data) => {
+      // extract data from document and attach it to our request
+      request.user.username = data.docs[0].data().username;
+
+      return next(); // allow request to proceed
+    })
+    .catch((err) => {
+      console.error("Token verification: ", err);
+      return response
+        .status(403)
+        .json({ error: err.code, message: err.message });
+    });
+};
+
+const isBlank = (string) => {
+  if (string.trim() === "") return true;
+  return false;
+};
+
 // route for inserting a new post
-app.post("/addpost", (request, response) => {
+app.post("/addpost", authenticate, (request, response) => {
+  if (isBlank(request.body.content))
+    return response.status(400).json({ content: "Must provide post content" });
+
+  // authenticate parameter ensures user is authenticated before adding a post,
+  // so now our POST request only needs to contain the content!
+  // TO TEST: send login request, copy returned token, send addpost request with
+  // Authorizations header with value "Bearer token" (with the pasted token)
   const newPost = {
-    username: request.body.username,
+    username: request.user.username,
     content: request.body.content,
     createdAt: new Date().toISOString(),
   };
@@ -58,19 +118,14 @@ app.post("/addpost", (request, response) => {
     .add(JSON.parse(JSON.stringify(newPost)))
     .then((doc) => {
       response.json({
-        msg: `created document ${doc.id}`,
+        message: `Created document ${doc.id}`,
       });
     })
     .catch((err) => {
-      console.error(err);
-      response.status(500).json({ error: err.code });
+      console.error("Post creation: ", err);
+      response.status(500).json({ error: err.code, message: err.message });
     });
 });
-
-const isBlank = (string) => {
-  if (string.trim() === "") return true;
-  return false;
-};
 
 const isUCSCEmail = (email) => {
   const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@ucsc.edu$/;
