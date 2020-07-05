@@ -4,12 +4,10 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import AddCommentIcon from "@material-ui/icons/AddComment";
-import NotificationsIcon from "@material-ui/icons/Notifications";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -50,12 +48,13 @@ export default function QueuedUpAppBar() {
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       id={menuId}
       keepMounted
-      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      transformOrigin={{ vertical: "top", horizontal: "center" }}
       open={isMenuOpen}
-      onClose={handleMenuClose}>
+      onClose={handleMenuClose}
+      getContentAnchorEl={null}>
       <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
     </Menu>
   );
@@ -84,11 +83,6 @@ export default function QueuedUpAppBar() {
           <div className={classes.sectionDesktop}>
             <IconButton color="#434343">
               <AddCommentIcon />
-            </IconButton>
-            <IconButton aria-label="show 0 new notifications" color="#434343">
-              <Badge badgeContent={0} color="secondary">
-                <NotificationsIcon />
-              </Badge>
             </IconButton>
             <IconButton
               edge="end"
