@@ -1,13 +1,9 @@
-import React, { Component } from 'react'
+import React, { Component } from "react";
 
 export class dashboard extends Component {
-    render() {
-        return (
-            <div>
-                Dashboard
-            </div>
-        )
-    }
+  render() {
+    return <div>Dashboard</div>;
+  }
 }
 
-export default dashboard
+export default dashboard;
