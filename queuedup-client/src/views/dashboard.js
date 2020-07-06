@@ -10,14 +10,24 @@ const styles = (theme) => ({
   root: {
     flexGrow: 1,
     overflow: "hidden",
-    padding: theme.spacing(0, 3),
+    padding: theme.spacing(0, 0),
   },
   Card: {
     margin: `${theme.spacing(1)}px auto`,
     padding: theme.spacing(2),
+    background: "#eaf1fd",
   },
   Username: {
     fontWeight: "bold",
+    textAlign: "left",
+    fontFamily: "Hind",
+  },
+  Contents: {
+    textAlign: "left",
+    fontFamily: "Hind",
+  },
+  Empty: {
+    fontFamily: "Hind",
   },
 });
 
@@ -46,20 +56,22 @@ export class dashboard extends Component {
     let recentPosts = this.state.posts ? (
       this.state.posts.map((post) => (
         <Card className={classes.Card}>
-          <Grid container wrap="nowrap" spacing={2}>
+          <Grid container className={classes.root} wrap="nowrap" spacing={2}>
             <Grid item>
               <Typography className={classes.Username}>
                 {post.username}:
               </Typography>
             </Grid>
             <Grid item xs>
-              <Typography>{post.content}</Typography>
+              <Typography className={classes.Contents}>
+                {post.content}
+              </Typography>
             </Grid>
           </Grid>
         </Card>
       ))
     ) : (
-      <Typography>No posts yet!</Typography>
+      <Typography className={classes.Empty}>No posts yet!</Typography>
     );
 
     return (

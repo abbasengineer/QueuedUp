@@ -21,12 +21,16 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("sm")]: {
       display: "block",
     },
+    fontFamily: "Hind",
   },
   sectionDesktop: {
     display: "none",
     [theme.breakpoints.up("md")]: {
       display: "flex",
     },
+  },
+  menuItem: {
+    fontFamily: "Hind",
   },
 }));
 
@@ -55,7 +59,9 @@ export default function QueuedUpAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
       getContentAnchorEl={null}>
-      <MenuItem onClick={handleMenuClose}>Log In</MenuItem>
+      <MenuItem className={classes.menuItem} onClick={handleMenuClose}>
+        Log In
+      </MenuItem>
     </Menu>
   );
 
