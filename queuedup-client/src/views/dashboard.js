@@ -53,6 +53,8 @@ export class dashboard extends Component {
   render() {
     const { classes } = this.props;
 
+    // TODO: refactor into methods
+    // TODO: some sort of descriptive message if error in getposts, e.g. "Error fetching posts, try again later!"
     let recentPosts = this.state.posts ? (
       this.state.posts.map((post) => (
         <Card className={classes.Card}>

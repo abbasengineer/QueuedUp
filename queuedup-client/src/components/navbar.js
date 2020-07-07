@@ -62,6 +62,9 @@ export default function QueuedUpAppBar() {
       <MenuItem className={classes.menuItem} onClick={handleMenuClose}>
         Log In
       </MenuItem>
+      <MenuItem className={classes.menuItem} onClick={handleMenuClose}>
+        Sign Up
+      </MenuItem>
     </Menu>
   );
 
