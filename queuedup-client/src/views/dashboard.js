@@ -31,6 +31,8 @@ const styles = (theme) => ({
   },
 });
 
+const errorMessage = "We encountered an error. Please try again later!";
+
 export class dashboard extends Component {
   state = {
     posts: null,
@@ -47,38 +49,54 @@ export class dashboard extends Component {
           posts: response.data,
         });
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+
+        this.setState({
+          posts: errorMessage,
+        });
+      });
   }
 
   render() {
     const { classes } = this.props;
 
-    // TODO: refactor into methods
-    // TODO: some sort of descriptive message if error in getposts, e.g. "Error fetching posts, try again later!"
-    let recentPosts = this.state.posts ? (
-      this.state.posts.map((post) => (
-        <Card className={classes.Card}>
-          <Grid container className={classes.root} wrap="nowrap" spacing={2}>
-            <Grid item>
-              <Typography className={classes.Username}>
-                {post.username}:
-              </Typography>
-            </Grid>
-            <Grid item xs>
-              <Typography className={classes.Contents}>
-                {post.content}
-              </Typography>
-            </Grid>
+    let postDisplay = (post) => (
+      <Card className={classes.Card}>
+        <Grid container className={classes.root} wrap="nowrap" spacing={2}>
+          <Grid item>
+            <Typography className={classes.Username}>
+              {post.username}:
+            </Typography>
           </Grid>
-        </Card>
-      ))
-    ) : (
-      <Typography className={classes.Empty}>No posts yet!</Typography>
+          <Grid item xs>
+            <Typography className={classes.Contents}>{post.content}</Typography>
+          </Grid>
+        </Grid>
+      </Card>
     );
+
+    let discussionPosts;
+
+    if (this.state.posts) {
+      if (this.state.posts === errorMessage) {
+        // error fetching posts
+        discussionPosts = (
+          <Typography className={classes.Empty}>{this.state.posts}</Typography>
+        );
+      } else {
+        // display the posts
+        discussionPosts = this.state.posts.map((post) => postDisplay(post));
+      }
+    } else {
+      discussionPosts = (
+        <Typography className={classes.Empty}>No posts yet!</Typography>
+      );
+    }
 
     return (
       <Container container className={classes.root} spacing={0}>
-        <Container item>{recentPosts}</Container>
+        <Container item>{discussionPosts}</Container>
       </Container>
     );
   }
