@@ -11,7 +11,7 @@ const styles = {
   form: {
   textAlign : 'center'
  },
- loginTitle:{
+ signupTitle:{
   margin: '2px auto 40px auto'
  },
  TextField:{
@@ -26,7 +26,7 @@ const styles = {
  }
 };
 
-class login extends Component {
+class signup extends Component {
   constructor(){
     super();
     this.state = {
@@ -46,7 +46,7 @@ class login extends Component {
       email: this.state.email,
       password: this.state.password
     }
-    axios.post('/login', userData)
+    axios.post('/signup', userData)
       .then(res => {
         console.log(res.data);
         this.setState({
@@ -74,7 +74,7 @@ class login extends Component {
       <Grid container className={classes.form}>
         <Grid item sm/>
         <Grid item sm>
-          <Typography variant='h3' className={classes.loginTitle}> 
+          <Typography variant='h3' className={classes.signupTitle}> 
             Welcome Back
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
@@ -106,7 +106,7 @@ class login extends Component {
                   </Typography>
                 )}
       
-            <small>New to QueuedUp? <Link to ="/signup">Sign Up</Link></small>
+            <small>Alredy have an Account? <Link to ="/login">Log In</Link></small>
             <br/>
             <Button type="submit" variant="contained" color="primary" className={classes.button}>
               Log In
@@ -118,7 +118,7 @@ class login extends Component {
     );
   }
 }
-login.propTypes = {
+signup.propTypes = {
   classes: PropTypes.object.isRequired
 };
-export default withStyles(styles)(login);
+export default withStyles(styles)(signup);
