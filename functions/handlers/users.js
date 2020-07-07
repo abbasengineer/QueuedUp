@@ -78,7 +78,10 @@ exports.logIn = (request, response) => {
   };
 
   const { valid, errors } = isLogInVerified(existingUser);
-  if (!valid) return response.status(400).json(errors);
+
+  if (!valid) {
+    return response.status(400).json(errors);
+  }
 
   firebase
     .auth()
