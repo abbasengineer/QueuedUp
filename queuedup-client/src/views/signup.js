@@ -12,14 +12,14 @@ const styles = {
   form: {
     textAlign: "center",
   },
-  loginTitle: {
-    margin: "2px auto 40px auto",
+  signupTitle: {
+    margin: "2px auto 20px auto",
   },
   TextField: {
-    margin: "60px auto 12px auto",
+    margin: "12px auto 12px auto",
   },
   button: {
-    margin: "80px auto 0px auto",
+    margin: "35px auto 0px auto",
   },
   Error: {
     color: "red",
@@ -27,13 +27,16 @@ const styles = {
   },
 };
 
-class login extends Component {
+class signup extends Component {
   constructor() {
     super();
 
     this.state = {
+      fullName: "",
+      username: "",
       email: "",
       password: "",
+      confirmPassword: "",
       loading: false,
       errors: {},
     };
@@ -46,16 +49,17 @@ class login extends Component {
       loading: true,
     });
 
-    const userData = {
+    const newUserData = {
+      fullName: this.state.fullName,
+      username: this.state.username,
       email: this.state.email,
       password: this.state.password,
+      confirmPassword: this.state.confirmPassword,
     };
 
     axios
-      .post("/login", userData)
+      .post("/signup", newUserData)
       .then((res) => {
-        console.log(res.data);
-
         this.setState({
           loading: false,
         });
@@ -84,10 +88,34 @@ class login extends Component {
       <Grid container className={classes.form}>
         <Grid item sm />
         <Grid item sm>
-          <Typography variant="h3" className={classes.loginTitle}>
-            Welcome Back
+          <Typography variant="h3" className={classes.signupTitle}>
+            Sign Up
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
+            <TextField
+              id="fullName"
+              name="fullName"
+              type="text"
+              label="Full Name"
+              className={classes.TextField}
+              helperText={errors.fullName}
+              error={errors.fullName ? true : false}
+              value={this.state.fullName}
+              onChange={this.handleChange}
+              fullWidth
+            />
+            <TextField
+              id="username"
+              name="username"
+              type="text"
+              label="Username"
+              className={classes.TextField}
+              helperText={errors.username}
+              error={errors.username ? true : false}
+              value={this.state.username}
+              onChange={this.handleChange}
+              fullWidth
+            />
             <TextField
               id="email"
               name="email"
@@ -112,6 +140,18 @@ class login extends Component {
               onChange={this.handleChange}
               fullWidth
             />
+            <TextField
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              label="Confirm Password"
+              className={classes.TextField}
+              helperText={errors.confirmPassword}
+              error={errors.confirmPassword ? true : false}
+              value={this.state.confirmPassword}
+              onChange={this.handleChange}
+              fullWidth
+            />
             {errors.info && (
               <Typography variant="body2" className={classes.Error}>
                 {errors.info}
@@ -119,7 +159,7 @@ class login extends Component {
             )}
             <Typography>
               <small>
-                New to QueuedUp? <Link to="/signup">Sign up here!</Link>
+                Already have an account? <Link to="/login">Log in here!</Link>
               </small>
             </Typography>
             <Button
@@ -127,7 +167,7 @@ class login extends Component {
               variant="contained"
               color="primary"
               className={classes.button}>
-              Log In
+              Sign Up
             </Button>
             <br />
           </form>
@@ -138,8 +178,8 @@ class login extends Component {
   }
 }
 
-login.propTypes = {
+signup.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(login);
+export default withStyles(styles)(signup);

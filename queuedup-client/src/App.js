@@ -6,6 +6,7 @@ import login from "./views/login";
 import QueuedUpAppBar from "./components/navbar";
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import { createMuiTheme } from "@material-ui/core/styles";
+import signup from "./views/signup";
 
 const theme = createMuiTheme({
   palette: {
@@ -32,6 +33,7 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={dashboard} />
                 <Route exact path="/login" component={login} />
+                <Route exact path="/signup" component={signup} />
               </Switch>
             </div>
           </Router>

@@ -65,9 +65,7 @@ exports.signUp = (request, response) => {
       if (err.code === "auth/email-already-in-use")
         return response.status(400).json({ email: "Email already in use" });
 
-      return response
-        .status(500)
-        .json({ error: err.code, message: err.message });
+      return response.status(500).json({ info: "Error signing up" });
     });
 };
 
@@ -78,7 +76,10 @@ exports.logIn = (request, response) => {
   };
 
   const { valid, errors } = isLogInVerified(existingUser);
-  if (!valid) return response.status(400).json(errors);
+
+  if (!valid) {
+    return response.status(400).json(errors);
+  }
 
   firebase
     .auth()

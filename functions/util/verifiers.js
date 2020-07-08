@@ -66,8 +66,12 @@ let isSignUpVerified = (data) => {
 let isLogInVerified = (data) => {
   let errors = {};
 
-  if (isBlank(data.email)) errors.email = "Must provide email";
-  if (isBlank(data.password)) errors.password = "Must provide password";
+  if (isBlank(data.email)) {
+    errors.email = "Must provide email";
+  }
+  if (isBlank(data.password)) {
+    errors.password = "Must provide password";
+  }
 
   return {
     valid: Object.keys(errors).length > 0 ? false : true,
