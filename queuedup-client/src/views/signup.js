@@ -147,17 +147,16 @@ class signup extends Component {
               onChange={this.handleChange}
               fullWidth
             />
-
             {errors.info && (
               <Typography variant="body2" className={classes.Error}>
                 {errors.info}
               </Typography>
             )}
-
-            <small>
-              Already have an account? <Link to="/login">Log in here!</Link>
-            </small>
-            <br />
+            <Typography>
+              <small>
+                Already have an account? <Link to="/login">Log in here!</Link>
+              </small>
+            </Typography>
             <Button
               type="submit"
               variant="contained"
@@ -165,6 +164,7 @@ class signup extends Component {
               className={classes.button}>
               Sign Up
             </Button>
+            <br />
           </form>
         </Grid>
         <Grid item sm />

@@ -88,7 +88,7 @@ class login extends Component {
               id="email"
               name="email"
               type="email"
-              label="Email"
+              label="UCSC Email"
               className={classes.TextField}
               helperText={errors.email}
               error={errors.email ? true : false}
@@ -113,11 +113,11 @@ class login extends Component {
                 {errors.info}
               </Typography>
             )}
-
-            <small>
-              New to QueuedUp? <Link to="/signup">Sign up here!</Link>
-            </small>
-            <br />
+            <Typography>
+              <small>
+                New to QueuedUp? <Link to="/signup">Sign up here!</Link>
+              </small>
+            </Typography>
             <Button
               type="submit"
               variant="contained"
@@ -125,6 +125,7 @@ class login extends Component {
               className={classes.button}>
               Log In
             </Button>
+            <br />
           </form>
         </Grid>
         <Grid item sm />
