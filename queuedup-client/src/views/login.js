@@ -30,6 +30,7 @@ const styles = {
 class login extends Component {
   constructor() {
     super();
+
     this.state = {
       email: "",
       password: "",
@@ -40,6 +41,7 @@ class login extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+
     this.setState({
       loading: true,
     });
@@ -53,9 +55,11 @@ class login extends Component {
       .post("/login", userData)
       .then((res) => {
         console.log(res.data);
+
         this.setState({
           loading: false,
         });
+
         this.props.history.push("/");
       })
       .catch((err) => {

@@ -30,11 +30,13 @@ const styles = {
 class signup extends Component {
   constructor() {
     super();
+
     this.state = {
+      fullName: "",
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
-      handle: "",
       loading: false,
       errors: {},
     };
@@ -42,9 +44,11 @@ class signup extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
+
     this.setState({
       loading: true,
     });
+
     const newUserData = {
       fullName: this.state.fullName,
       username: this.state.username,
@@ -59,6 +63,7 @@ class signup extends Component {
         this.setState({
           loading: false,
         });
+
         this.props.history.push("/");
       })
       .catch((err) => {
@@ -103,7 +108,7 @@ class signup extends Component {
               id="username"
               name="username"
               type="text"
-              label="User Name"
+              label="Username"
               className={classes.TextField}
               helperText={errors.username}
               error={errors.username ? true : false}
