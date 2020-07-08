@@ -64,6 +64,12 @@ export default function QueuedUpAppBar() {
       <MenuItem className={classes.menuItem} onClick={handleMenuClose} component = {Link} to='/login'>
         Log In
       </MenuItem>
+      <MenuItem className={classes.menuItem} onClick={handleMenuClose} component = {Link} to='/signup'>
+        Sign Up
+      </MenuItem>
+      <MenuItem className={classes.menuItem} onClick={handleMenuClose}>
+        Log Out
+      </MenuItem>
     </Menu>
   );
 

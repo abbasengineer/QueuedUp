@@ -12,13 +12,13 @@ const styles = {
   textAlign : 'center'
  },
  signupTitle:{
-  margin: '2px auto 40px auto'
+  margin: '2px auto 20px auto'
  },
  TextField:{
-  margin: '60px auto 12px auto'
+  margin: '12px auto 12px auto'
  },
  button:{
-  margin: '80px auto 0px auto'
+  margin: '35px auto 0px auto'
  },
  customError:{
     color: 'red',
@@ -32,6 +32,8 @@ class signup extends Component {
     this.state = {
       email: '',
       password: '',
+      confirmPassword: '',
+      handle: '',
       loading: false,
       errors: {}
       
@@ -42,13 +44,15 @@ class signup extends Component {
     this.setState({
       loading: true
     });
-    const userData = {
+    const newUserData = {
+      fullName: this.state.fullName,
+      username: this.state.username,
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
+      confirmPassword: this.state.confirmPassword,
     }
-    axios.post('/signup', userData)
+    axios.post('/signup', newUserData)
       .then(res => {
-        console.log(res.data);
         this.setState({
           loading: false
         });
@@ -75,9 +79,31 @@ class signup extends Component {
         <Grid item sm/>
         <Grid item sm>
           <Typography variant='h3' className={classes.signupTitle}> 
-            Welcome Back
+            Sign Up
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
+          <TextField 
+                id="fullName" 
+                name="fullName" 
+                type="text" 
+                label="Full Name" 
+                className={classes.TextField}
+                helperText={errors.fullName}
+                error={errors.fullName ? true : false}
+                value={this.state.fullName} 
+                onChange={this.handleChange} 
+                fullWidth/>
+            <TextField 
+                id="username" 
+                name="username" 
+                type="text" 
+                label="User Name" 
+                className={classes.TextField}
+                helperText={errors.username}
+                error={errors.username ? true : false}
+                value={this.state.username} 
+                onChange={this.handleChange} 
+                fullWidth/>
             <TextField 
               id="email" 
               name="email" 
@@ -100,6 +126,18 @@ class signup extends Component {
                 value={this.state.password} 
                 onChange={this.handleChange} 
                 fullWidth/>
+                <TextField 
+                id="confirmPassword" 
+                name="confirmPassword" 
+                type="password" 
+                label="Confirm Password" 
+                className={classes.TextField}
+                helperText={errors.confirmPassword}
+                error={errors.confirmPassword ? true : false}
+                value={this.state.confirmPassword} 
+                onChange={this.handleChange} 
+                fullWidth/>
+
                 {errors.general && (
                   <Typography variant="body2" className={classes.customError}>
                     {errors.general}
@@ -109,7 +147,7 @@ class signup extends Component {
             <small>Alredy have an Account? <Link to ="/login">Log In</Link></small>
             <br/>
             <Button type="submit" variant="contained" color="primary" className={classes.button}>
-              Log In
+              Sing Up
             </Button>
           </form>
         </Grid>
