@@ -108,7 +108,7 @@ class signup extends Component {
               id="email" 
               name="email" 
               type="email" 
-              label="Email" 
+              label="UCSC Email" 
               className={classes.TextField}
               helperText={errors.email}
               error={errors.email ? true : false}
