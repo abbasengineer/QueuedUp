@@ -9,7 +9,7 @@ import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import AddCommentIcon from "@material-ui/icons/AddComment";
 import { Button } from "@material-ui/core";
-import Link from 'react-router-dom/Link';
+import Link from "react-router-dom/Link";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -61,13 +61,18 @@ export default function QueuedUpAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
       getContentAnchorEl={null}>
-      <MenuItem className={classes.menuItem} onClick={handleMenuClose} component = {Link} to='/'>
-        Home
-      </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={handleMenuClose} component = {Link} to='/login'>
+      <MenuItem
+        className={classes.menuItem}
+        onClick={handleMenuClose}
+        component={Link}
+        to="/login">
         Log In
       </MenuItem>
-      <MenuItem className={classes.menuItem} onClick={handleMenuClose} component = {Link} to='/signup'>
+      <MenuItem
+        className={classes.menuItem}
+        onClick={handleMenuClose}
+        component={Link}
+        to="/signup">
         Sign Up
       </MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleMenuClose}>
