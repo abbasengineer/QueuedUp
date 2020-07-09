@@ -24,14 +24,21 @@ exports.getPosts = (request, response) => {
     .catch((err) => console.error(err));
 };
 
+/*
+TO TEST:
+  Send login request, copy returned token, send post request to route: /addpost
+REQUEST HEADER:
+  key: Authorizations. value: "Bearer <token>" (<token> is the pasted token)
+REQUEST BODY FORMAT:
+  { "content": "some message" }
+*/
 exports.addPost = (request, response) => {
-  if (isBlank(request.body.content))
+  if (isBlank(request.body.content)) {
     return response.status(400).json({ content: "Must provide post content" });
+  }
 
   // authenticate parameter ensures user is authenticated before adding a post,
-  // so now our POST request only needs to contain the content!
-  // TO TEST: send login request, copy returned token, send addpost request with
-  // Authorizations header with value "Bearer token" (with the pasted token)
+  // so now our POST request only needs to contain the content
   const newPost = {
     username: request.user.username,
     content: request.body.content,
@@ -49,6 +56,92 @@ exports.addPost = (request, response) => {
     })
     .catch((err) => {
       console.error("Post creation: ", err);
-      response.status(500).json({ error: err.code, message: err.message });
+      response.status(500).json({ error: "Error creating a post" });
+    });
+};
+
+exports.getPost = (request, response) => {
+  let post = {};
+
+  admin
+    .firestore()
+    .doc(`/posts/${request.params.postID}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return response.status(404).json({ error: "Post not found" });
+      }
+
+      post = doc.data();
+      post.postID = doc.id;
+
+      return admin
+        .firestore()
+        .collection("comments")
+        .where("postID", "==", request.params.postID)
+        .orderBy("createdAt", "desc")
+        .get();
+    })
+    .then((data) => {
+      post.comments = [];
+
+      data.forEach((doc) => {
+        post.comments.push(doc.data());
+      });
+
+      return response.json(post);
+    })
+    .catch((err) => {
+      console.error(err);
+
+      response.status(500).json({ error: "Comments not found" });
+    });
+};
+
+/*
+TO TEST:
+  Send login request, copy returned token, send post request to route:
+  /getpost/<postID>/addcomment (<postID> is the postID of the parent comment)
+REQUEST HEADER:
+  key: Authorizations. value: "Bearer <token>" (<token> is the pasted token)
+REQUEST BODY FORMAT:
+  { "content": "some message" }
+*/
+exports.addComment = (request, response) => {
+  if (isBlank(request.body.content)) {
+    return response
+      .status(400)
+      .json({ content: "Must provide comment content" });
+  }
+
+  // authenticate parameter ensures user is authenticated before adding a post,
+  // so now our POST request only needs to contain the content!
+  const newComment = {
+    username: request.user.username,
+    content: request.body.content,
+    createdAt: new Date().toISOString(),
+    postID: request.params.postID,
+  };
+
+  admin
+    .firestore()
+    .doc(`/posts/${request.params.postID}`)
+    .get()
+    .then((doc) => {
+      if (!doc.exists) {
+        return response.status(404).json({ error: "Comment not found" });
+      }
+
+      return admin
+        .firestore()
+        .collection("comments")
+        .add(JSON.parse(JSON.stringify(newComment)));
+    })
+    .then(() => {
+      response.json(newComment);
+    })
+    .catch((err) => {
+      console.log(err);
+      response.status(500).json({ error: "Error adding comment" });
     });
 };

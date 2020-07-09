@@ -13,7 +13,10 @@ exports.signUp = (request, response) => {
   };
 
   const { valid, errors } = isSignUpVerified(newUser);
-  if (!valid) return response.status(400).json(errors);
+
+  if (!valid) {
+    return response.status(400).json(errors);
+  }
 
   let token;
   let userID;
@@ -23,10 +26,11 @@ exports.signUp = (request, response) => {
     .doc(`/users/${newUser.username}`)
     .get()
     .then((doc) => {
-      if (doc.exists)
+      if (doc.exists) {
         return response
           .status(400)
           .json({ username: "Username already taken" });
+      }
 
       return firebase
         .auth()
@@ -62,8 +66,9 @@ exports.signUp = (request, response) => {
     .catch((err) => {
       console.error(err);
 
-      if (err.code === "auth/email-already-in-use")
+      if (err.code === "auth/email-already-in-use") {
         return response.status(400).json({ email: "Email already in use" });
+      }
 
       return response.status(500).json({ info: "Error signing up" });
     });

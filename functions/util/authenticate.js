@@ -9,9 +9,9 @@ module.exports = (request, response, next) => {
   if (
     request.headers.authorization &&
     request.headers.authorization.startsWith("Bearer ")
-  )
+  ) {
     IDToken = request.headers.authorization.split("Bearer ")[1];
-  else {
+  } else {
     console.error("Unauthorized: no token found");
     return response.status(403).json({ error: "Unauthorized: no token found" });
   }
