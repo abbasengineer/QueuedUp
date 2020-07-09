@@ -61,6 +61,9 @@ export default function QueuedUpAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
       getContentAnchorEl={null}>
+      <MenuItem className={classes.menuItem} onClick={handleMenuClose} component = {Link} to='/'>
+        Home
+      </MenuItem>
       <MenuItem className={classes.menuItem} onClick={handleMenuClose} component = {Link} to='/login'>
         Log In
       </MenuItem>
