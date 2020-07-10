@@ -1,5 +1,6 @@
 const { admin } = require("../util/admin");
 const { isBlank } = require("../util/verifiers");
+const { response } = require("express");
 
 exports.getPosts = (request, response) => {
   admin
@@ -145,3 +146,26 @@ exports.addComment = (request, response) => {
       response.status(500).json({ error: "Error adding comment" });
     });
 };
+
+//Delete a post
+exports.deletePost = (request, response) => {
+  document.get()
+  .then(doc => {
+    if(!doc.exist){
+      return response.status(404).json({error: "Post not found"});
+    }
+    if(doc.data().username !== request.user.handle){
+      return response.status(403).json({error: "Unauthorized"});
+    }
+    else{
+      return document.delete();
+    }
+  })
+  .then(() => {
+    response.json({ message: "Post has been deleted"})
+  })
+  .catch(err => {
+    console.log(err);
+    return response.status(500).json({error: error.code});
+  })
+}

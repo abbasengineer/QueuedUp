@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 
 const authenticate = require("./util/authenticate");
-const { getPosts, addPost, getPost, addComment } = require("./handlers/posts");
+const { getPosts, addPost, getPost, addComment, deletePost } = require("./handlers/posts");
 const { signUp, logIn } = require("./handlers/users");
 
 // route for retreiving all posts
@@ -11,6 +11,9 @@ app.get("/getposts", getPosts);
 
 // route for inserting a new post
 app.post("/addpost", authenticate, addPost);
+
+//route for deleting a post
+app.delete("/getpost/:postID", authenticate, deletePost);
 
 // route for retrieving a certain post
 app.get("/getpost/:postID/", getPost);
