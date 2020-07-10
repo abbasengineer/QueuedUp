@@ -65,13 +65,6 @@ export default function QueuedUpAppBar() {
         className={classes.menuItem}
         onClick={handleMenuClose}
         component={Link}
-        to="/">
-        Home
-      </MenuItem>
-      <MenuItem
-        className={classes.menuItem}
-        onClick={handleMenuClose}
-        component={Link}
         to="/login">
         Log In
       </MenuItem>
@@ -100,12 +93,14 @@ export default function QueuedUpAppBar() {
             alt="logo"
             height="40"
             width="40"
+            to="/"
           />
           <Typography
             className={classes.title}
             variant="h4"
             noWrap
-            style={{ color: "#434343" }}>
+            style={{ color: "#434343" }}
+            to="/">
             QueuedUp
           </Typography>
           <div className={classes.grow} />
