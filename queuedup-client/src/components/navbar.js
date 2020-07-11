@@ -52,8 +52,13 @@ class QueuedUpAppBar extends Component {
     this.setState({ anchorEl: event.currentTarget });
   };
 
-  handleOpen = (event) => {
+  handleClose = () => {
     this.setState({ anchorEl: null });
+  };
+
+  handleLogoutClose = () => {
+    this.handleClose();
+    logoutUser();
   };
 
   render() {
@@ -69,12 +74,7 @@ class QueuedUpAppBar extends Component {
 
     const loggedInMenu = (
       <Fragment>
-        <MenuItem
-          className={classes.menuItem}
-          onClick={function () {
-            this.handleClose();
-            logoutUser();
-          }}>
+        <MenuItem className={classes.menuItem} onClick={this.handleLogoutClose}>
           Log Out
         </MenuItem>
       </Fragment>
@@ -108,8 +108,10 @@ class QueuedUpAppBar extends Component {
         transformOrigin={{ vertical: "top", horizontal: "center" }}
         open={isMenuOpen}
         onClose={this.handleClose}
-        getContentanchorEl={null}>
-        {isAuth ? loggedOutMenu : loggedInMenu}
+        getContentAnchorEl={null}>
+        {loggedOutMenu}
+        {loggedInMenu}
+        {/* {isAuth ? loggedInMenu : loggedOutMenu} */}
       </Menu>
     );
 
