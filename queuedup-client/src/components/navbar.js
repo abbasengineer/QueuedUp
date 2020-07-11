@@ -56,16 +56,15 @@ class QueuedUpAppBar extends Component {
     this.setState({ anchorEl: null });
   };
 
-  handleLogoutClose = () => {
+  handleLogoutClose = (event) => {
+    event.preventDefault();
+
     this.handleClose();
-    logoutUser();
+    this.props.logoutUser();
   };
 
   render() {
-    const {
-      classes,
-      user: { isAuth },
-    } = this.props;
+    const { classes, isAuth } = this.props;
 
     let { anchorEl } = this.state;
 
@@ -109,9 +108,7 @@ class QueuedUpAppBar extends Component {
         open={isMenuOpen}
         onClose={this.handleClose}
         getContentAnchorEl={null}>
-        {loggedOutMenu}
-        {loggedInMenu}
-        {/* {isAuth ? loggedInMenu : loggedOutMenu} */}
+        {isAuth ? loggedInMenu : loggedOutMenu}
       </Menu>
     );
 
@@ -163,11 +160,19 @@ class QueuedUpAppBar extends Component {
 
 QueuedUpAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func.isRequired,
+  isAuth: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user,
+  isAuth: state.user.isAuth,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(QueuedUpAppBar));
+const mapActionsToProps = {
+  logoutUser,
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(QueuedUpAppBar));

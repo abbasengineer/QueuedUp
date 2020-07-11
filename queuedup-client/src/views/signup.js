@@ -39,6 +39,7 @@ class signup extends Component {
       email: "",
       password: "",
       confirmPassword: "",
+      loading: false,
       errors: {},
     };
   }

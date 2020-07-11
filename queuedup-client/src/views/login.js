@@ -41,9 +41,9 @@ class login extends Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.UI.errors) {
-      this.setState({ errors: nextProps.UI.errors });
+  componentWillReceiveProps(props) {
+    if (props.UI.errors) {
+      this.setState({ errors: props.UI.errors });
     }
   }
 
@@ -120,7 +120,7 @@ class login extends Component {
               color="primary"
               className={classes.button}
               disabled={loading}>
-              Log In {loading}
+              Log In
             </Button>
             <br />
           </form>
