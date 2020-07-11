@@ -13,7 +13,7 @@ const AuthRoute = ({ component: Component, isAuth, ...rest }) => (
 );
 
 const mapStateToProps = (state) => ({
-  isAuth: state.user.authenticated,
+  isAuth: state.user.isAuth,
 });
 
 AuthRoute.propTypes = {

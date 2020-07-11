@@ -12,10 +12,10 @@ export const getUserData = () => (dispatch) => {
 
   axios
     .get("/user")
-    .then((response) => {
+    .then((res) => {
       dispatch({
         type: "SET_USER",
-        payload: response.data,
+        payload: res.data,
       });
     })
     .catch((err) => console.log(err));
@@ -26,12 +26,10 @@ export const loginUser = (userData, history) => (dispatch) => {
 
   axios
     .post("/login", userData)
-    .then((response) => {
-      setAuthorizationHeader(response.data.token);
-
+    .then((res) => {
+      setAuthorizationHeader(res.data.token);
       dispatch(getUserData());
       dispatch({ type: "CLEAR_ERRORS" });
-
       history.push("/");
     })
     .catch((err) => {
@@ -47,8 +45,8 @@ export const signupUser = (newUserData, history) => (dispatch) => {
 
   axios
     .post("/signup", newUserData)
-    .then((response) => {
-      setAuthorizationHeader(response.data.token);
+    .then((res) => {
+      setAuthorizationHeader(res.data.token);
 
       dispatch(getUserData());
       dispatch({ type: "CLEAR_ERRORS" });

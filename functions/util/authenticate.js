@@ -44,6 +44,6 @@ module.exports = (request, response, next) => {
       console.error("Token verification: ", err);
       return response
         .status(403)
-        .json({ error: err.code, message: err.message });
+        .json({ error: err.code, message: "Error with token verification" });
     });
 };

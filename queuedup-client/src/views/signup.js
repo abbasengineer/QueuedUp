@@ -39,7 +39,6 @@ class signup extends Component {
       email: "",
       password: "",
       confirmPassword: "",
-      loading: false,
       errors: {},
     };
   }
@@ -166,7 +165,7 @@ class signup extends Component {
               color="primary"
               className={classes.button}
               disabled={loading}>
-              Sign Up {loading}
+              Sign Up
             </Button>
             <br />
           </form>

@@ -1,7 +1,11 @@
 const { admin } = require("../util/admin");
 const { firebase } = require("../util/firebase");
 
-const { isSignUpVerified, isLogInVerified } = require("../util/verifiers");
+const {
+  isSignUpVerified,
+  isLogInVerified,
+  trimUserInfo,
+} = require("../util/verifiers");
 
 exports.signUp = (request, response) => {
   const newUser = {
@@ -98,5 +102,93 @@ exports.logIn = (request, response) => {
     .catch((err) => {
       console.error(err);
       return response.status(403).json({ info: "Incorrect login information" });
+    });
+};
+
+exports.addUserInfo = (request, response) => {
+  let data = trimUserInfo(request.content);
+
+  admin
+    .firestore()
+    .doc(`/users/${request.user.username}`)
+    .update(data)
+    .then(() => {
+      return response.json({ message: "User data added" });
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return response
+        .status(500)
+        .json({ error: err.code, message: "Error adding user data" });
+    });
+};
+
+exports.getUserInfo = (request, response) => {
+  let data = {};
+
+  admin
+    .firestore()
+    .doc(`/users/${request.params.username}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        data.user = doc.data();
+
+        return admin
+          .firestore()
+          .collection("posts")
+          .where("username", "==", request.params.username)
+          .orderBy("createdAt", "desc")
+          .get();
+      } else {
+        return response
+          .status(404)
+          .json({ error: err.code, error: "User cannot be found" });
+      }
+    })
+    .then((data) => {
+      data.posts = [];
+
+      data.forEach((doc) => {
+        data.posts.push({
+          username: doc.data().username,
+          content: doc.data().content,
+          postID: doc.id,
+          createdAt: doc.data().createdAt,
+        });
+      });
+
+      return response.json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+      return response
+        .status(500)
+        .json({ error: err.code, message: "Error getting user data" });
+    });
+};
+
+exports.getAuthUser = (request, response) => {
+  let data = {};
+
+  admin
+    .firestore()
+    .doc(`/users/${request.user.username}`)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        data.credentials = doc.data();
+      }
+
+      return response.json(data);
+    })
+    .catch((err) => {
+      console.error(err);
+
+      return response.status(500).json({
+        error: err.code,
+        message: "Error getting authenticated user credentials",
+      });
     });
 };

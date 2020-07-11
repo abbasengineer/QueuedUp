@@ -4,25 +4,6 @@ export const clearErrors = () => (dispatch) => {
   dispatch({ type: "CLEAR_ERRORS" });
 };
 
-export const getUserData = (username) => (dispatch) => {
-  dispatch({ type: "LOADING_DATA" });
-
-  axios
-    .get(`/user/${username}`)
-    .then((response) => {
-      dispatch({
-        type: "SET_POSTS",
-        payload: response.data.posts,
-      });
-    })
-    .catch(() => {
-      dispatch({
-        type: "SET_POSTS",
-        payload: null,
-      });
-    });
-};
-
 export const getPosts = () => (dispatch) => {
   dispatch({ type: "LOADING_DATA" });
 
@@ -90,5 +71,24 @@ export const deletePost = (postID) => (dispatch) => {
     })
     .catch((error) => {
       console.log(error);
+    });
+};
+
+export const getUserData = (username) => (dispatch) => {
+  dispatch({ type: "LOADING_DATA" });
+
+  axios
+    .get(`/user/${username}`)
+    .then((response) => {
+      dispatch({
+        type: "SET_POSTS",
+        payload: response.data.posts,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_POSTS",
+        payload: null,
+      });
     });
 };

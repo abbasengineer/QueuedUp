@@ -29,13 +29,17 @@ const theme = createMuiTheme({
   },
 });
 
+axios.defaults.baseURL =
+  "https://us-central1-queuedup-123.cloudfunctions.net/api/";
+
 const token = localStorage.firebaseIDToken;
+
 if (token) {
   const decodedToken = jwtDecode(token);
 
   if (decodedToken.exp * 1000 < Date.now()) {
     store.dispatch(logoutUser());
-    window.location.href = "/login";
+    //window.location.href = "/login";
   } else {
     store.dispatch({ type: "SET_AUTHENTICATED" });
     axios.defaults.headers.common["Authorization"] = token;
@@ -57,6 +61,11 @@ class App extends Component {
                   <AuthRoute exact path="/login" component={login} />
                   <AuthRoute exact path="/signup" component={signup} />
                   <Route exact path="/users/:username" component={user} />
+                  <Route
+                    exact
+                    path="/users/:username/getpost/:postID"
+                    component={user}
+                  />
                 </Switch>
               </div>
             </Router>

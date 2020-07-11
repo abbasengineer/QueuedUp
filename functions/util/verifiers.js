@@ -79,4 +79,14 @@ let isLogInVerified = (data) => {
   };
 };
 
-module.exports = { isBlank, isSignUpVerified, isLogInVerified };
+let trimUserInfo = (data) => {
+  let userInfo = {};
+
+  // if (!isBlank(data.aboutMe.trim())) {
+  //   userInfo.aboutMe = data.aboutMe;
+  // }
+
+  return userInfo;
+};
+
+module.exports = { isBlank, isSignUpVerified, isLogInVerified, trimUserInfo };

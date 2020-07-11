@@ -32,15 +32,12 @@ class Post extends Component {
     const {
       classes,
       post: { username, content, postID },
-      user: {
-        isAuth,
-        credentials: { authUsername },
-      },
+      user: { isAuth, credentials },
     } = this.props;
 
     let deleteButton;
 
-    if (isAuth && username === authUsername) {
+    if (isAuth && username === credentials.username) {
       deleteButton = <DeletePost postID={postID} />;
     } else {
       deleteButton = null;

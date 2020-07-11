@@ -2,6 +2,9 @@ const functions = require("firebase-functions");
 const express = require("express");
 const app = express();
 
+const cors = require("cors");
+app.use(cors());
+
 const authenticate = require("./util/authenticate");
 const {
   getPosts,
@@ -10,28 +13,46 @@ const {
   addComment,
   deletePost,
 } = require("./handlers/posts");
-const { signUp, logIn } = require("./handlers/users");
+const {
+  signUp,
+  logIn,
+  addUserInfo,
+  getUserInfo,
+  getAuthUser,
+} = require("./handlers/users");
+const admin = require("./util/admin");
 
-// route for retreiving all posts
-app.get("/getposts", getPosts);
+// post routes
+app.get("/getposts", getPosts); // get all posts
+app.post("/addpost", authenticate, addPost); // insert a new post
+app.get("/getpost/:postID/", getPost); // get a certain post
+app.post("/getpost/:postID/addcomment", authenticate, addComment); // add comment
+app.delete("/getpost/:postID", authenticate, deletePost); // delete a post
 
-// route for inserting a new post
-app.post("/addpost", authenticate, addPost);
+// user routes
+app.post("/signup", signUp); // sign up
+app.post("/login", logIn); // log in
+app.post("/user", authenticate, addUserInfo); // add a user's data
+app.get("/user/:username", getUserInfo); // get a user's data
+app.get("/user", authenticate, getAuthUser); // get a user's credentials
 
-// route for retrieving a certain post
-app.get("/getpost/:postID/", getPost);
+// exports.onDeletePost = functions.firestore
+//   .document("/posts/{postID}")
+//   .onDelete((snap, context) => {
+//     const postID = context.params.postID;
+//     const batch = admin.firestore().batch();
 
-// route for inserting a new comment on a post
-app.post("/getpost/:postID/addcomment", authenticate, addComment);
+//     return admin
+//       .firestore()
+//       .collection("comments")
+//       .where("postID", "==", postID)
+//       .get()
+//       .then((data) => {
+//         data.forEach((doc) => {
+//           batch.delete(admin().firestore().doc(`/comments/${doc.id}`));
+//         });
+//       })
+//       .catch((error) => console.error(error));
+//   });
 
-// route for deleting a post
-app.delete("/getpost/:postID", authenticate, deletePost);
-
-// route for signing up
-app.post("/signup", signUp);
-
-// route for logging in
-app.post("/login", logIn);
-
-// route for API
-exports.api = functions.https.onRequest(app);
+exports.api = functions.https.onRequest(app); // route for API

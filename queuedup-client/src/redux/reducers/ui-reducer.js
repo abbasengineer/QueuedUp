@@ -1,4 +1,5 @@
 const initialState = {
+  loading: false,
   errors: null,
 };
 
@@ -15,6 +16,16 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         errors: null,
+      };
+    case "LOADING_UI":
+      return {
+        ...state,
+        loading: true,
+      };
+    case "STOP_LOADING_UI":
+      return {
+        ...state,
+        loading: false,
       };
     default:
       return state;

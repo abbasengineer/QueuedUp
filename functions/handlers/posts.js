@@ -1,6 +1,5 @@
 const { admin } = require("../util/admin");
 const { isBlank } = require("../util/verifiers");
-const { response } = require("express");
 
 exports.getPosts = (request, response) => {
   admin
@@ -22,7 +21,10 @@ exports.getPosts = (request, response) => {
 
       return response.json(posts);
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error(err);
+      response.status(500).json({ error: "Error getting all posts" });
+    });
 };
 
 /*
@@ -158,7 +160,7 @@ exports.deletePost = (request, response) => {
       }
 
       if (doc.data().username !== request.user.username) {
-        return response.status(403).json({ error: "Unauthorized" });
+        return response.status(403).json({ error: "Unauthorized user" });
       } else {
         return document.delete();
       }
