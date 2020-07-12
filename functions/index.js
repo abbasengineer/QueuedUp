@@ -19,6 +19,7 @@ const {
   addUserInfo,
   getUserInfo,
   getAuthUser,
+  imageUpload,
 } = require("./handlers/users");
 const admin = require("./util/admin");
 
@@ -35,6 +36,8 @@ app.post("/login", logIn); // log in
 app.post("/user", authenticate, addUserInfo); // add a user's data
 app.get("/user/:username", getUserInfo); // get a user's data
 app.get("/user", authenticate, getAuthUser); // get a user's credentials
+app.post("/user/image", authenticate, imageUpload);
+
 
 // exports.onDeletePost = functions.firestore
 //   .document("/posts/{postID}")
