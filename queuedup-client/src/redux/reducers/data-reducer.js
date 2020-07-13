@@ -17,6 +17,7 @@ export default function (state = initialState, action) {
         posts: action.payload,
         loading: false,
       };
+      
     case "SET_POST":
       return {
         ...state,
