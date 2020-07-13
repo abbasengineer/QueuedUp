@@ -196,12 +196,16 @@ exports.editPost = (request, response) => {
       if (!doc.exists) {
         return response.status(404).json({ error: "Post not found" });
       }
-
-      return admin
+      if (doc.data().username !== request.user.username) {
+        return response.status(403).json({ error: "Unauthorized user" });
+      } else {
+        return admin
         .firestore()
         .collection("posts")
         .set(JSON.parse(JSON.stringify(editedContent)));
+      }
     })
+
     .then(() => {
       response.json({ message: "Post has been edited" });
     })
