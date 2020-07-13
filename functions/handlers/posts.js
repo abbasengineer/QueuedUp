@@ -64,7 +64,7 @@ exports.addPost = (request, response) => {
 };
 
 exports.getPost = (request, response) => {
-  let post = {};
+  let postData = {};
 
   admin
     .firestore()
@@ -75,8 +75,8 @@ exports.getPost = (request, response) => {
         return response.status(404).json({ error: "Post not found" });
       }
 
-      post = doc.data();
-      post.postID = doc.id;
+      postData = doc.data();
+      postData.postID = doc.id;
 
       return admin
         .firestore()
@@ -86,13 +86,13 @@ exports.getPost = (request, response) => {
         .get();
     })
     .then((data) => {
-      post.comments = [];
+      postData.comments = [];
 
       data.forEach((doc) => {
-        post.comments.push(doc.data());
+        postData.comments.push(doc.data());
       });
 
-      return response.json(post);
+      return response.json(postData);
     })
     .catch((err) => {
       console.error(err);
