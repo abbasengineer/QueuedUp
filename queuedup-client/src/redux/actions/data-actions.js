@@ -74,6 +74,21 @@ export const deletePost = (postID) => (dispatch) => {
     });
 };
 
+export const editPostcontent = (editedContent) => (dispatch) =>{
+  dispatch({ type: "LOADING_UI" });
+
+  axios
+    .get(`/post/${editedContent.postID}`)
+    .then((response) => {
+      dispatch({
+        type: "EDIT_POST",
+        payload: postID,
+      });
+      dispatch({ type: "STOP_LOADING_UI" });
+    })
+    .catch((error) => console.log(error));
+};
+
 export const getUserData = (username) => (dispatch) => {
   dispatch({ type: "LOADING_DATA" });
 
