@@ -17,14 +17,14 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 
 const styles = (theme) => ({
-    DeleteButton: {
-      fontFamily: "Hind",
-      opacity: "0.2",
-      size: "small",
-    },
     ConfirmButton: {
       fontFamily: "Hind",
       color: "#434343",
+    },
+    editButton: {
+      fontFamily: "Hind",
+      opacity: "0.2",
+      size: "small",
     },
     DialogTitle: {
       fontFamily: "Hind",
@@ -64,9 +64,9 @@ class editPost extends Component {
       handleSubmit = () =>{
           const editedContent = {
               content: this.state.content,
-              postID: this.state.postID
+              postID: this.props.postID
         };
-        this.props.editPostcontent(editPostcontent);
+        this.props.editPostcontent(editedContent);
         this.handleClose;
       }
       render() {
@@ -78,7 +78,7 @@ class editPost extends Component {
              title = "Edit Post"
              placement= "top">
                 <IconButton
-                className={classes.button}
+                className={classes.editButton}
                 color="#434343"
                 onClick={this.handleOpen}>
                 <EditIcon />
@@ -92,7 +92,7 @@ class editPost extends Component {
               <DialogTitle className={classes.DialogTitle}>
                   Edit Your Post
               </DialogTitle>
-              <DialogContent>
+              <DialogContent className={classes.DialogContent}>
                   <form>
                       <TextFiled
                         name = "content"
