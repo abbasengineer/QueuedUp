@@ -11,19 +11,19 @@ import { Avatar } from "@material-ui/core";
 
 
 const styles = (theme) => ({
-  Card: {
+  card: {
     margin: `${theme.spacing(1)}px auto`,
     padding: theme.spacing(2),
     background: "#eaf1fd",
   },
-  Username: {
+  username: {
     fontWeight: "bold",
     textAlign: "left",
     fontFamily: "Hind",
     color: "#434343",
     textDecoration: "none",
   },
-  Contents: {
+  contents: {
     textAlign: "left",
     fontFamily: "Hind",
     padding: 20,
@@ -42,13 +42,12 @@ class Post extends Component {
       post: { 
         username, 
         content, 
-        postID, 
-        imageURL, 
-        createdAt
+        postID,
+        imageURL
       },
       user: { 
         isAuth,
-         credentials 
+         credentials
       },
     } = this.props;
 
@@ -61,8 +60,11 @@ class Post extends Component {
     }
 
     return (
-      <Card className={classes.Card}>
+      <Card className={classes.card}>
         <Grid container className={classes.root} wrap="nowrap" spacing={2}>
+          {/* <CardMedia class={classes.image}
+            image={imageURL}
+            title={username}/> */}
           <Avatar
             variant="rounded"
             src={imageURL}
@@ -70,14 +72,14 @@ class Post extends Component {
             className={classes.image}/>
           <Grid item>
             <Typography
-              className={classes.Username}
+              className={classes.username}
               component={Link}
               to={`/users/${username}`}>
               {username}
             </Typography>
           </Grid>
           <Grid item xs>
-            <Typography className={classes.Contents}>{content}</Typography>
+            <Typography className={classes.contents}>{content}</Typography>
           </Grid>
           <Grid item>{deleteButton}</Grid>
         </Grid>

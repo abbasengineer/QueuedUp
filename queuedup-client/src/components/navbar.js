@@ -130,14 +130,14 @@ class QueuedUpAppBar extends Component {
               className={classes.title}
               variant="h4"
               noWrap
-              style={{ color: "#434343" }}
+              style={{ color: "secondary" }}
               component={Link}
               to="/">
               QueuedUp
             </Typography>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton color="#434343">
+              <IconButton color="secondary">
                 <AddCommentIcon />
               </IconButton>
               <IconButton
@@ -146,7 +146,7 @@ class QueuedUpAppBar extends Component {
                 aria-controls={menuId}
                 aria-haspopup="true"
                 onClick={this.handleOpen}
-                color="#434343">
+                color="secondary">
                 <AccountCircle />
               </IconButton>
             </div>

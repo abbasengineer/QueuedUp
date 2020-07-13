@@ -59,7 +59,7 @@ exports.signUp = (request, response) => {
         createdAt: new Date().toISOString(),
         imageURL: `https://firebasestorage.googleapis.com/v0/b/${
           firebaseConfig.storageBucket
-        }/o/${defaultImage}?alt=media`
+        }/o/${defaultImage}?alt=media`, userId,
       };
 
       // create and store in database
@@ -211,7 +211,7 @@ exports.addUserInfo = (request, response) => {
 
 
 exports.getUserInfo = (request, response) => {
-  let data = {};
+  let userData = {};
 
   admin
     .firestore()
@@ -219,7 +219,7 @@ exports.getUserInfo = (request, response) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        data.user = doc.data();
+        userData.user = doc.data();
 
         return admin
           .firestore()
@@ -234,18 +234,18 @@ exports.getUserInfo = (request, response) => {
       }
     })
     .then((data) => {
-      data.posts = [];
+      userData.posts = [];
 
       data.forEach((doc) => {
-        data.posts.push({
+        userData.posts.push({
           username: doc.data().username,
           content: doc.data().content,
           postID: doc.id,
-          createdAt: doc.data().createdAt,
+          createdAt: doc.data().createdAt
         });
       });
 
-      return response.json(data);
+      return response.json(userData);
     })
     .catch((err) => {
       console.error(err);
