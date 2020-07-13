@@ -16,16 +16,24 @@ const styles = {
   signupTitle: {
     margin: "2px auto 20px auto",
     color: "#434343",
+    fontFamily: "Hind",
   },
   TextField: {
     margin: "12px auto 12px auto",
   },
   button: {
     margin: "35px auto 0px auto",
+    fontFamily: "Hind",
+    textTransform: "none",
   },
   Error: {
     color: "red",
     frontSize: "0.8rem",
+    fontFamily: "Hind",
+  },
+  LogInLink: {
+    fontFamily: "Hind",
+    color: "#434343",
   },
 };
 
@@ -154,15 +162,16 @@ class signup extends Component {
                 {errors.info}
               </Typography>
             )}
-            <Typography>
-              <small>
+            <Typography className={classes.LogInLink}>
+              <medium>
                 Already have an account? <Link to="/login">Log in here!</Link>
-              </small>
+              </medium>
             </Typography>
             <Button
               type="submit"
               variant="contained"
               color="primary"
+              size="large"
               className={classes.button}
               disabled={loading}>
               Sign Up

@@ -33,6 +33,14 @@ export default function (state = initialState, action) {
       return {
         ...state,
       };
+    case "ADD_COMMENT":
+      return {
+        ...state,
+        post: {
+          ...state.post,
+          comments: [action.payload, ...state.post.comments],
+        },
+      };
     default:
       return state;
   }

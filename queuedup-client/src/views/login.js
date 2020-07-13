@@ -16,16 +16,24 @@ const styles = {
   loginTitle: {
     margin: "2px auto 40px auto",
     color: "#434343",
+    fontFamily: "Hind",
   },
   TextField: {
     margin: "60px auto 12px auto",
   },
   button: {
     margin: "80px auto 0px auto",
+    fontFamily: "Hind",
+    textTransform: "none",
   },
   Error: {
     color: "red",
     frontSize: "0.8rem",
+    fontFamily: "Hind",
+  },
+  SignUpLink: {
+    fontFamily: "Hind",
+    color: "#434343",
   },
 };
 
@@ -109,15 +117,16 @@ class login extends Component {
                 {errors.info}
               </Typography>
             )}
-            <Typography>
-              <small>
+            <Typography className={classes.SignUpLink}>
+              <medium>
                 New to QueuedUp? <Link to="/signup">Sign up here!</Link>
-              </small>
+              </medium>
             </Typography>
             <Button
               type="submit"
               variant="contained"
               color="primary"
+              size="large"
               className={classes.button}
               disabled={loading}>
               Log In
