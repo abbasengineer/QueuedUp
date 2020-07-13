@@ -6,6 +6,7 @@ const cors = require("cors");
 app.use(cors());
 
 const authenticate = require("./util/authenticate");
+
 const {
   getPosts,
   addPost,
@@ -13,6 +14,7 @@ const {
   addComment,
   deletePost,
 } = require("./handlers/posts");
+
 const {
   signUp,
   logIn,

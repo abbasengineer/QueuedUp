@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/styles";
-import Typography from "@material-ui/core/Typography";
+//import Typography from "@material-ui/core/Typography";
+import { CircularProgress } from '@material-ui/core';
 import Post from "../components/post";
 import { connect } from "react-redux";
 import { getPosts } from "../redux/actions/data-actions";
@@ -32,12 +33,17 @@ export class dashboard extends Component {
 
     if (loading) {
       discussionPosts = (
-        <Typography className={classes.Empty}>No posts yet!</Typography>
-      );
+        <CircularProgress />
+      )
+      // discussionPosts = (
+      //   <Typography className={classes.Empty}>No posts yet!</Typography>
+      // );
     } else {
       // display the posts
       discussionPosts = posts.map((post) => (
-        <Post key={post.postID} post={post} />
+
+      <Post key={post.postID} post={post} />
+
       ));
     }
 
