@@ -45,7 +45,7 @@ export const addPost = (newPost) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
 
   axios
-    .get(`/addpost`, newPost)
+    .post(`/addpost`, newPost)
     .then((response) => {
       dispatch({
         type: "ADD_POST",
@@ -53,6 +53,7 @@ export const addPost = (newPost) => (dispatch) => {
       });
 
       dispatch(clearErrors());
+      window.location.href = "/"; // redirect page to dashboard to see new post
     })
     .catch((error) => {
       console.log(error);
@@ -61,17 +62,6 @@ export const addPost = (newPost) => (dispatch) => {
         type: "SET_ERRORS",
         payload: error.response.data,
       });
-    });
-};
-
-export const deletePost = (postID) => (dispatch) => {
-  axios
-    .delete(`/getpost/${postID}`)
-    .then(() => {
-      dispatch({ type: "DELETE_POST", payload: postID });
-    })
-    .catch((error) => {
-      console.log(error);
     });
 };
 
@@ -91,6 +81,17 @@ export const addComment = (postID, commentData) => (dispatch) => {
         type: "SET_ERRORS",
         payload: err.response.data,
       });
+    });
+};
+
+export const deletePost = (postID) => (dispatch) => {
+  axios
+    .delete(`/getpost/${postID}`)
+    .then(() => {
+      dispatch({ type: "DELETE_POST", payload: postID });
+    })
+    .catch((error) => {
+      console.log(error);
     });
 };
 

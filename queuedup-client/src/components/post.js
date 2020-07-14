@@ -11,7 +11,6 @@ import { Avatar } from "@material-ui/core";
 import { connect } from "react-redux";
 
 const styles = (theme) => ({
-  root: {},
   card: {
     margin: `${theme.spacing(1)}px auto`,
     padding: theme.spacing(2),

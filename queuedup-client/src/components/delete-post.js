@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -13,13 +14,16 @@ import { connect } from "react-redux";
 import { deletePost } from "../redux/actions/data-actions";
 
 const styles = (theme) => ({
-  celeteButton: {
+  grid: {
+    marginTop: 15,
+  },
+  deleteButton: {
     opacity: "0.2",
     size: "small",
   },
   confirmButton: {
     fontFamily: "Hind",
-    color: "#434343",
+    textTransform: "none",
   },
   dialogTitle: {
     fontFamily: "Hind",
@@ -53,16 +57,26 @@ class DeletePost extends Component {
 
     return (
       <Fragment>
-        <IconButton className={classes.deleteButton} onClick={this.handleOpen}>
-          <DeleteOutlineIcon />
-        </IconButton>
+        <Grid container className={classes.grid}>
+          <Grid item>
+            <IconButton
+              className={classes.deleteButton}
+              onClick={this.handleOpen}>
+              <DeleteOutlineIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description">
-          <DialogTitle id="alert-dialog-title" className={classes.dialogTitle}>
-            {"Delete post"}
+          <DialogTitle>
+            <span
+              id="alert-dialog-title"
+              style={{ fontFamily: "Hind", color: "secondary" }}>
+              Delete post
+            </span>
           </DialogTitle>
           <DialogContent>
             <DialogContentText
@@ -74,15 +88,20 @@ class DeletePost extends Component {
           <DialogActions>
             <Button
               className={classes.confirmButton}
-              onClick={this.handleClose}
-              color="#434343">
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="medium"
+              onClick={this.handleClose}>
               No
             </Button>
             <Button
               className={classes.confirmButton}
-              onClick={this.deletePost}
-              color="#434343"
-              autoFocus>
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="medium"
+              onClick={this.deletePost}>
               Yes
             </Button>
           </DialogActions>
