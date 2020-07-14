@@ -32,14 +32,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
       };
-
-      case "ADD_POST":
+    case "ADD_POST":
       return {
         ...state,
-        posts: [action.payload, ...state.posts]
+        posts: [action.payload, ...state.posts],
       };
-
-
     case "ADD_COMMENT":
       return {
         ...state,

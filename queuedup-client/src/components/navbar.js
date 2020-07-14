@@ -9,10 +9,9 @@ import Typography from "@material-ui/core/Typography";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import AddCommentIcon from "@material-ui/icons/AddComment";
 import { logoutUser } from "../redux/actions/user-actions";
 import { connect } from "react-redux";
-import AddPost from './add-post';
+import AddPost from "./add-post";
 
 const styles = (theme) => ({
   grow: {
@@ -113,6 +112,8 @@ class QueuedUpAppBar extends Component {
       </Menu>
     );
 
+    const addPostIcon = <AddPost />;
+
     return (
       <div className={classes.grow}>
         <AppBar
@@ -138,10 +139,7 @@ class QueuedUpAppBar extends Component {
             </Typography>
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <IconButton color="#434343">
-                <AddCommentIcon />
-                <AddPost/>
-              </IconButton>
+              {isAuth ? addPostIcon : null}
               <IconButton
                 edge="end"
                 aria-label="my account"

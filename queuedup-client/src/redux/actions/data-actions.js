@@ -35,17 +35,17 @@ export const getPost = (postID) => (dispatch) => {
         type: "SET_POST",
         payload: response.data,
       });
+
       dispatch({ type: "STOP_LOADING_UI" });
     })
     .catch((error) => console.log(error));
 };
 
-//modiefied axios to .post 
 export const addPost = (newPost) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
 
   axios
-    .get(`/addpost`, newPost)
+    .post(`/addpost`, newPost)
     .then((response) => {
       dispatch({
         type: "ADD_POST",
@@ -61,17 +61,6 @@ export const addPost = (newPost) => (dispatch) => {
         type: "SET_ERRORS",
         payload: error.response.data,
       });
-    });
-};
-
-export const deletePost = (postID) => (dispatch) => {
-  axios
-    .delete(`/getpost/${postID}`)
-    .then(() => {
-      dispatch({ type: "DELETE_POST", payload: postID });
-    })
-    .catch((error) => {
-      console.log(error);
     });
 };
 
@@ -91,6 +80,17 @@ export const addComment = (postID, commentData) => (dispatch) => {
         type: "SET_ERRORS",
         payload: err.response.data,
       });
+    });
+};
+
+export const deletePost = (postID) => (dispatch) => {
+  axios
+    .delete(`/getpost/${postID}`)
+    .then(() => {
+      dispatch({ type: "DELETE_POST", payload: postID });
+    })
+    .catch((error) => {
+      console.log(error);
     });
 };
 
