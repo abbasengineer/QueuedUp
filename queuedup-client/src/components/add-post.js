@@ -15,7 +15,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import { addPost } from "../redux/actions/data-actions";
 import { connect } from "react-redux";
-
+  
 
 const styles = (theme) => ({
     ...theme,
@@ -30,6 +30,7 @@ const styles = (theme) => ({
         left: '90%',
         top: '10%'
     },
+    
 });
 
 class AddPost extends Component {
