@@ -3,6 +3,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import DeletePost from "./delete-post";
+import PostModal from "./post-modal";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -10,10 +11,14 @@ import { Avatar } from "@material-ui/core";
 import { connect } from "react-redux";
 
 const styles = (theme) => ({
+  root: {
+    // wrap: "nowrap",
+    alignItems: "center",
+  },
   card: {
     margin: `${theme.spacing(1)}px auto`,
     padding: theme.spacing(2),
-    background: "#eaf1fd",
+    backgroundColor: "#eaf1fd",
   },
   username: {
     fontWeight: "bold",
@@ -70,6 +75,7 @@ class Post extends Component {
             <Typography className={classes.contents}>{content}</Typography>
           </Grid>
           <Grid item>{deleteButton}</Grid>
+          <PostModal postID={postID} username={username}></PostModal>
         </Grid>
       </Card>
     );
