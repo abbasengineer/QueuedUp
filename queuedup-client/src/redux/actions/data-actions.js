@@ -31,14 +31,11 @@ export const getPost = (postID) => (dispatch) => {
   axios
     .get(`/getpost/${postID}`)
     .then((response) => {
-      // attach user image to post data 
-      axios.get(`/user/${response.data.username}`).then((userInfo) => {
-        response.data.imageURL = userInfo.data.imageURL;
-      });
       dispatch({
         type: "SET_POST",
         payload: response.data,
       });
+
       dispatch({ type: "STOP_LOADING_UI" });
     })
     .catch((error) => console.log(error));

@@ -40,24 +40,52 @@ app.get("/user/:username", getUserInfo); // get a user's data
 app.get("/user", authenticate, getAuthUser); // get a user's credentials
 app.post("/user/image", authenticate, imageUpload);
 
+exports.onDeletePost = functions.firestore
+  .document("/posts/{postID}")
+  .onDelete((snap, context) => {
+    const postID = context.params.postID;
+    const batch = admin.firestore().batch();
 
-// exports.onDeletePost = functions.firestore
-//   .document("/posts/{postID}")
-//   .onDelete((snap, context) => {
-//     const postID = context.params.postID;
-//     const batch = admin.firestore().batch();
+    return admin
+      .firestore()
+      .collection("comments")
+      .where("postID", "==", postID)
+      .get()
+      .then((data) => {
+        data.forEach((doc) => {
+          batch.delete(admin().firestore().doc(`/comments/${doc.id}`));
+        });
+      })
+      .catch((error) => console.error(error));
+  });
 
-//     return admin
-//       .firestore()
-//       .collection("comments")
-//       .where("postID", "==", postID)
-//       .get()
-//       .then((data) => {
-//         data.forEach((doc) => {
-//           batch.delete(admin().firestore().doc(`/comments/${doc.id}`));
-//         });
-//       })
-//       .catch((error) => console.error(error));
-//   });
+exports.onImageChange = functions.firestore
+  .document("/users/{userID}")
+  .onUpdate((imageChange) => {
+    if (
+      imageChange.before.data().imageUrl !== imageChange.after.data().imageURL
+    ) {
+      const writeOps = admin.firestore().batch();
+
+      return admin
+        .firestore()
+        .collection("posts")
+        .where("username", "==", imageChange.before.data().username)
+        .get()
+        .then((data) => {
+          data.forEach((doc) => {
+            const post = admin.firestore().doc(`/getposts/${doc.id}`);
+
+            writeOps.update(post, {
+              imageURL: imageChange.after.data().imageURL,
+            });
+          });
+
+          return writeOps.commit();
+        });
+    }
+
+    return true;
+  });
 
 exports.api = functions.https.onRequest(app); // route for API

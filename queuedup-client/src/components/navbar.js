@@ -21,12 +21,12 @@ const styles = (theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
+    textDecoration: "none",
     display: "none",
     [theme.breakpoints.up("sm")]: {
       display: "block",
     },
     fontFamily: "Hind",
-    textDecoration: "none",
   },
   sectionDesktop: {
     display: "none",
@@ -101,7 +101,7 @@ class QueuedUpAppBar extends Component {
     const renderMenu = (
       <Menu
         anchorEl={anchorEl}
-        anchorElOrigin={{ vertical: "bottom", horizontal: "center" }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
         id={menuId}
         keepMounted
         transformOrigin={{ vertical: "top", horizontal: "center" }}
@@ -128,9 +128,9 @@ class QueuedUpAppBar extends Component {
               to="/"></img>
             <Typography
               className={classes.title}
+              color="secondary"
               variant="h4"
               noWrap
-              style={{ color: "secondary" }}
               component={Link}
               to="/">
               QueuedUp

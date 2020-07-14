@@ -22,7 +22,7 @@ exports.signUp = (request, response) => {
     return response.status(400).json(errors);
   }
 
-  const defaultImage = 'defaultUserImage.png';
+  const defaultImage = "defaultUserImage.png";
 
   let token;
   let userID;
@@ -38,8 +38,8 @@ exports.signUp = (request, response) => {
           .json({ username: "Username already taken." });
       } else {
         return firebase
-        .auth()
-        .createUserWithEmailAndPassword(newUser.email, newUser.password);
+          .auth()
+          .createUserWithEmailAndPassword(newUser.email, newUser.password);
       }
     })
     .then((credential) => {
@@ -57,9 +57,8 @@ exports.signUp = (request, response) => {
         email: newUser.email,
         username: newUser.username,
         createdAt: new Date().toISOString(),
-        imageURL: `https://firebasestorage.googleapis.com/v0/b/${
-          firebaseConfig.storageBucket
-        }/o/${defaultImage}?alt=media`, userId,
+        imageURL: `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${defaultImage}?alt=media`,
+        userId,
       };
 
       // create and store in database
@@ -81,7 +80,6 @@ exports.signUp = (request, response) => {
       }
     });
 };
-
 
 exports.logIn = (request, response) => {
   const existingUser = {
@@ -110,39 +108,41 @@ exports.logIn = (request, response) => {
     });
 };
 
-
 // User profile picture upload
 exports.imageUpload = (request, response) => {
-  const BusBoy = require('busboy');
-  const path = require('path');
-  const os = require('os');
-  const fs = require('fs');
+  const BusBoy = require("busboy");
+  const path = require("path");
+  const os = require("os");
+  const fs = require("fs");
 
   const busboy = new BusBoy({ headers: request.headers });
 
   let imageFileName;
   let imageUploaded = {};
 
-  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+  busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
     // Only allow image filetypes. TODO: control from html side,
     // see https://www.w3schools.com/tags/att_input_accept.asp
-    if(mimetype !== 'image/png' && mimetype !== 'image/jpeg'){
-      return response.status(400).json({ error: "Incorrect filetype submitted. Accepted filetypes: png, jpeg"});
+    if (mimetype !== "image/png" && mimetype !== "image/jpeg") {
+      return response.status(400).json({
+        error: "Incorrect filetype submitted. Accepted filetypes: png, jpeg",
+      });
     }
     // returns filetype. e.g.: my.image.png returns just .png
-    const imageExtension = filename.split('.')[filename.split('.').length - 1];
+    const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
     // template string for generating a random numeric filename with the above extension
     imageFileName = `${Math.round(
-      Math.random()*10000000000
-      ).toString()}.${imageExtension}`;
+      Math.random() * 10000000000
+    ).toString()}.${imageExtension}`;
     const filepath = path.join(os.tmpdir(), imageFileName);
     imageUploaded = { filepath, mimetype };
+
     // uses filesystem library to create file on local server
     file.pipe(fs.createWriteStream(filepath));
   });
-    busboy.on('finish', () => {
-      admin
+  busboy.on("finish", () => {
+    admin
       .storage()
       .bucket(firebaseConfig.storageBucket)
       .upload(imageUploaded.filepath, {
@@ -153,30 +153,35 @@ exports.imageUpload = (request, response) => {
           },
         },
       })
-    .then(() => {
-      // constructs image url to add to user
-      const imageURL = `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${imageFileName}?alt=media`;
-      return admin.firestore().doc(`/users/${request.user.username}`).update({ imageURL });
-    })
-    .then(() => {
-      return response.json({ message: 'Image upload succeeded' });
-    })
-    .catch(err => {
-      console.error(err);
-      return response.status(500).json({ error: err.code, message: "Error assigning image" });
-    });
+      .then(() => {
+        // constructs image url to add to user
+        const imageURL = `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${imageFileName}?alt=media`;
+
+        return admin
+          .firestore()
+          .doc(`/users/${request.user.username}`)
+          .update({ imageURL });
+      })
+      .then(() => {
+        return response.json({ message: "Image upload succeeded" });
+      })
+      .catch((err) => {
+        console.error(err);
+        return response
+          .status(500)
+          .json({ error: err.code, message: "Error assigning image" });
+      });
   });
   busboy.end(request.rawBody);
 };
 
-
 exports.addUserInfo = (request, response) => {
-  let data = trimUserInfo(request.content);
+  let userData = trimUserInfo(request.content);
 
   admin
     .firestore()
     .doc(`/users/${request.user.username}`)
-    .update(data)
+    .update(userData)
     .then(() => {
       return response.json({ message: "User data added" });
     })
@@ -188,27 +193,6 @@ exports.addUserInfo = (request, response) => {
         .json({ error: err.code, message: "Error adding user data" });
     });
 };
-
-
-exports.addUserInfo = (request, response) => {
-  let data = trimUserInfo(request.content);
-
-  admin
-    .firestore()
-    .doc(`/users/${request.user.username}`)
-    .update(data)
-    .then(() => {
-      return response.json({ message: "User data added" });
-    })
-    .catch((err) => {
-      console.error(err);
-
-      return response
-        .status(500)
-        .json({ error: err.code, message: "Error adding user data" });
-    });
-};
-
 
 exports.getUserInfo = (request, response) => {
   let userData = {};
@@ -240,8 +224,9 @@ exports.getUserInfo = (request, response) => {
         userData.posts.push({
           username: doc.data().username,
           content: doc.data().content,
+          imageURL: doc.data().imageURL,
           postID: doc.id,
-          createdAt: doc.data().createdAt
+          createdAt: doc.data().createdAt,
         });
       });
 
@@ -255,9 +240,8 @@ exports.getUserInfo = (request, response) => {
     });
 };
 
-
 exports.getAuthUser = (request, response) => {
-  let data = {};
+  let userData = {};
 
   admin
     .firestore()
@@ -265,10 +249,10 @@ exports.getAuthUser = (request, response) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        data.credentials = doc.data();
+        userData.credentials = doc.data();
       }
 
-      return response.json(data);
+      return response.json(userData);
     })
     .catch((err) => {
       console.error(err);

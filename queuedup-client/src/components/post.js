@@ -6,9 +6,8 @@ import DeletePost from "./delete-post";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
-import { connect } from "react-redux";
 import { Avatar } from "@material-ui/core";
-
+import { connect } from "react-redux";
 
 const styles = (theme) => ({
   card: {
@@ -27,28 +26,20 @@ const styles = (theme) => ({
     textAlign: "left",
     fontFamily: "Hind",
     padding: 20,
-    objectFit: 'cover'
+    objectFit: "cover",
   },
-  image:{
+  image: {
     minWidth: 80,
-    minHeight: 80
-  }
+    minHeight: 80,
+  },
 });
 
 class Post extends Component {
   render() {
     const {
       classes,
-      post: { 
-        username, 
-        content, 
-        postID,
-        imageURL
-      },
-      user: { 
-        isAuth,
-         credentials
-      },
+      post: { username, content, postID, imageURL },
+      user: { isAuth, credentials },
     } = this.props;
 
     let deleteButton;
@@ -62,14 +53,11 @@ class Post extends Component {
     return (
       <Card className={classes.card}>
         <Grid container className={classes.root} wrap="nowrap" spacing={2}>
-          {/* <CardMedia class={classes.image}
-            image={imageURL}
-            title={username}/> */}
           <Avatar
             variant="rounded"
             src={imageURL}
             title={username}
-            className={classes.image}/>
+            className={classes.image}></Avatar>
           <Grid item>
             <Typography
               className={classes.username}

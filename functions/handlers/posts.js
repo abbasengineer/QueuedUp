@@ -7,18 +7,20 @@ exports.getPosts = (request, response) => {
     .collection("posts")
     .orderBy("createdAt", "desc")
     .get()
-    .then((data) => {
+    .then((doc) => {
       let posts = [];
 
-      data.forEach((doc) => {
+      doc.forEach((postDoc) => {
         posts.push({
-          postID: doc.id,
-          username: doc.data().username,
-          content: doc.data().content,
+          postID: postDoc.id,
+          username: postDoc.data().username,
+          content: postDoc.data().content,
+          imageURL: postDoc.data().imageURL,
           createdAt: new Date().toISOString(),
         });
       });
 
+      console.log(posts);
       return response.json(posts);
     })
     .catch((err) => {
@@ -45,6 +47,7 @@ exports.addPost = (request, response) => {
   const newPost = {
     username: request.user.username,
     content: request.body.content,
+    imageURL: request.user.imageURL,
     createdAt: new Date().toISOString(),
   };
 
@@ -64,7 +67,7 @@ exports.addPost = (request, response) => {
 };
 
 exports.getPost = (request, response) => {
-  let post = {};
+  let postData = {};
 
   admin
     .firestore()
@@ -75,8 +78,8 @@ exports.getPost = (request, response) => {
         return response.status(404).json({ error: "Post not found" });
       }
 
-      post = doc.data();
-      post.postID = doc.id;
+      postData = doc.data();
+      postData.postID = doc.id;
 
       return admin
         .firestore()
@@ -86,13 +89,13 @@ exports.getPost = (request, response) => {
         .get();
     })
     .then((data) => {
-      post.comments = [];
+      postData.comments = [];
 
-      data.forEach((doc) => {
-        post.comments.push(doc.data());
+      data.forEach((commentsDoc) => {
+        postData.comments.push(commentsDoc.data());
       });
 
-      return response.json(post);
+      return response.json(postData);
     })
     .catch((err) => {
       console.error(err);
@@ -122,8 +125,9 @@ exports.addComment = (request, response) => {
   const newComment = {
     username: request.user.username,
     content: request.body.content,
-    createdAt: new Date().toISOString(),
+    imageURL: request.user.imageURL,
     postID: request.params.postID,
+    createdAt: new Date().toISOString(),
   };
 
   admin

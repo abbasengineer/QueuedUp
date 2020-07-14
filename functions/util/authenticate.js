@@ -37,6 +37,7 @@ module.exports = (request, response, next) => {
     .then((data) => {
       // extract data from document and attach it to our request
       request.user.username = data.docs[0].data().username;
+      request.user.imageURL = data.docs[0].data().imageURL;
 
       return next(); // allow request to proceed
     })
