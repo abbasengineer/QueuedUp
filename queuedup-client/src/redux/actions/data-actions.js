@@ -74,13 +74,13 @@ export const deletePost = (postID) => (dispatch) => {
     });
 };
 
-export const editPostcontent = (postID) => (dispatch) =>{
+export const editPost = (postID) => (dispatch) =>{
   dispatch({ type: "LOADING_UI" });
   axios
-    .get(`/getpost/${postID}`)
+    .post(`/getpost/${postID}/edit`)
     .then((response) => {
       dispatch({
-        type: "EDIT_POST",
+        type: "SET_POST",
         payload: response.data,
       });
       dispatch({ type: "STOP_LOADING_UI" });

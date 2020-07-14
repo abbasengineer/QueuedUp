@@ -12,6 +12,7 @@ const {
   getPost,
   addComment,
   deletePost,
+  editPost,
 } = require("./handlers/posts");
 const {
   signUp,
@@ -27,6 +28,7 @@ app.get("/getposts", getPosts); // get all posts
 app.post("/addpost", authenticate, addPost); // insert a new post
 app.get("/getpost/:postID/", getPost); // get a certain post
 app.post("/getpost/:postID/addcomment", authenticate, addComment); // add comment
+app.post("/getpost/:postID/edit", authenticate, editPost); // edit a post
 app.delete("/getpost/:postID", authenticate, deletePost); // delete a post
 
 // user routes

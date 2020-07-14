@@ -202,7 +202,8 @@ exports.editPost = (request, response) => {
         return admin
         .firestore()
         .collection("posts")
-        .set(JSON.parse(JSON.stringify(editedContent)));
+        .get("content")
+        .update(JSON.parse(JSON.stringify(editedContent)));
       }
     })
 
@@ -211,6 +212,6 @@ exports.editPost = (request, response) => {
     })
     .catch((err) => {
       console.log(err);
-      response.status(500).json({ error: "Error adding comment" });
+      response.status(500).json({ error: "Error editing Post" });
     });
 };
