@@ -40,6 +40,7 @@ export const getPost = (postID) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
+//modiefied axios to .post 
 export const addPost = (newPost) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
 

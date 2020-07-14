@@ -12,6 +12,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import AddCommentIcon from "@material-ui/icons/AddComment";
 import { logoutUser } from "../redux/actions/user-actions";
 import { connect } from "react-redux";
+import AddPost from './add-post';
 
 const styles = (theme) => ({
   grow: {
@@ -139,6 +140,7 @@ class QueuedUpAppBar extends Component {
             <div className={classes.sectionDesktop}>
               <IconButton color="#434343">
                 <AddCommentIcon />
+                <AddPost/>
               </IconButton>
               <IconButton
                 edge="end"

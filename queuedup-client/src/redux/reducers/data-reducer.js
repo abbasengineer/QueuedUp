@@ -32,6 +32,16 @@ export default function (state = initialState, action) {
       return {
         ...state,
       };
+    //start of adding posts case
+    case "ADD_POST":
+      return {
+        ...state,
+        posts: [
+          action.payload,
+          ...state.posts
+        ]
+      };
+    //end of adding post case 
     default:
       return state;
   }
