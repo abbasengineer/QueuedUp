@@ -13,20 +13,19 @@ import { connect } from "react-redux";
 import { deletePost } from "../redux/actions/data-actions";
 
 const styles = (theme) => ({
-  DeleteButton: {
-    fontFamily: "Hind",
+  celeteButton: {
     opacity: "0.2",
     size: "small",
   },
-  ConfirmButton: {
+  confirmButton: {
     fontFamily: "Hind",
     color: "#434343",
   },
-  DialogTitle: {
+  dialogTitle: {
     fontFamily: "Hind",
     color: "#434343",
   },
-  DialogContent: {
+  dialogContent: {
     fontFamily: "Hind",
   },
 });
@@ -54,10 +53,7 @@ class DeletePost extends Component {
 
     return (
       <Fragment>
-        <IconButton
-          className={classes.DeleteButton}
-          color="#434343"
-          onClick={this.handleOpen}>
+        <IconButton className={classes.deleteButton} onClick={this.handleOpen}>
           <DeleteOutlineIcon />
         </IconButton>
         <Dialog
@@ -65,25 +61,25 @@ class DeletePost extends Component {
           onClose={this.handleClose}
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description">
-          <DialogTitle id="alert-dialog-title" className={classes.DialogTitle}>
+          <DialogTitle id="alert-dialog-title" className={classes.dialogTitle}>
             {"Delete post"}
           </DialogTitle>
           <DialogContent>
             <DialogContentText
-              className={classes.DialogContent}
+              className={classes.dialogContent}
               id="alert-dialog-description">
               Are you sure you want to permanently delete this post?
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button
-              className={classes.ConfirmButton}
+              className={classes.confirmButton}
               onClick={this.handleClose}
               color="#434343">
               No
             </Button>
             <Button
-              className={classes.ConfirmButton}
+              className={classes.confirmButton}
               onClick={this.deletePost}
               color="#434343"
               autoFocus>

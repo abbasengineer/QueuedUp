@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/styles";
-//import Typography from "@material-ui/core/Typography";
 import { CircularProgress } from "@material-ui/core";
 import Post from "../components/post";
 import { connect } from "react-redux";

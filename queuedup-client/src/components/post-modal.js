@@ -8,38 +8,41 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
-import UnfoldMore from "@material-ui/icons/UnfoldMore";
+import ChatIcon from "@material-ui/icons/Chat";
 import AddCommentForm from "./add-comment-form";
 import Comments from "./comments";
+import { Avatar } from "@material-ui/core";
 import { connect } from "react-redux";
 import { getPost } from "../redux/actions/data-actions";
 
 const styles = (theme) => ({
-  DialogContent: {
+  dialogContent: {
     padding: 20,
   },
-  Username: {
+  username: {
     fontWeight: "bold",
     textAlign: "left",
     fontFamily: "Hind",
-    color: "#434343",
     textDecoration: "none",
   },
-  Contents: {
+  contents: {
     textAlign: "left",
     fontFamily: "Hind",
   },
-  IconButton: {
-    color: "#434343",
+  chatButton: {
     opacity: "0.2",
     size: "small",
   },
-  CloseButton: {
-    color: "#434343",
+  closeButton: {
+    color: "secondary",
     opacity: "0.2",
     size: "small",
     position: "absolute",
     left: "90%",
+  },
+  image: {
+    minWidth: 60,
+    minHeight: 60,
   },
 });
 
@@ -60,29 +63,35 @@ class PostModal extends Component {
   render() {
     const {
       classes,
-      post: { postID, username, content, comments },
+      post: { postID, username, content, comments, imageURL },
     } = this.props;
 
     const postDialog = (
       <Grid container spacing={2}>
         <Grid item>
+          <Avatar
+            variant="rounded"
+            src={imageURL}
+            title={username}
+            className={classes.image}></Avatar>
+        </Grid>
+        <Grid item xs>
           <Typography
-            className={classes.Username}
+            className={classes.username}
+            color="secondary"
             component={Link}
             to={`/users/${username}`}>
             {username}
           </Typography>
-        </Grid>
-        <Grid item xs>
-          <Typography className={classes.Contents}>{content}</Typography>
+          <Typography className={classes.contents}>{content}</Typography>
         </Grid>
       </Grid>
     );
 
     return (
       <Fragment>
-        <IconButton className={classes.IconButton} onClick={this.handleOpen}>
-          <UnfoldMore />
+        <IconButton className={classes.chatButton} onClick={this.handleOpen}>
+          <ChatIcon />
         </IconButton>
         <Dialog
           open={this.state.open}
@@ -90,17 +99,16 @@ class PostModal extends Component {
           fullWidth
           maxWidth="sm">
           <IconButton
-            className={classes.CloseButton}
-            onClick={this.handleClose}
-            alignItems="center">
+            className={classes.closeButton}
+            onClick={this.handleClose}>
             <CloseIcon />
           </IconButton>
-          <DialogContent className={classes.DialogContent}>
+          <DialogContent className={classes.dialogContent}>
             {postDialog}
           </DialogContent>
           {comments && (
             <Fragment>
-              <DialogContent className={classes.DialogContent}>
+              <DialogContent className={classes.dialogContent}>
                 <Comments comments={comments}></Comments>
               </DialogContent>
             </Fragment>

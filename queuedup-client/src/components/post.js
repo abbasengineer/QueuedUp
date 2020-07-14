@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -11,26 +11,25 @@ import { Avatar } from "@material-ui/core";
 import { connect } from "react-redux";
 
 const styles = (theme) => ({
-  root: {
-    // wrap: "nowrap",
-    alignItems: "center",
-  },
+  root: {},
   card: {
     margin: `${theme.spacing(1)}px auto`,
     padding: theme.spacing(2),
     backgroundColor: "#eaf1fd",
+    textAlign: "left",
+  },
+  postInfoGrid: {
+    paddingLeft: 5,
   },
   username: {
     fontWeight: "bold",
     textAlign: "left",
     fontFamily: "Hind",
-    color: "#434343",
     textDecoration: "none",
   },
   contents: {
     textAlign: "left",
     fontFamily: "Hind",
-    padding: 20,
     objectFit: "cover",
   },
   image: {
@@ -57,25 +56,28 @@ class Post extends Component {
 
     return (
       <Card className={classes.card}>
-        <Grid container className={classes.root} wrap="nowrap" spacing={2}>
-          <Avatar
-            variant="rounded"
-            src={imageURL}
-            title={username}
-            className={classes.image}></Avatar>
+        <Grid container className={classes.root} spacing={2}>
           <Grid item>
+            <Avatar
+              variant="rounded"
+              src={imageURL}
+              title={username}
+              className={classes.image}></Avatar>
+          </Grid>
+          <Grid item xs className={classes.postInfoGrid}>
             <Typography
               className={classes.username}
+              color="secondary"
               component={Link}
               to={`/users/${username}`}>
               {username}
             </Typography>
-          </Grid>
-          <Grid item xs>
             <Typography className={classes.contents}>{content}</Typography>
           </Grid>
           <Grid item>{deleteButton}</Grid>
-          <PostModal postID={postID} username={username}></PostModal>
+          <Fragment>
+            <PostModal postID={postID} username={username}></PostModal>
+          </Fragment>
         </Grid>
       </Card>
     );

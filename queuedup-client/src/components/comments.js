@@ -4,21 +4,26 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import { Avatar } from "@material-ui/core";
 
 const styles = (theme) => ({
-  Username: {
+  username: {
     fontWeight: "bold",
     textAlign: "left",
     fontFamily: "Hind",
-    color: "#434343",
     textDecoration: "none",
   },
-  Contents: {
+  contents: {
     textAlign: "left",
     fontFamily: "Hind",
   },
-  Comment: {
-    marginLeft: 20,
+  comment: {
+    marginLeft: 7,
+    marginTop: 5,
+  },
+  image: {
+    minWidth: 45,
+    minHeight: 45,
   },
 });
 
@@ -29,25 +34,34 @@ class Comments extends Component {
     return (
       <Grid container>
         {comments.map((comment) => {
-          const { username, content, createdAt } = comment;
+          const { username, content, createdAt, imageURL } = comment;
 
           return (
             <Fragment key={createdAt}>
-              <Grid item sm={10}>
-                <Grid container className={classes.Comment} spacing={2}>
-                  <Grid item>
-                    <Typography
-                      className={classes.Username}
-                      component={Link}
-                      to={`/users/${username}`}>
-                      {username}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs>
-                    <Typography className={classes.Contents}>
-                      {content}
-                    </Typography>
-                  </Grid>
+              <Grid
+                container
+                className={classes.comment}
+                spacing={2}
+                item
+                sm={10}>
+                <Grid item>
+                  <Avatar
+                    variant="rounded"
+                    src={imageURL}
+                    title={username}
+                    className={classes.image}></Avatar>
+                </Grid>
+                <Grid item xs>
+                  <Typography
+                    className={classes.username}
+                    color="secondary"
+                    component={Link}
+                    to={`/users/${username}`}>
+                    {username}
+                  </Typography>
+                  <Typography className={classes.contents}>
+                    {content}
+                  </Typography>
                 </Grid>
               </Grid>
             </Fragment>

@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import AddCommentIcon from "@material-ui/icons/AddComment";
+import AddPostIcon from "@material-ui/icons/AddComment";
 import { logoutUser } from "../redux/actions/user-actions";
 import { connect } from "react-redux";
 
@@ -138,7 +138,7 @@ class QueuedUpAppBar extends Component {
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton color="secondary">
-                <AddCommentIcon />
+                <AddPostIcon />
               </IconButton>
               <IconButton
                 edge="end"

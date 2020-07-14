@@ -15,25 +15,27 @@ const styles = {
   },
   loginTitle: {
     margin: "2px auto 40px auto",
-    color: "#434343",
     fontFamily: "Hind",
   },
-  TextField: {
-    margin: "60px auto 12px auto",
+  textFieldMargin: {
+    margin: "15px auto 12px auto",
+  },
+  textField: {
+    fontFamily: "Hind",
   },
   button: {
-    margin: "80px auto 0px auto",
+    margin: "30px auto 0px auto",
     fontFamily: "Hind",
     textTransform: "none",
   },
-  Error: {
+  error: {
     color: "red",
     frontSize: "0.8rem",
     fontFamily: "Hind",
   },
-  SignUpLink: {
+  signUpLink: {
     fontFamily: "Hind",
-    color: "#434343",
+    margin: "15px auto 12px auto",
   },
 };
 
@@ -84,7 +86,10 @@ class login extends Component {
       <Grid container className={classes.form}>
         <Grid item sm />
         <Grid item sm>
-          <Typography variant="h3" className={classes.loginTitle}>
+          <Typography
+            variant="h4"
+            className={classes.loginTitle}
+            color="secondary">
             Welcome Back
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
@@ -92,8 +97,11 @@ class login extends Component {
               id="email"
               name="email"
               type="email"
-              label="UCSC Email"
-              className={classes.TextField}
+              label={<span style={{ fontFamily: "Hind" }}>UCSC Email</span>}
+              className={classes.textFieldMargin}
+              inputProps={{
+                className: classes.textField,
+              }}
               helperText={errors.email}
               error={errors.email ? true : false}
               value={this.state.email}
@@ -104,8 +112,11 @@ class login extends Component {
               id="password"
               name="password"
               type="password"
-              label="Password"
-              className={classes.TextField}
+              label={<span style={{ fontFamily: "Hind" }}>Password</span>}
+              className={classes.textFieldMargin}
+              inputProps={{
+                className: classes.textField,
+              }}
               helperText={errors.password}
               error={errors.password ? true : false}
               value={this.state.password}
@@ -113,13 +124,13 @@ class login extends Component {
               fullWidth
             />
             {errors.info && (
-              <Typography variant="body2" className={classes.Error}>
+              <Typography variant="body2" className={classes.error}>
                 {errors.info}
               </Typography>
             )}
-            <Typography className={classes.SignUpLink}>
+            <Typography className={classes.signUpLink} color="secondary">
               <medium>
-                New to QueuedUp? <Link to="/signup">Sign up here!</Link>
+                New to Queued Up? <Link to="/signup">Sign up here!</Link>
               </medium>
             </Typography>
             <Button

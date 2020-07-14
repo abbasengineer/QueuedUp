@@ -4,21 +4,23 @@ import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import SendIcon from "@material-ui/icons/Send";
 import { connect } from "react-redux";
 import { addComment } from "../redux/actions/data-actions";
 
 const styles = (theme) => ({
-  form: {
+  formGrid: {
     textAlign: "center",
     padding: 20,
   },
-  TextField: {
-    align: "center",
+  textField: {
+    fontFamily: "Hind",
   },
-  SubmitButton: {
+  submitButton: {
     margin: "10px auto 0px auto",
     fontFamily: "Hind",
     textTransform: "none",
+    fontSize: "15px",
   },
 });
 
@@ -48,30 +50,36 @@ class AddCommentForm extends Component {
     const { classes, isAuth } = this.props;
 
     return (
-      <Grid
-        item
-        sm={12}
-        className={classes.form}
-        style={{ textAlign: "center" }}
-        alignItems="center">
+      <Grid item className={classes.formGrid}>
         <form onSubmit={this.handleSubmit}>
           <TextField
             name="content"
             type="text"
-            label="Comment on this post"
-            className={classes.TextField}
+            label={
+              <span style={{ fontFamily: "Hind" }}>Comment on this post</span>
+            }
             value={this.state.content}
             onChange={this.handleChange}
-            fullWidth></TextField>
-          <Button
-            className={classes.SubmitButton}
-            type="submit"
-            variant="contained"
-            color="primary"
-            size="Large"
-            disabled={!isAuth}>
-            Submit
-          </Button>
+            fullWidth
+            inputProps={{
+              className: classes.textField,
+            }}></TextField>
+          <Grid container wrap="nowrap">
+            <Grid item xs={9}></Grid>
+            <Grid item>
+              <Button
+                className={classes.submitButton}
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="medium"
+                buttonStyle={{ justifyContent: "flex-end" }}
+                startIcon={<SendIcon />}
+                disabled={!isAuth}>
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
         </form>
       </Grid>
     );
