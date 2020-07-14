@@ -75,6 +75,25 @@ export const deletePost = (postID) => (dispatch) => {
     });
 };
 
+export const addComment = (postID, commentData) => (dispatch) => {
+  axios
+    .post(`/getpost/${postID}/addcomment`, commentData)
+    .then((res) => {
+      dispatch({
+        type: "ADD_COMMENT",
+        payload: res.data,
+      });
+
+      dispatch(clearErrors());
+    })
+    .catch((err) => {
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      });
+    });
+};
+
 export const getUserData = (username) => (dispatch) => {
   dispatch({ type: "LOADING_DATA" });
 
