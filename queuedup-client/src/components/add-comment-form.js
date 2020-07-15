@@ -56,8 +56,15 @@ class AddCommentForm extends Component {
             name="content"
             type="text"
             label={
-              <span style={{ fontFamily: "Hind" }}>Comment on this post</span>
+              isAuth ? (
+                <span style={{ fontFamily: "Hind" }}>Comment on this post</span>
+              ) : (
+                <span style={{ fontFamily: "Hind" }}>
+                  Log in to join the conversation
+                </span>
+              )
             }
+            disabled={!isAuth}
             value={this.state.content}
             onChange={this.handleChange}
             fullWidth

@@ -96,7 +96,7 @@ class signup extends Component {
         <Grid item sm />
         <Grid item sm>
           <Typography
-            variant="h4"
+            variant="h3"
             className={classes.signupTitle}
             color="secondary">
             Join Us
@@ -105,103 +105,100 @@ class signup extends Component {
             noValidate
             onSubmit={this.handleSubmit}
             style={{ margin: "20px" }}>
-            <TextField
-              id="fullName"
-              name="fullName"
-              type="text"
-              label={<span style={{ fontFamily: "Hind" }}>Full Name</span>}
-              className={classes.textFieldMargin}
-              inputProps={{
-                className: classes.textField,
-              }}
-              helperText={errors.fullName}
-              error={errors.fullName ? true : false}
-              value={this.state.fullName}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="username"
-              name="username"
-              type="text"
-              label={<span style={{ fontFamily: "Hind" }}>Username</span>}
-              className={classes.textFieldMargin}
-              inputProps={{
-                className: classes.textField,
-              }}
-              helperText={errors.username}
-              error={errors.username ? true : false}
-              value={this.state.username}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="email"
-              name="email"
-              type="email"
-              label={<span style={{ fontFamily: "Hind" }}>UCSC Email</span>}
-              className={classes.textFieldMargin}
-              inputProps={{
-                className: classes.textField,
-              }}
-              helperText={errors.email}
-              error={errors.email ? true : false}
-              value={this.state.email}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="password"
-              name="password"
-              type="password"
-              label={<span style={{ fontFamily: "Hind" }}>Password</span>}
-              className={classes.textFieldMargin}
-              inputProps={{
-                className: classes.textField,
-              }}
-              helperText={errors.password}
-              error={errors.password ? true : false}
-              value={this.state.password}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              label={
-                <span style={{ fontFamily: "Hind" }}>Confirm Password</span>
-              }
-              className={classes.textFieldMargin}
-              inputProps={{
-                className: classes.textField,
-              }}
-              helperText={errors.confirmPassword}
-              error={errors.confirmPassword ? true : false}
-              value={this.state.confirmPassword}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            {errors.info && (
-              <Typography variant="body2" className={classes.error}>
-                {errors.info}
+            <Grid container direction="column">
+              <TextField
+                id="fullName"
+                name="fullName"
+                type="text"
+                label={<span style={{ fontFamily: "Hind" }}>Full Name</span>}
+                className={classes.textFieldMargin}
+                inputProps={{
+                  className: classes.textField,
+                }}
+                helperText={errors.fullName}
+                error={errors.fullName ? true : false}
+                value={this.state.fullName}
+                onChange={this.handleChange}
+              />
+              <TextField
+                id="username"
+                name="username"
+                type="text"
+                label={<span style={{ fontFamily: "Hind" }}>Username</span>}
+                className={classes.textFieldMargin}
+                inputProps={{
+                  className: classes.textField,
+                }}
+                helperText={errors.username}
+                error={errors.username ? true : false}
+                value={this.state.username}
+                onChange={this.handleChange}
+              />
+              <TextField
+                id="email"
+                name="email"
+                type="email"
+                label={<span style={{ fontFamily: "Hind" }}>UCSC Email</span>}
+                className={classes.textFieldMargin}
+                inputProps={{
+                  className: classes.textField,
+                }}
+                helperText={errors.email}
+                error={errors.email ? true : false}
+                value={this.state.email}
+                onChange={this.handleChange}
+              />
+              <TextField
+                id="password"
+                name="password"
+                type="password"
+                label={<span style={{ fontFamily: "Hind" }}>Password</span>}
+                className={classes.textFieldMargin}
+                inputProps={{
+                  className: classes.textField,
+                }}
+                helperText={errors.password}
+                error={errors.password ? true : false}
+                value={this.state.password}
+                onChange={this.handleChange}
+              />
+              <TextField
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                label={
+                  <span style={{ fontFamily: "Hind" }}>Confirm Password</span>
+                }
+                className={classes.textFieldMargin}
+                inputProps={{
+                  className: classes.textField,
+                }}
+                helperText={errors.confirmPassword}
+                error={errors.confirmPassword ? true : false}
+                value={this.state.confirmPassword}
+                onChange={this.handleChange}
+              />
+              {errors.info && (
+                <Typography variant="body2" className={classes.error}>
+                  {errors.info}
+                </Typography>
+              )}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                className={classes.button}
+                disabled={loading}>
+                Sign Up
+              </Button>
+              <Typography className={classes.logInLink} color="secondary">
+                <medium>
+                  Already have an account? <Link to="/login">Log in here!</Link>
+                </medium>
               </Typography>
-            )}
-            <Typography className={classes.logInLink} color="secondary">
-              <medium>
-                Already have an account? <Link to="/login">Log in here!</Link>
-              </medium>
-            </Typography>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              className={classes.button}
-              disabled={loading}>
-              Sign Up
-            </Button>
-            <br />
+              <br />
+            </Grid>
           </form>
         </Grid>
         <Grid item sm />

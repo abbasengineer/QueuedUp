@@ -87,62 +87,62 @@ class login extends Component {
         <Grid item sm />
         <Grid item sm>
           <Typography
-            variant="h4"
+            variant="h3"
             className={classes.loginTitle}
             color="secondary">
             Welcome Back
           </Typography>
           <form noValidate onSubmit={this.handleSubmit}>
-            <TextField
-              id="email"
-              name="email"
-              type="email"
-              label={<span style={{ fontFamily: "Hind" }}>UCSC Email</span>}
-              className={classes.textFieldMargin}
-              inputProps={{
-                className: classes.textField,
-              }}
-              helperText={errors.email}
-              error={errors.email ? true : false}
-              value={this.state.email}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="password"
-              name="password"
-              type="password"
-              label={<span style={{ fontFamily: "Hind" }}>Password</span>}
-              className={classes.textFieldMargin}
-              inputProps={{
-                className: classes.textField,
-              }}
-              helperText={errors.password}
-              error={errors.password ? true : false}
-              value={this.state.password}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            {errors.info && (
-              <Typography variant="body2" className={classes.error}>
-                {errors.info}
+            <Grid container direction="column">
+              <TextField
+                id="email"
+                name="email"
+                type="email"
+                label={<span style={{ fontFamily: "Hind" }}>UCSC Email</span>}
+                className={classes.textFieldMargin}
+                inputProps={{
+                  className: classes.textField,
+                }}
+                helperText={errors.email}
+                error={errors.email ? true : false}
+                value={this.state.email}
+                onChange={this.handleChange}
+              />
+              <TextField
+                id="password"
+                name="password"
+                type="password"
+                label={<span style={{ fontFamily: "Hind" }}>Password</span>}
+                className={classes.textFieldMargin}
+                inputProps={{
+                  className: classes.textField,
+                }}
+                helperText={errors.password}
+                error={errors.password ? true : false}
+                value={this.state.password}
+                onChange={this.handleChange}
+              />
+              {errors.info && (
+                <Typography variant="body2" className={classes.error}>
+                  {errors.info}
+                </Typography>
+              )}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                size="large"
+                className={classes.button}
+                disabled={loading}>
+                Log In
+              </Button>
+              <Typography className={classes.signUpLink} color="secondary">
+                <medium>
+                  New to QueuedUp? <Link to="/signup">Sign up here!</Link>
+                </medium>
               </Typography>
-            )}
-            <Typography className={classes.signUpLink} color="secondary">
-              <medium>
-                New to QueuedUp? <Link to="/signup">Sign up here!</Link>
-              </medium>
-            </Typography>
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              size="large"
-              className={classes.button}
-              disabled={loading}>
-              Log In
-            </Button>
-            <br />
+              <br />
+            </Grid>
           </form>
         </Grid>
         <Grid item sm />
