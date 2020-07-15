@@ -74,18 +74,28 @@ export const deletePost = (postID) => (dispatch) => {
     });
 };
 
-export const editPost = (postID) => (dispatch) => {
+export const editPost = (postID, editedPost) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
+
   axios
-    .post(`/getpost/${postID}/edit`)
-    .then((response) => {
+    .post(`/getpost/${postID}/edit`, editedPost)
+    .then(() => {
       dispatch({
         type: "SET_POST",
-        payload: response.data,
+        payload: postID,
       });
-      dispatch({ type: "STOP_LOADING_UI" });
+
+      dispatch(clearErrors());
+      window.location.href = "/"; // redirect page to dashboard to see edited post
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      console.log(error);
+
+      dispatch({
+        type: "SET_ERRORS",
+        payload: error.response.data,
+      });
+    });
 };
 
 export const addComment = (postID, commentData) => (dispatch) => {

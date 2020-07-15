@@ -2,55 +2,64 @@ import React, { Component, Fragment } from "react";
 import { withStyles } from "@material-ui/styles";
 import PropTypes from "prop-types";
 import Button from "@material-ui/core/Button";
-import TextFiled from "@material-ui/core/TextFiled";
+import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Tooltip from "@material-ui/core/Tooltip";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import { connect } from "react-redux";
 import { editPost } from "../redux/actions/data-actions";
 
 const styles = (theme) => ({
-  confirmButton: {
-    fontFamily: "Hind",
-    color: "#434343",
-  },
-  editButton: {
-    fontFamily: "Hind",
-    opacity: "0.2",
-    size: "small",
-  },
-  dialogTitle: {
-    fontFamily: "Hind",
-    color: "#434343",
-  },
   dialogContent: {
     fontFamily: "Hind",
   },
+  textField: {
+    fontFamily: "Hind",
+  },
+  editButton: {
+    opacity: "0.2",
+    size: "small",
+  },
+  confirmButton: {
+    fontFamily: "Hind",
+    textTransform: "none",
+  },
+  progressSpinner: {
+    position: "absolute",
+  },
 });
 
-class editPost extends Component {
+class EditPost extends Component {
   state = {
-    content: "",
     open: false,
+    content: "",
+    errors: {},
   };
 
-  componentDidMount() {
-    this.setState({
-      content: post.content ? post.content : "",
-    });
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.UI.errors) {
+      this.setState({
+        errors: nextProps.UI.errors,
+      });
+    }
+
+    if (!nextProps.UI.errors && !nextProps.UI.loading) {
+      this.setState({ content: "" });
+      this.handleClose();
+    }
   }
 
   handleOpen = () => {
     this.setState({ open: true });
-    content: post.content ? post.content : "";
   };
 
   handleClose = () => {
-    this.setState({ open: false });
+    this.setState({ open: false, errors: {} });
   };
 
   handleChange = (event) => {
@@ -59,26 +68,22 @@ class editPost extends Component {
     });
   };
 
-  handleSubmit = () => {
-    const editedContent = {
-      content: this.state.content,
-      postID: this.props.postID,
-    };
-
-    this.props.editPost(editedContent);
-    this.handleClose;
+  handleSubmit = (event) => {
+    event.preventDefault();
+    this.props.editPost(this.props.postID, { content: this.state.content });
   };
 
   render() {
-    const { classes } = this.props;
+    const {
+      classes,
+      UI: { loading },
+    } = this.props;
+    const { errors } = this.state;
 
     return (
       <Fragment>
-        <Tooltip title="Edit Post" placement="top">
-          <IconButton
-            className={classes.editButton}
-            color="#434343"
-            onClick={this.handleOpen}>
+        <Tooltip title="Edit post" placement="top">
+          <IconButton className={classes.editButton} onClick={this.handleOpen}>
             <EditIcon />
           </IconButton>
         </Tooltip>
@@ -87,19 +92,28 @@ class editPost extends Component {
           onClose={this.handleClose}
           fullWidth
           maxWidth="md">
-          <DialogTitle className={classes.dialogTitle}>
-            Edit Your Post
+          <DialogTitle>
+            <span
+              id="alert-dialog-title"
+              style={{ fontFamily: "Hind", color: "secondary" }}>
+              Edit post
+            </span>
           </DialogTitle>
-          <DialogContent className={classes.dialogContent}>
+          <DialogContent>
             <form>
-              <TextFiled
+              <TextField
+                className={classes.dialogContent}
                 name="content"
                 type="text"
-                lable="Content"
+                label={
+                  <span style={{ fontFamily: "Hind" }}>Choose wisely</span>
+                }
+                error={errors.content ? true : false}
+                helperText={errors.content}
+                inputProps={{
+                  className: classes.textField,
+                }}
                 multiline
-                rows="5"
-                className={classes.textFiled}
-                value={this.state.content}
                 onChange={this.handleChange}
                 fullWidth
               />
@@ -109,15 +123,27 @@ class editPost extends Component {
             <Button
               className={classes.confirmButton}
               onClick={this.handleClose}
-              color="#434343">
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="medium">
               Cancel
             </Button>
             <Button
               className={classes.confirmButton}
               onClick={this.handleSubmit}
-              color="#434343"
-              autoFocus>
-              Save Changes
+              type="submit"
+              variant="contained"
+              color="primary"
+              size="medium"
+              disabled={loading}>
+              Edit
+              {loading && (
+                <CircularProgress
+                  size={30}
+                  className={classes.progressSpinner}
+                />
+              )}
             </Button>
           </DialogActions>
         </Dialog>
@@ -126,14 +152,18 @@ class editPost extends Component {
   }
 }
 
-editPost.propTypes = {
+EditPost.propTypes = {
   classes: PropTypes.object.isRequired,
   postID: PropTypes.string.isRequired,
-  editPostcontent: PropTypes.func.isRequired,
+  editPost: PropTypes.func.isRequired,
+  UI: PropTypes.object.isRequired,
 };
+
 const mapStateToProps = (state) => ({
-  post: state.post,
+  classes: state.classes,
+  UI: state.UI,
 });
-export default connect(mapStateToProps, { editPostcontent })(
-  withStyles(styles)(editPost)
+
+export default connect(mapStateToProps, { editPost })(
+  withStyles(styles)(EditPost)
 );

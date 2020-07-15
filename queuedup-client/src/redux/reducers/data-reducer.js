@@ -17,7 +17,7 @@ export default function (state = initialState, action) {
         posts: action.payload,
         loading: false,
       };
-      
+
     case "SET_POST":
       return {
         ...state,
@@ -33,16 +33,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
       };
-
-    /*case "EDIT_POST":
-      let index = state.posts.findIndex(
-        (post) => post.postID === action.payload
-      );
-
-      return {
-        ...state,
-      };*/
-
     case "ADD_COMMENT":
       return {
         ...state,

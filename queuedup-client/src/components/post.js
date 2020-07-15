@@ -2,11 +2,12 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import DeletePost from "./delete-post";
-import PostModal from "./post-modal";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import DeletePost from "./delete-post";
+import EditPost from "./edit-post";
+import PostModal from "./post-modal";
 import { connect } from "react-redux";
 
 const styles = (theme) => ({
@@ -40,11 +41,15 @@ class Post extends Component {
       user: { isAuth, credentials },
     } = this.props;
 
+    let editButton;
     let deleteButton;
 
+    // only display edit and delete buttons for logged in users
     if (isAuth && username === credentials.username) {
+      editButton = <EditPost postID={postID} />;
       deleteButton = <DeletePost postID={postID} />;
     } else {
+      editButton = null;
       deleteButton = null;
     }
 
@@ -62,6 +67,7 @@ class Post extends Component {
           <Grid item xs>
             <Typography className={classes.Contents}>{content}</Typography>
           </Grid>
+          <Grid item>{editButton}</Grid>
           <Grid item>{deleteButton}</Grid>
           <PostModal postID={postID} username={username}></PostModal>
         </Grid>
