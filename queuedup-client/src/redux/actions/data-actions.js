@@ -65,6 +65,30 @@ export const addPost = (newPost) => (dispatch) => {
     });
 };
 
+export const editPost = (postID, editedPost) => (dispatch) => {
+  dispatch({ type: "LOADING_UI" });
+
+  axios
+    .post(`/getpost/${postID}/edit`, editedPost)
+    .then(() => {
+      dispatch({
+        type: "SET_POST",
+        payload: postID,
+      });
+
+      dispatch(clearErrors());
+      window.location.href = "/"; // redirect page to dashboard to see edited post
+    })
+    .catch((error) => {
+      console.log(error);
+
+      dispatch({
+        type: "SET_ERRORS",
+        payload: error.response.data,
+      });
+    });
+};
+
 export const addComment = (postID, commentData) => (dispatch) => {
   axios
     .post(`/getpost/${postID}/addcomment`, commentData)
