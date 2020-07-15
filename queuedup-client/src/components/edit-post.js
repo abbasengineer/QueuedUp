@@ -26,10 +26,9 @@ const styles = (theme) => ({
     fontFamily: "Hind",
   },
   editButton: {
-    opacity: "0.2",
-    size: "small",
-    paddingLeft: "0",
-    paddingRight: "0",
+    opacity: "0.3",
+    margin: "0",
+    padding: "0",
   },
   confirmButton: {
     fontFamily: "Hind",
@@ -93,8 +92,9 @@ class EditPost extends Component {
             <Tooltip title="Edit post" placement="bottom">
               <IconButton
                 className={classes.editButton}
-                onClick={this.handleOpen}>
-                <EditIcon />
+                onClick={this.handleOpen}
+                size="small">
+                <EditIcon fontSize="inherit" />
               </IconButton>
             </Tooltip>
           </Grid>

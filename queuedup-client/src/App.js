@@ -6,6 +6,7 @@ import QueuedUpAppBar from "./components/navbar";
 import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
 import jwtDecode from "jwt-decode";
 import { createMuiTheme } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import axios from "axios";
 import AuthRoute from "./util/auth-route";
 import store from "./redux/store";
@@ -23,6 +24,9 @@ const theme = createMuiTheme({
     secondary: {
       main: "#434343",
     },
+    background: {
+      default: "#eaf1fd",
+    },
   },
   typography: {
     useNextVariants: true,
@@ -39,7 +43,6 @@ if (token) {
 
   if (decodedToken.exp * 1000 < Date.now()) {
     store.dispatch(logoutUser());
-    //window.location.href = "/login";
   } else {
     store.dispatch({ type: "SET_AUTHENTICATED" });
     axios.defaults.headers.common["Authorization"] = token;
@@ -51,11 +54,12 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
+        <CssBaseline />
         <Provider store={store}>
           <div className="App">
             <Router>
               <QueuedUpAppBar />
-              <div className="container">
+              <div>
                 <Switch>
                   <Route exact path="/" component={dashboard} />
                   <AuthRoute exact path="/login" component={login} />

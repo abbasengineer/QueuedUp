@@ -19,10 +19,9 @@ const styles = (theme) => ({
     marginTop: 15,
   },
   deleteButton: {
-    opacity: "0.2",
-    size: "small",
-    paddingLeft: "0",
-    paddingRight: "0",
+    opacity: "0.3",
+    margin: "0",
+    padding: "0",
   },
   confirmButton: {
     fontFamily: "Hind",
@@ -61,8 +60,9 @@ class DeletePost extends Component {
             <Tooltip title="Delete post" placement="bottom">
               <IconButton
                 className={classes.deleteButton}
-                onClick={this.handleOpen}>
-                <DeleteOutlineIcon />
+                onClick={this.handleOpen}
+                size="small">
+                <DeleteOutlineIcon fontSize="inherit" />
               </IconButton>
             </Tooltip>
           </Grid>

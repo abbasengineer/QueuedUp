@@ -17,11 +17,12 @@ import { connect } from "react-redux";
 import { getPost } from "../redux/actions/data-actions";
 
 const styles = (theme) => ({
-  grid: {
-    marginTop: 15,
-  },
   dialogContent: {
     padding: 20,
+    paddingLeft: 15,
+  },
+  postInfoGrid: {
+    paddingLeft: 15,
   },
   username: {
     fontWeight: "bold",
@@ -34,10 +35,9 @@ const styles = (theme) => ({
     fontFamily: "Hind",
   },
   chatButton: {
-    opacity: "0.2",
-    size: "small",
-    paddingLeft: "0",
-    paddingRight: "1",
+    opacity: "0.3",
+    margin: "0",
+    padding: "0",
   },
   closeButton: {
     color: "secondary",
@@ -81,7 +81,7 @@ class PostModal extends Component {
             title={username}
             className={classes.image}></Avatar>
         </Grid>
-        <Grid item xs>
+        <Grid item xs className={classes.postInfoGrid}>
           <Typography
             className={classes.username}
             color="secondary"
@@ -89,24 +89,23 @@ class PostModal extends Component {
             to={`/users/${username}`}>
             {username}
           </Typography>
-          <Typography className={classes.contents}>{content}</Typography>
+          <Typography className={classes.contents} noWrap="false">
+            {content}
+          </Typography>
         </Grid>
       </Grid>
     );
 
     return (
       <Fragment>
-        <Grid container className={classes.grid}>
-          <Grid item>
-            <Tooltip title="View comments" placement="bottom">
-              <IconButton
-                className={classes.chatButton}
-                onClick={this.handleOpen}>
-                <ChatIcon />
-              </IconButton>
-            </Tooltip>
-          </Grid>
-        </Grid>
+        <Tooltip title="View comments" placement="bottom">
+          <IconButton
+            className={classes.chatButton}
+            onClick={this.handleOpen}
+            size="small">
+            <ChatIcon fontSize="inherit" />
+          </IconButton>
+        </Tooltip>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}

@@ -40,8 +40,8 @@ export class dashboard extends Component {
     }
 
     return (
-      <Container container className={classes.root} spacing={0}>
-        <Container item>{discussionPosts}</Container>
+      <Container className={classes.root} spacing={0}>
+        <Container>{discussionPosts}</Container>
       </Container>
     );
   }

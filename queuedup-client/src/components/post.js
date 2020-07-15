@@ -14,12 +14,11 @@ import { connect } from "react-redux";
 const styles = (theme) => ({
   card: {
     margin: `${theme.spacing(1)}px auto`,
-    padding: theme.spacing(1),
-    backgroundColor: "#eaf1fd",
+    padding: theme.spacing(2),
     textAlign: "left",
   },
   postInfoGrid: {
-    paddingLeft: 5,
+    paddingLeft: 15,
   },
   username: {
     fontWeight: "bold",
@@ -33,8 +32,8 @@ const styles = (theme) => ({
     objectFit: "cover",
   },
   image: {
-    minWidth: 80,
-    minHeight: 80,
+    minWidth: 90,
+    minHeight: 90,
   },
 });
 
@@ -62,7 +61,7 @@ class Post extends Component {
 
     return (
       <Card className={classes.card}>
-        <Grid container spacing={2}>
+        <Grid container>
           <Grid item>
             <Avatar
               variant="rounded"
@@ -78,11 +77,17 @@ class Post extends Component {
               to={`/users/${username}`}>
               {username}
             </Typography>
-            <Typography className={classes.contents}>{content}</Typography>
+            <Typography className={classes.contents} component="p">
+              {content}
+            </Typography>
           </Grid>
-          <Grid item>{editButton}</Grid>
-          <Grid item>{deleteButton}</Grid>
-          <Grid item>{popoutButton}</Grid>
+          <Grid>
+            <Grid item>
+              {popoutButton} {editButton} {deleteButton}
+            </Grid>
+          </Grid>
+          {/* <Grid item>{editButton}</Grid> <Grid item>{deleteButton}</Grid>
+          <Grid item>{popoutButton}</Grid> */}
         </Grid>
       </Card>
     );

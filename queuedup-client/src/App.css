@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 20vmin;
   pointer-events: none;
 }
 
@@ -14,9 +14,8 @@
 }
 
 .container {
-  margin: 80px auto 0 auto;
+  margin: 0px 0 0 0;
   max-width: 1200px;
-  
 }
 
 .App-header {
@@ -27,11 +26,11 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  color: white;
+  color: "#eaf1fd";
 }
 
 .App-link {
-  color: #b9cff5;
+  color: "#eaf1fd";
 }
 
 @keyframes App-logo-spin {

@@ -16,6 +16,7 @@ import AddPost from "./add-post";
 const styles = (theme) => ({
   grow: {
     flexGrow: 1,
+    paddingBottom: "35px",
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -124,8 +125,8 @@ class QueuedUpAppBar extends Component {
               style={{ display: "flex", padding: 15 }}
               src="logo.png"
               alt="logo"
-              height="40"
-              width="40"
+              height="70"
+              width="70"
               component={Link}
               to="/"></img>
             <Typography
