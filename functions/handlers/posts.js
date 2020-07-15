@@ -161,9 +161,9 @@ exports.deletePost = (request, response) => {
 
       if (doc.data().username !== request.user.username) {
         return response.status(403).json({ error: "Unauthorized user" });
-      } else {
-        return document.delete();
       }
+
+      return document.delete();
     })
     .then(() => {
       response.json({ message: "Post has been deleted" });
@@ -179,39 +179,36 @@ exports.deletePost = (request, response) => {
 
 exports.editPost = (request, response) => {
   if (isBlank(request.body.content)) {
-    return response
-      .status(400)
-      .json({ content: "Must provide new content" });
+    return response.status(400).json({ content: "Must provide new content" });
   }
 
   const editedContent = {
     content: request.body.content,
   };
 
-  admin
-    .firestore()
-    .doc(`/posts/${request.params.postID}`)
+  const document = admin.firestore().doc(`/posts/${request.params.postID}`);
+
+  document
     .get()
     .then((doc) => {
       if (!doc.exists) {
         return response.status(404).json({ error: "Post not found" });
       }
+
       if (doc.data().username !== request.user.username) {
         return response.status(403).json({ error: "Unauthorized user" });
-      } else {
-        return admin
-        .firestore()
-        .collection("posts")
-        .get("content")
-        .update(JSON.parse(JSON.stringify(editedContent)));
       }
-    })
 
+      return document.update(JSON.parse(JSON.stringify(editedContent)));
+    })
     .then(() => {
       response.json({ message: "Post has been edited" });
     })
     .catch((err) => {
       console.log(err);
-      response.status(500).json({ error: "Error editing Post" });
+
+      return response
+        .status(500)
+        .json({ error: error.code, message: "Error editing the post" });
     });
 };

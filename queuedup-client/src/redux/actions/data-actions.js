@@ -74,7 +74,7 @@ export const deletePost = (postID) => (dispatch) => {
     });
 };
 
-export const editPost = (postID) => (dispatch) =>{
+export const editPost = (postID) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
   axios
     .post(`/getpost/${postID}/edit`)
@@ -86,9 +86,8 @@ export const editPost = (postID) => (dispatch) =>{
       dispatch({ type: "STOP_LOADING_UI" });
     })
     .catch((error) => console.log(error));
+};
 
-  };
-    
 export const addComment = (postID, commentData) => (dispatch) => {
   axios
     .post(`/getpost/${postID}/addcomment`, commentData)
