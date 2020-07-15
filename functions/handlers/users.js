@@ -58,7 +58,6 @@ exports.signUp = (request, response) => {
         username: newUser.username,
         createdAt: new Date().toISOString(),
         imageURL: `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${defaultImage}?alt=media`,
-        userId,
       };
 
       // create and store in database
@@ -75,6 +74,10 @@ exports.signUp = (request, response) => {
 
       if (err.code === "auth/email-already-in-use") {
         return response.status(400).json({ email: "Email already in use" });
+      } else if (err.code === "auth/weak-password") {
+        return response
+          .status(400)
+          .json({ password: "Password should be at least 6 characters" });
       } else {
         return response.status(500).json({ info: "Error signing up" });
       }
