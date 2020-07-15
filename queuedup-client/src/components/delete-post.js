@@ -10,6 +10,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
+import Tooltip from "@material-ui/core/Tooltip";
 import { connect } from "react-redux";
 import { deletePost } from "../redux/actions/data-actions";
 
@@ -20,14 +21,12 @@ const styles = (theme) => ({
   deleteButton: {
     opacity: "0.2",
     size: "small",
+    paddingLeft: "0",
+    paddingRight: "0",
   },
   confirmButton: {
     fontFamily: "Hind",
     textTransform: "none",
-  },
-  dialogTitle: {
-    fontFamily: "Hind",
-    color: "#434343",
   },
   dialogContent: {
     fontFamily: "Hind",
@@ -59,11 +58,13 @@ class DeletePost extends Component {
       <Fragment>
         <Grid container className={classes.grid}>
           <Grid item>
-            <IconButton
-              className={classes.deleteButton}
-              onClick={this.handleOpen}>
-              <DeleteOutlineIcon />
-            </IconButton>
+            <Tooltip title="Delete post" placement="bottom">
+              <IconButton
+                className={classes.deleteButton}
+                onClick={this.handleOpen}>
+                <DeleteOutlineIcon />
+              </IconButton>
+            </Tooltip>
           </Grid>
         </Grid>
         <Dialog

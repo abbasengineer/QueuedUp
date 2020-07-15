@@ -11,11 +11,15 @@ import CloseIcon from "@material-ui/icons/Close";
 import ChatIcon from "@material-ui/icons/Chat";
 import AddCommentForm from "./add-comment-form";
 import Comments from "./comments";
+import Tooltip from "@material-ui/core/Tooltip";
 import { Avatar } from "@material-ui/core";
 import { connect } from "react-redux";
 import { getPost } from "../redux/actions/data-actions";
 
 const styles = (theme) => ({
+  grid: {
+    marginTop: 15,
+  },
   dialogContent: {
     padding: 20,
   },
@@ -32,6 +36,8 @@ const styles = (theme) => ({
   chatButton: {
     opacity: "0.2",
     size: "small",
+    paddingLeft: "0",
+    paddingRight: "1",
   },
   closeButton: {
     color: "secondary",
@@ -67,7 +73,7 @@ class PostModal extends Component {
     } = this.props;
 
     const postDialog = (
-      <Grid container spacing={2}>
+      <Grid container>
         <Grid item>
           <Avatar
             variant="rounded"
@@ -90,9 +96,17 @@ class PostModal extends Component {
 
     return (
       <Fragment>
-        <IconButton className={classes.chatButton} onClick={this.handleOpen}>
-          <ChatIcon />
-        </IconButton>
+        <Grid container className={classes.grid}>
+          <Grid item>
+            <Tooltip title="View comments" placement="bottom">
+              <IconButton
+                className={classes.chatButton}
+                onClick={this.handleOpen}>
+                <ChatIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        </Grid>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}

@@ -7,6 +7,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Grid from "@material-ui/core/Grid";
 import Tooltip from "@material-ui/core/Tooltip";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import IconButton from "@material-ui/core/IconButton";
@@ -15,6 +16,9 @@ import { connect } from "react-redux";
 import { editPost } from "../redux/actions/data-actions";
 
 const styles = (theme) => ({
+  grid: {
+    marginTop: 15,
+  },
   dialogContent: {
     fontFamily: "Hind",
   },
@@ -24,6 +28,8 @@ const styles = (theme) => ({
   editButton: {
     opacity: "0.2",
     size: "small",
+    paddingLeft: "0",
+    paddingRight: "0",
   },
   confirmButton: {
     fontFamily: "Hind",
@@ -82,11 +88,17 @@ class EditPost extends Component {
 
     return (
       <Fragment>
-        <Tooltip title="Edit post" placement="top">
-          <IconButton className={classes.editButton} onClick={this.handleOpen}>
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
+        <Grid container className={classes.grid}>
+          <Grid item>
+            <Tooltip title="Edit post" placement="bottom">
+              <IconButton
+                className={classes.editButton}
+                onClick={this.handleOpen}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+        </Grid>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -14,7 +14,7 @@ import { connect } from "react-redux";
 const styles = (theme) => ({
   card: {
     margin: `${theme.spacing(1)}px auto`,
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     backgroundColor: "#eaf1fd",
     textAlign: "left",
   },
@@ -58,9 +58,11 @@ class Post extends Component {
       deleteButton = null;
     }
 
+    let popoutButton = <PostModal postID={postID} username={username} />;
+
     return (
       <Card className={classes.card}>
-        <Grid container className={classes.root} spacing={2}>
+        <Grid container spacing={2}>
           <Grid item>
             <Avatar
               variant="rounded"
@@ -80,9 +82,7 @@ class Post extends Component {
           </Grid>
           <Grid item>{editButton}</Grid>
           <Grid item>{deleteButton}</Grid>
-          <Fragment>
-            <PostModal postID={postID} username={username}></PostModal>
-          </Fragment>
+          <Grid item>{popoutButton}</Grid>
         </Grid>
       </Card>
     );
