@@ -1,47 +1,93 @@
 const functions = require("firebase-functions");
-const admin = require("firebase-admin");
+const express = require("express");
+const app = express();
 
-admin.initializeApp();
+const cors = require("cors");
+app.use(cors());
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  response.send("Hello QueuedUp");
-});
+const authenticate = require("./util/authenticate");
 
-exports.getPosts = functions.https.onRequest((request, response) => {
-  admin
-    .firestore()
-    .collection("posts")
-    .get()
-    .then((data) => {
-      let posts = [];
+const {
+  getPosts,
+  addPost,
+  getPost,
+  addComment,
+  deletePost,
+  editPost,
+} = require("./handlers/posts");
 
-      data.forEach((doc) => {
-        posts.push(doc.data());
-      });
+const {
+  signUp,
+  logIn,
+  addUserInfo,
+  getUserInfo,
+  getAuthUser,
+  imageUpload,
+} = require("./handlers/users");
+const admin = require("./util/admin");
 
-      return response.json(posts);
-    })
-    .catch((err) => console.log(err));
-});
+// post routes
+app.get("/getposts", getPosts); // get all posts
+app.post("/addpost", authenticate, addPost); // insert a new post
+app.get("/getpost/:postID/", getPost); // get a certain post
+app.post("/getpost/:postID/addcomment", authenticate, addComment); // add comment
+app.post("/getpost/:postID/edit", authenticate, editPost); // edit a post
+app.delete("/getpost/:postID", authenticate, deletePost); // delete a post
 
-exports.createPost = functions.https.onRequest((request, response) => {
-  const newPost = {
-    body: request.body.body,
-    userHandle: request.body.userHandle,
-    createdAt: admin.firestore.Timestamp.fromDate(new Date()),
-  };
+// user routes
+app.post("/signup", signUp); // sign up
+app.post("/login", logIn); // log in
+app.post("/user", authenticate, addUserInfo); // add a user's data
+app.get("/user/:username", getUserInfo); // get a user's data
+app.get("/user", authenticate, getAuthUser); // get a user's credentials
+app.post("/user/image", authenticate, imageUpload);
 
-  admin
-    .firestore()
-    .collection("posts")
-    .add(JSON.parse(JSON.stringify(newPost)))
-    .then((doc) => {
-      response.json({
-        message: `successfully created document ${doc.id}`,
-      });
-    })
-    .catch((err) => {
-      response.status(500).json({ err: "error occurred!" });
-      console.error(err);
-    });
-});
+exports.onDeletePost = functions.firestore
+  .document("/posts/{postID}")
+  .onDelete((snap, context) => {
+    const postID = context.params.postID;
+    const batch = admin.firestore().batch();
+
+    return admin
+      .firestore()
+      .collection("comments")
+      .where("postID", "==", postID)
+      .get()
+      .then((data) => {
+        data.forEach((doc) => {
+          batch.delete(admin().firestore().doc(`/comments/${doc.id}`));
+        });
+      })
+      .catch((error) => console.error(error));
+  });
+
+exports.onImageChange = functions.firestore
+  .document("/users/{userID}")
+  .onUpdate((imageChange) => {
+    if (
+      imageChange.before.data().imageUrl !== imageChange.after.data().imageURL
+    ) {
+      const writeOps = admin.firestore().batch();
+
+      return admin
+        .firestore()
+        .collection("posts")
+        .where("username", "==", imageChange.before.data().username)
+        .get()
+        .then((data) => {
+          data.forEach((doc) => {
+            const post = admin.firestore().doc(`/getposts/${doc.id}`);
+
+            writeOps.update(post, {
+              imageURL: imageChange.after.data().imageURL,
+            });
+          });
+
+          return writeOps.commit();
+        });
+    }
+
+    return true;
+  });
+
+exports.api = functions.https.onRequest(app); // route for API
