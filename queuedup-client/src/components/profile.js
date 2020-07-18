@@ -7,18 +7,17 @@ import dayjs from "dayjs";
 // mui
 import { connect } from "react-redux";
 import Typography from "@material-ui/core/Typography";
-import { ThemeProvider } from "@material-ui/core";
 import MuiLink from "@material-ui/core/Link";
 import Dialog from "@material-ui/core/Dialog";
 import { CircularProgress } from "@material-ui/core";
 import DialogContent from "@material-ui/core/DialogContent";
 import Tooltip from "@material-ui/core/Tooltip";
+import MenuItem from "@material-ui/core/MenuItem";
 
 // icons
 import School from "@material-ui/icons/School";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CalendarToday from "@material-ui/icons/CalendarToday";
-import Mood from "@material-ui/icons/Mood";
 import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
@@ -78,17 +77,20 @@ const styles = (theme) => ({
   dialogContent: {
     padding: 20,
   },
+  menuItem: {
+    fontFamily: "Hind",
+  },
 });
 
 export class Profile extends Component {
-  onClose = (event) => {
-    this.props.onClose && this.props.onClose(event);
+  state = { open: false };
+
+  handleOpen = () => {
+    this.setState({ open: true });
   };
 
-  toggleModal = () => {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
+  handleClose = () => {
+    this.setState({ open: false });
   };
 
   render() {
@@ -102,9 +104,12 @@ export class Profile extends Component {
     } = this.props;
 
     let profileMarkup = !loading ? (
-      <Fragment>
+      <div>
+        <MenuItem className={classes.menuItem} onClick={this.handleOpen}>
+          Profile
+        </MenuItem>
         <Dialog
-          open={this.state.isOpen}
+          open={this.state.open}
           onClose={this.handleClose}
           fullWidth
           maxWidth="sm"
@@ -132,14 +137,14 @@ export class Profile extends Component {
                   placement="top"
                 >
                   <IconButton onClick={this.handleEditPicture}>
-                    <EditIcon color="primary" />
+                    <EditIcon color="secondary" />
                   </IconButton>
                 </Tooltip>
               </div>
               <MuiLink
                 component={Link}
                 to={`/users/${username}`}
-                color="primary"
+                color="secondary"
                 variant="h5"
               >
                 {username}
@@ -164,27 +169,22 @@ export class Profile extends Component {
             </div>
           </DialogContent>
         </Dialog>
-      </Fragment>
+      </div>
     ) : (
       <CircularProgress />
     );
 
-    if (!this.props.show) {
-      return null;
-    } else {
-      return profileMarkup;
-    }
+    return profileMarkup;
   }
 }
 
 Profile.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
   user: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
+  classes: state.classes,
   user: state.user,
 });
 

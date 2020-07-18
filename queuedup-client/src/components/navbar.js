@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import Link from "react-router-dom/Link";
@@ -13,7 +13,6 @@ import { logoutUser } from "../redux/actions/user-actions";
 import { connect } from "react-redux";
 import AddPost from "./add-post";
 import Profile from "./profile";
-import Mood from "@material-ui/icons/Mood";
 
 const styles = (theme) => ({
   grow: {
@@ -48,7 +47,6 @@ class QueuedUpAppBar extends Component {
 
     this.state = {
       anchorEl: null,
-      show: false,
     };
   }
 
@@ -67,12 +65,6 @@ class QueuedUpAppBar extends Component {
     this.props.logoutUser();
   };
 
-  showModal = () => {
-    this.setState({
-      show: true,
-    });
-  };
-
   render() {
     const { classes, isAuth } = this.props;
 
@@ -82,19 +74,17 @@ class QueuedUpAppBar extends Component {
     const menuId = "queued-up-account-menu";
 
     const loggedInMenu = (
-      <Fragment>
+      <div>
         <MenuItem className={classes.menuItem} onClick={this.handleLogoutClose}>
           Log Out
         </MenuItem>
-        <MenuItem className={classes.menuItem} onClick={this.showModal}>
-          My Beautiful Profile <Mood color="primary" />
-        </MenuItem>
-        <Profile show={this.state.show} onClose={this.showModal}></Profile>
-      </Fragment>
+
+        <Profile />
+      </div>
     );
 
     const loggedOutMenu = (
-      <Fragment>
+      <div>
         <MenuItem
           className={classes.menuItem}
           onClick={this.handleClose}
@@ -111,7 +101,7 @@ class QueuedUpAppBar extends Component {
         >
           Sign Up
         </MenuItem>
-      </Fragment>
+      </div>
     );
 
     const renderMenu = (
