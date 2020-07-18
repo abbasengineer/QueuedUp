@@ -12,6 +12,8 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import { logoutUser } from "../redux/actions/user-actions";
 import { connect } from "react-redux";
 import AddPost from "./add-post";
+import Profile from "./profile";
+import Mood from "@material-ui/icons/Mood";
 
 const styles = (theme) => ({
   grow: {
@@ -46,6 +48,7 @@ class QueuedUpAppBar extends Component {
 
     this.state = {
       anchorEl: null,
+      show: false,
     };
   }
 
@@ -64,6 +67,12 @@ class QueuedUpAppBar extends Component {
     this.props.logoutUser();
   };
 
+  showModal = () => {
+    this.setState({
+      show: true,
+    });
+  };
+
   render() {
     const { classes, isAuth } = this.props;
 
@@ -77,6 +86,10 @@ class QueuedUpAppBar extends Component {
         <MenuItem className={classes.menuItem} onClick={this.handleLogoutClose}>
           Log Out
         </MenuItem>
+        <MenuItem className={classes.menuItem} onClick={this.showModal}>
+          My Beautiful Profile <Mood color="primary" />
+        </MenuItem>
+        <Profile show={this.state.show} onClose={this.showModal}></Profile>
       </Fragment>
     );
 
@@ -86,14 +99,16 @@ class QueuedUpAppBar extends Component {
           className={classes.menuItem}
           onClick={this.handleClose}
           component={Link}
-          to="/login">
+          to="/login"
+        >
           Log In
         </MenuItem>
         <MenuItem
           className={classes.menuItem}
           onClick={this.handleClose}
           component={Link}
-          to="/signup">
+          to="/signup"
+        >
           Sign Up
         </MenuItem>
       </Fragment>
@@ -108,7 +123,8 @@ class QueuedUpAppBar extends Component {
         transformOrigin={{ vertical: "top", horizontal: "center" }}
         open={isMenuOpen}
         onClose={this.handleClose}
-        getContentAnchorEl={null}>
+        getContentAnchorEl={null}
+      >
         {isAuth ? loggedInMenu : loggedOutMenu}
       </Menu>
     );
@@ -119,7 +135,8 @@ class QueuedUpAppBar extends Component {
       <div className={classes.grow}>
         <AppBar
           position="static"
-          style={{ background: "transparent", boxShadow: "none" }}>
+          style={{ background: "transparent", boxShadow: "none" }}
+        >
           <Toolbar>
             <img
               style={{ display: "flex", padding: 15 }}
@@ -128,14 +145,16 @@ class QueuedUpAppBar extends Component {
               height="70"
               width="70"
               component={Link}
-              to="/"></img>
+              to="/"
+            ></img>
             <Typography
               className={classes.title}
               color="secondary"
               variant="h4"
               noWrap
               component={Link}
-              to="/">
+              to="/"
+            >
               QueuedUp
             </Typography>
             <div className={classes.grow} />
@@ -146,7 +165,8 @@ class QueuedUpAppBar extends Component {
                 aria-label="my account"
                 aria-controls={menuId}
                 aria-haspopup="true"
-                onClick={this.handleOpen}>
+                onClick={this.handleOpen}
+              >
                 <AccountCircle />
               </IconButton>
             </div>

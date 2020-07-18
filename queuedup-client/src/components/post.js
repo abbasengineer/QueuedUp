@@ -67,14 +67,16 @@ class Post extends Component {
               variant="rounded"
               src={imageURL}
               title={username}
-              className={classes.image}></Avatar>
+              className={classes.image}
+            ></Avatar>
           </Grid>
           <Grid item xs className={classes.postInfoGrid}>
             <Typography
               className={classes.username}
               color="secondary"
               component={Link}
-              to={`/users/${username}`}>
+              to={`/users/${username}`}
+            >
               {username}
             </Typography>
             <Typography className={classes.contents} component="p">

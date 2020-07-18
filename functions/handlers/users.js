@@ -179,7 +179,7 @@ exports.imageUpload = (request, response) => {
 };
 
 exports.addUserInfo = (request, response) => {
-  let userData = trimUserInfo(request.content);
+  let userData = trimUserInfo(request.body);
 
   admin
     .firestore()
