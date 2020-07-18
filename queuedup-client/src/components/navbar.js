@@ -75,11 +75,10 @@ class QueuedUpAppBar extends Component {
 
     const loggedInMenu = (
       <div>
+        <Profile />
         <MenuItem className={classes.menuItem} onClick={this.handleLogoutClose}>
           Log Out
         </MenuItem>
-
-        <Profile />
       </div>
     );
 
@@ -89,16 +88,14 @@ class QueuedUpAppBar extends Component {
           className={classes.menuItem}
           onClick={this.handleClose}
           component={Link}
-          to="/login"
-        >
+          to="/login">
           Log In
         </MenuItem>
         <MenuItem
           className={classes.menuItem}
           onClick={this.handleClose}
           component={Link}
-          to="/signup"
-        >
+          to="/signup">
           Sign Up
         </MenuItem>
       </div>
@@ -113,8 +110,7 @@ class QueuedUpAppBar extends Component {
         transformOrigin={{ vertical: "top", horizontal: "center" }}
         open={isMenuOpen}
         onClose={this.handleClose}
-        getContentAnchorEl={null}
-      >
+        getContentAnchorEl={null}>
         {isAuth ? loggedInMenu : loggedOutMenu}
       </Menu>
     );
@@ -125,8 +121,7 @@ class QueuedUpAppBar extends Component {
       <div className={classes.grow}>
         <AppBar
           position="static"
-          style={{ background: "transparent", boxShadow: "none" }}
-        >
+          style={{ background: "transparent", boxShadow: "none" }}>
           <Toolbar>
             <img
               style={{ display: "flex", padding: 15 }}
@@ -135,16 +130,14 @@ class QueuedUpAppBar extends Component {
               height="70"
               width="70"
               component={Link}
-              to="/"
-            ></img>
+              to="/"></img>
             <Typography
               className={classes.title}
               color="secondary"
               variant="h4"
               noWrap
               component={Link}
-              to="/"
-            >
+              to="/">
               QueuedUp
             </Typography>
             <div className={classes.grow} />
@@ -155,8 +148,7 @@ class QueuedUpAppBar extends Component {
                 aria-label="my account"
                 aria-controls={menuId}
                 aria-haspopup="true"
-                onClick={this.handleOpen}
-              >
+                onClick={this.handleOpen}>
                 <AccountCircle />
               </IconButton>
             </div>

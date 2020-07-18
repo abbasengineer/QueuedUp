@@ -6,7 +6,9 @@ import dayjs from "dayjs";
 
 // mui
 import { connect } from "react-redux";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import { Avatar } from "@material-ui/core";
 import MuiLink from "@material-ui/core/Link";
 import Dialog from "@material-ui/core/Dialog";
 import { CircularProgress } from "@material-ui/core";
@@ -23,44 +25,37 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 
 const styles = (theme) => ({
-  paper: {
-    padding: 20,
+  image: {
+    minWidth: 130,
+    minHeight: 130,
   },
-  profile: {
-    "& .image-wrapper": {
-      textAlign: "center",
-      position: "relative",
-      "& button": {
-        position: "absolute",
-        top: "80%",
-        left: "70%",
-      },
-    },
-    "& .profile-image": {
-      width: 200,
-      height: 200,
-      objectFit: "cover",
-      maxWidth: "100%",
-      borderRadius: "50%",
-    },
-    "& .profile-details": {
-      textAlign: "center",
-      "& span, svg": {
-        verticalAlign: "middle",
-      },
-      "& a": {
-        color: theme.palette.primary.main,
-      },
-    },
-    "& hr": {
-      border: "none",
-      margin: "0 0 10px 0",
-    },
-    "& svg.button": {
-      "&:hover": {
-        cursor: "pointer",
-      },
-    },
+  username: {
+    fontFamily: "Hind",
+    fontWeight: "bold",
+    textAlign: "left",
+    textDecoration: "none",
+    fontSize: "45px",
+    paddingLeft: 15,
+  },
+  calendarButton: {
+    verticalAlign: "middle",
+  },
+  memberSince: {
+    fontFamily: "Hind",
+    opacity: "0.6",
+    paddingTop: 15,
+    paddingLeft: 15,
+  },
+  hr: {
+    clear: "both",
+    visibility: "hidden",
+  },
+  fieldTitle: {
+    fontFamily: "Hind",
+    fontWeight: "bold",
+  },
+  field: {
+    fontFamily: "Hind",
   },
   closeButton: {
     opacity: "0.2",
@@ -97,7 +92,15 @@ export class Profile extends Component {
     const {
       classes,
       user: {
-        credentials: { username, createdAt, imageURL, aboutMe, college, major },
+        credentials: {
+          username,
+          fullName,
+          createdAt,
+          imageURL,
+          aboutMe,
+          college,
+          major,
+        },
         loading,
         isAuth,
       },
@@ -112,17 +115,74 @@ export class Profile extends Component {
           open={this.state.open}
           onClose={this.handleClose}
           fullWidth
-          maxWidth="sm"
-        >
+          maxWidth="sm">
           <IconButton
             className={classes.closeButton}
             onClick={this.handleClose}
-            alignItems="center"
-          >
+            alignItems="center">
             <CloseIcon />
           </IconButton>
           <DialogContent className={classes.dialogContent}>
-            <div className={classes.profile}>
+            <Grid container>
+              <Grid item>
+                <Avatar
+                  variant="rounded"
+                  src={imageURL}
+                  title={username}
+                  className={classes.image}></Avatar>
+              </Grid>
+              <Grid item xs>
+                <Typography className={classes.username} color="secondary">
+                  {username}
+                </Typography>
+                <Typography className={classes.memberSince}>
+                  <CalendarToday
+                    className={classes.calendarButton}
+                    color="primary"
+                  />{" "}
+                  Member since {dayjs(createdAt).format("MMM YYYY")}
+                </Typography>
+              </Grid>
+            </Grid>
+            <hr className={classes.hr} />
+            <Grid container direction="column" spacing={3}>
+              <Grid item>
+                <Typography className={classes.fieldTitle} color="secondary">
+                  Name
+                </Typography>
+                <Typography className={classes.field} color="secondary">
+                  {fullName}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography className={classes.fieldTitle} color="secondary">
+                  About Me
+                </Typography>
+                <Typography className={classes.field} color="secondary">
+                  {aboutMe}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography className={classes.fieldTitle} color="secondary">
+                  Major
+                </Typography>
+                <Typography className={classes.field} color="secondary">
+                  {major}
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography className={classes.fieldTitle} color="secondary">
+                  College
+                </Typography>
+                <Typography className={classes.field} color="secondary">
+                  {college}
+                </Typography>
+              </Grid>
+            </Grid>
+          </DialogContent>
+        </Dialog>
+
+        {/* <div className={classes.profile}>
               <div className="image-wrapper">
                 <img className="profile-image" src={imageURL} alt={username} />
                 <input
@@ -134,8 +194,7 @@ export class Profile extends Component {
                 <Tooltip
                   title={"Edit profile picture"}
                   className={classes.button}
-                  placement="top"
-                >
+                  placement="top">
                   <IconButton onClick={this.handleEditPicture}>
                     <EditIcon color="secondary" />
                   </IconButton>
@@ -145,8 +204,7 @@ export class Profile extends Component {
                 component={Link}
                 to={`/users/${username}`}
                 color="secondary"
-                variant="h5"
-              >
+                variant="h5">
                 {username}
               </MuiLink>
               <hr />
@@ -168,7 +226,7 @@ export class Profile extends Component {
               <span>Member since {dayjs(createdAt).format("MMM YYYY")}</span>
             </div>
           </DialogContent>
-        </Dialog>
+              </Dialog> */}
       </div>
     ) : (
       <CircularProgress />
