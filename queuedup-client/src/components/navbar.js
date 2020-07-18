@@ -75,6 +75,12 @@ class QueuedUpAppBar extends Component {
 
     const loggedInMenu = (
       <div>
+        <MenuItem
+          className={classes.menuItem}
+          open={true}
+          onClick={this.handleClose}>
+          Profile
+        </MenuItem>
         <Profile />
         <MenuItem className={classes.menuItem} onClick={this.handleLogoutClose}>
           Log Out

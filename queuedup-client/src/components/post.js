@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -9,7 +10,9 @@ import { Avatar } from "@material-ui/core";
 import DeletePost from "./delete-post";
 import EditPost from "./edit-post";
 import PostModal from "./post-modal";
+import Profile from "./profile";
 import { connect } from "react-redux";
+import { getUserData } from "../redux/actions/data-actions";
 
 const styles = (theme) => ({
   card: {
@@ -38,6 +41,33 @@ const styles = (theme) => ({
 });
 
 class Post extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      profile: null,
+      open: false,
+    };
+  }
+
+  componentDidMount() {
+    const username = this.props.match.params.username;
+    this.props.getUserData(username);
+
+    axios
+      .get(`/user/${username}`)
+      .then((response) => {
+        this.setState({
+          profile: response.data.user,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  openProfile = () => {
+    this.setState({ open: true });
+  };
+
   render() {
     const {
       classes,
@@ -67,18 +97,17 @@ class Post extends Component {
               variant="rounded"
               src={imageURL}
               title={username}
-              className={classes.image}
-            ></Avatar>
+              className={classes.image}></Avatar>
           </Grid>
           <Grid item xs className={classes.postInfoGrid}>
-            <Typography
-              className={classes.username}
-              color="secondary"
-              component={Link}
-              to={`/users/${username}`}
-            >
-              {username}
-            </Typography>
+            <div>
+              <Link onClick={this.openProfile}>
+                <Typography className={classes.username} color="secondary">
+                  {username}
+                </Typography>
+              </Link>
+              <Profile profile={this.state.profile} open={this.state.open} />;
+            </div>
             <Typography className={classes.contents} component="p">
               {content}
             </Typography>
@@ -88,8 +117,6 @@ class Post extends Component {
               {popoutButton} {editButton} {deleteButton}
             </Grid>
           </Grid>
-          {/* <Grid item>{editButton}</Grid> <Grid item>{deleteButton}</Grid>
-          <Grid item>{popoutButton}</Grid> */}
         </Grid>
       </Card>
     );
@@ -100,10 +127,14 @@ Post.propTypes = {
   classes: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   post: PropTypes.object.isRequired,
+  data: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user,
+  data: state.data,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(Post));
+export default connect(mapStateToProps, { getUserData })(
+  withStyles(styles)(Post)
+);

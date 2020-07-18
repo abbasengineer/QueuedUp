@@ -14,6 +14,7 @@ export class user extends Component {
   componentDidMount() {
     const username = this.props.match.params.username;
     this.props.getUserData(username);
+
     axios
       .get(`/user/${username}`)
       .then((response) => {
@@ -23,6 +24,7 @@ export class user extends Component {
       })
       .catch((err) => console.log(err));
   }
+
   render() {
     const { posts, loading } = this.props.data;
     const postsMarkup = loading ? (

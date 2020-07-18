@@ -11,7 +11,6 @@ import Typography from "@material-ui/core/Typography";
 import { Avatar } from "@material-ui/core";
 import MuiLink from "@material-ui/core/Link";
 import Dialog from "@material-ui/core/Dialog";
-import { CircularProgress } from "@material-ui/core";
 import DialogContent from "@material-ui/core/DialogContent";
 import Tooltip from "@material-ui/core/Tooltip";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -78,7 +77,14 @@ const styles = (theme) => ({
 });
 
 export class Profile extends Component {
-  state = { open: false };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      profile: this.props.profile,
+      open: this.props.open,
+    };
+  }
 
   handleOpen = () => {
     this.setState({ open: true });
@@ -91,26 +97,26 @@ export class Profile extends Component {
   render() {
     const {
       classes,
-      user: {
-        credentials: {
-          username,
-          fullName,
-          createdAt,
-          imageURL,
-          aboutMe,
-          college,
-          major,
-        },
-        loading,
-        isAuth,
+      user: { credentials, isAuth },
+      profile: {
+        username,
+        fullName,
+        createdAt,
+        imageURL,
+        aboutMe,
+        college,
+        major,
       },
     } = this.props;
 
-    let profileMarkup = !loading ? (
+    let editButton;
+
+    if (isAuth && username === credentials.username) {
+      editButton = null;
+    }
+
+    let profileMarkup = (
       <div>
-        <MenuItem className={classes.menuItem} onClick={this.handleOpen}>
-          Profile
-        </MenuItem>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
@@ -228,8 +234,6 @@ export class Profile extends Component {
           </DialogContent>
               </Dialog> */}
       </div>
-    ) : (
-      <CircularProgress />
     );
 
     return profileMarkup;
@@ -237,13 +241,15 @@ export class Profile extends Component {
 }
 
 Profile.propTypes = {
-  user: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
+  data: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   classes: state.classes,
   user: state.user,
+  profile: state.profile,
+  data: state.data,
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(Profile));
