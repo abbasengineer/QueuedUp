@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import { Avatar } from "@material-ui/core";
 import DeletePost from "./delete-post";
 import EditPost from "./edit-post";
+import IncrementPost from "./increment-post";
 import PostModal from "./post-modal";
 import { connect } from "react-redux";
 
@@ -47,14 +48,17 @@ class Post extends Component {
 
     let editButton;
     let deleteButton;
+    let incrementButton;
 
     // only display edit and delete buttons for logged in users
     if (isAuth && username === credentials.username) {
       editButton = <EditPost postID={postID} />;
       deleteButton = <DeletePost postID={postID} />;
+      incrementButton = null; // can't increment your own post
     } else {
       editButton = null;
       deleteButton = null;
+      incrementButton = <IncrementButton postID={postID} />;
     }
 
     let popoutButton = <PostModal postID={postID} username={username} />;
@@ -83,11 +87,9 @@ class Post extends Component {
           </Grid>
           <Grid>
             <Grid item>
-              {popoutButton} {editButton} {deleteButton}
+              {popoutButton} {editButton} {deleteButton} {incrementButton}
             </Grid>
           </Grid>
-          {/* <Grid item>{editButton}</Grid> <Grid item>{deleteButton}</Grid>
-          <Grid item>{popoutButton}</Grid> */}
         </Grid>
       </Card>
     );

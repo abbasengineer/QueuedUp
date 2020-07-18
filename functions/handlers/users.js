@@ -179,7 +179,7 @@ exports.imageUpload = (request, response) => {
 };
 
 exports.addUserInfo = (request, response) => {
-  let userData = trimUserInfo(request.content);
+  let userData = trimUserInfo(request.body);
 
   admin
     .firestore()
@@ -230,6 +230,8 @@ exports.getUserInfo = (request, response) => {
           imageURL: doc.data().imageURL,
           postID: doc.id,
           createdAt: doc.data().createdAt,
+          increments: doc.data().increments,
+          decrements: doc.data().decrements,
         });
       });
 

@@ -14,6 +14,10 @@ const {
   addComment,
   deletePost,
   editPost,
+  incrementPost,
+  decrementPost,
+  unIncrementPost,
+  unDecrementPost,
 } = require("./handlers/posts");
 
 const {
@@ -30,9 +34,13 @@ const admin = require("./util/admin");
 app.get("/getposts", getPosts); // get all posts
 app.post("/addpost", authenticate, addPost); // insert a new post
 app.get("/getpost/:postID/", getPost); // get a certain post
-app.post("/getpost/:postID/addcomment", authenticate, addComment); // add comment
 app.post("/getpost/:postID/edit", authenticate, editPost); // edit a post
 app.delete("/getpost/:postID", authenticate, deletePost); // delete a post
+app.post("/getpost/:postID/addcomment", authenticate, addComment); // add comment
+app.get("/getpost/:postID/increment", authenticate, incrementPost); // increment certain post
+app.get("/getpost/:postID/decrement", authenticate, decrementPost); // decrement certain post
+app.get("/getpost/:postID/unincrement", authenticate, unIncrementPost); // un-increment a certain post
+app.get("/getpost/:postID/undecrement", authenticate, unDecrementPost); // un-decrement a certain post
 
 // user routes
 app.post("/signup", signUp); // sign up
@@ -44,7 +52,7 @@ app.post("/user/image", authenticate, imageUpload);
 
 exports.onDeletePost = functions.firestore
   .document("/posts/{postID}")
-  .onDelete((snap, context) => {
+  .onDelete((snapshot, context) => {
     const postID = context.params.postID;
     const batch = admin.firestore().batch();
 

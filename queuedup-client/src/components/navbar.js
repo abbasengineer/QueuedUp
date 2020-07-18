@@ -77,6 +77,9 @@ class QueuedUpAppBar extends Component {
         <MenuItem className={classes.menuItem} onClick={this.handleLogoutClose}>
           Log Out
         </MenuItem>
+        <MenuItem className={classes.menuItem} onClick={this.handleLogoutClose}>
+          Profile
+        </MenuItem>
       </Fragment>
     );
 
