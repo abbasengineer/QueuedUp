@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import { CircularProgress } from "@material-ui/core";
 import { Avatar } from "@material-ui/core";
 import DeletePost from "./delete-post";
 import EditPost from "./edit-post";
@@ -41,31 +42,29 @@ const styles = (theme) => ({
 });
 
 class Post extends Component {
-  constructor() {
-    super();
+  state = {
+    profile: null,
+  };
 
-    this.state = {
-      profile: null,
-      open: false,
-    };
-  }
+  // componentDidMount() {
+  //   //if (this.props.post) {
+  //   //const username = this.props.match.post.username;
+  //   const username = "igotrobbedlol";
+  //   this.props.getUserData(username);
 
-  componentDidMount() {
-    const username = this.props.match.params.username;
-    this.props.getUserData(username);
-
-    axios
-      .get(`/user/${username}`)
-      .then((response) => {
-        this.setState({
-          profile: response.data.user,
-        });
-      })
-      .catch((err) => console.log(err));
-  }
+  //   // axios
+  //   //   .get(`/user/igotrobbedlol`)
+  //   //   .then((response) => {
+  //   //     this.setState({
+  //   //       profile: response.data.user,
+  //   //     });
+  //   //   })
+  //   //   .catch((err) => console.log(err));
+  //   //}
+  // }
 
   openProfile = () => {
-    this.setState({ open: true });
+    //this.setState({ open: true });
   };
 
   render() {
@@ -101,12 +100,12 @@ class Post extends Component {
           </Grid>
           <Grid item xs className={classes.postInfoGrid}>
             <div>
-              <Link onClick={this.openProfile}>
-                <Typography className={classes.username} color="secondary">
-                  {username}
-                </Typography>
-              </Link>
-              <Profile profile={this.state.profile} open={this.state.open} />;
+              {/* <Link onClick={this.openProfile}> */}
+              <Typography className={classes.username} color="secondary">
+                {username}
+              </Typography>
+              {/* </Link> */}
+              {this.state.profile === null ? <CircularProgress /> : <Profile />}
             </div>
             <Typography className={classes.contents} component="p">
               {content}

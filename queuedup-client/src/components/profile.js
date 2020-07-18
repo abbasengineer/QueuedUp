@@ -1,11 +1,10 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 
 // mui
-import { connect } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Avatar } from "@material-ui/core";
@@ -14,6 +13,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import Tooltip from "@material-ui/core/Tooltip";
 import MenuItem from "@material-ui/core/MenuItem";
+import { connect } from "react-redux";
 
 // icons
 import School from "@material-ui/icons/School";
@@ -33,7 +33,7 @@ const styles = (theme) => ({
     fontWeight: "bold",
     textAlign: "left",
     textDecoration: "none",
-    fontSize: "45px",
+    fontSize: "35px",
     paddingLeft: 15,
   },
   calendarButton: {
@@ -62,12 +62,6 @@ const styles = (theme) => ({
     position: "absolute",
     left: "90%",
   },
-  buttons: {
-    textAlign: "center",
-    "& a": {
-      margin: "20px 10px",
-    },
-  },
   dialogContent: {
     padding: 20,
   },
@@ -77,14 +71,7 @@ const styles = (theme) => ({
 });
 
 export class Profile extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      profile: this.props.profile,
-      open: this.props.open,
-    };
-  }
+  state = { open: false };
 
   handleOpen = () => {
     this.setState({ open: true });
@@ -97,7 +84,7 @@ export class Profile extends Component {
   render() {
     const {
       classes,
-      user: { credentials, isAuth },
+      user: { credentials, loading, isAuth },
       profile: {
         username,
         fullName,
@@ -109,14 +96,11 @@ export class Profile extends Component {
       },
     } = this.props;
 
-    let editButton;
-
-    if (isAuth && username === credentials.username) {
-      editButton = null;
-    }
-
     let profileMarkup = (
       <div>
+        <MenuItem className={classes.menuItem} onClick={this.handleOpen}>
+          Profile
+        </MenuItem>
         <Dialog
           open={this.state.open}
           onClose={this.handleClose}
@@ -187,52 +171,6 @@ export class Profile extends Component {
             </Grid>
           </DialogContent>
         </Dialog>
-
-        {/* <div className={classes.profile}>
-              <div className="image-wrapper">
-                <img className="profile-image" src={imageURL} alt={username} />
-                <input
-                  type="file"
-                  id="imageInput"
-                  hidden="hidden"
-                  onChange={this.handleImageChange}
-                />
-                <Tooltip
-                  title={"Edit profile picture"}
-                  className={classes.button}
-                  placement="top">
-                  <IconButton onClick={this.handleEditPicture}>
-                    <EditIcon color="secondary" />
-                  </IconButton>
-                </Tooltip>
-              </div>
-              <MuiLink
-                component={Link}
-                to={`/users/${username}`}
-                color="secondary"
-                variant="h5">
-                {username}
-              </MuiLink>
-              <hr />
-              {aboutMe && <Typography variant="body2">{aboutMe}</Typography>}
-              <hr />
-              {college && (
-                <Fragment>
-                  <AccountBalanceIcon color="primary" /> <span>{college}</span>
-                  <hr />
-                </Fragment>
-              )}
-              {major && (
-                <Fragment>
-                  <School color="primary" /> <span>{major}</span>
-                  <hr />
-                </Fragment>
-              )}
-              <CalendarToday color="primary" />{" "}
-              <span>Member since {dayjs(createdAt).format("MMM YYYY")}</span>
-            </div>
-          </DialogContent>
-              </Dialog> */}
       </div>
     );
 
@@ -242,14 +180,12 @@ export class Profile extends Component {
 
 Profile.propTypes = {
   classes: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired,
+  user: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   classes: state.classes,
   user: state.user,
-  profile: state.profile,
-  data: state.data,
 });
 
 export default connect(mapStateToProps)(withStyles(styles)(Profile));

@@ -81,7 +81,7 @@ class QueuedUpAppBar extends Component {
           onClick={this.handleClose}>
           Profile
         </MenuItem>
-        <Profile />
+        {/* <Profile /> */}
         <MenuItem className={classes.menuItem} onClick={this.handleLogoutClose}>
           Log Out
         </MenuItem>
