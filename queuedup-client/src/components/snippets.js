@@ -7,16 +7,16 @@ import TextField from "@material-ui/core/TextField";
 export default class Snippet extends Component {
 render() {
  return (
-   <div className="code-section">
-     <Button className="code_title">CODE SNIPPET</Button>
+
+     <Button className="code_title">
+         CODE SNIPPET
         <code>
         <TextField
                 /* 
                   fullWidth*/
                 />
         </code>
-      
-    </div>
+        </Button>
   )
  }
 }
