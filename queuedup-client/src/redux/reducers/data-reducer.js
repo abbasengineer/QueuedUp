@@ -17,7 +17,6 @@ export default function (state = initialState, action) {
         posts: action.payload,
         loading: false,
       };
-
     case "SET_POST":
       return {
         ...state,
@@ -46,7 +45,23 @@ export default function (state = initialState, action) {
           comments: [action.payload, ...state.post.comments],
         },
       };
+    case "INCREMENT_POST":
+    case "UNINCREMENT_POST":
+    case "DECREMENT_POST":
+    case "UNDECREMENT_POST":
+      index = state.posts.findIndex(
+        (post) => post.postID === action.payload.postID
+      );
 
+      state.posts[index] = action.payload;
+
+      if (state.post.postID === action.payload.postID) {
+        state.post = action.payload;
+      }
+
+      return {
+        ...state,
+      };
     default:
       return state;
   }

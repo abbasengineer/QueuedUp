@@ -106,7 +106,43 @@ export const incrementPost = (postID) => (dispatch) => {
     .then((res) => {
       dispatch({
         type: "INCREMENT_POST",
-        paylod: res.data,
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const unincrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/unincrement`)
+    .then((res) => {
+      dispatch({
+        type: "UNINCREMENT_POST",
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const decrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/decrement`)
+    .then((res) => {
+      dispatch({
+        type: "DECREMENT_POST",
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const undecrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/undecrement`)
+    .then((res) => {
+      dispatch({
+        type: "UNDECREMENT_POST",
+        payload: res.data,
       });
     })
     .catch((err) => console.log(err));

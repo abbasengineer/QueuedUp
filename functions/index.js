@@ -16,8 +16,8 @@ const {
   editPost,
   incrementPost,
   decrementPost,
-  unIncrementPost,
-  unDecrementPost,
+  unincrementPost,
+  undecrementPost,
 } = require("./handlers/posts");
 
 const {
@@ -39,8 +39,8 @@ app.delete("/getpost/:postID", authenticate, deletePost); // delete a post
 app.post("/getpost/:postID/addcomment", authenticate, addComment); // add comment
 app.get("/getpost/:postID/increment", authenticate, incrementPost); // increment certain post
 app.get("/getpost/:postID/decrement", authenticate, decrementPost); // decrement certain post
-app.get("/getpost/:postID/unincrement", authenticate, unIncrementPost); // un-increment a certain post
-app.get("/getpost/:postID/undecrement", authenticate, unDecrementPost); // un-decrement a certain post
+app.get("/getpost/:postID/unincrement", authenticate, unincrementPost); // un-increment a certain post
+app.get("/getpost/:postID/undecrement", authenticate, undecrementPost); // un-decrement a certain post
 
 // user routes
 app.post("/signup", signUp); // sign up
