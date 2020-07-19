@@ -15,6 +15,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import SendIcon from "@material-ui/icons/Send";
 import { addPost } from "../redux/actions/data-actions";
 import { connect } from "react-redux";
+import Snippets from '../components/snippets'
 
 const styles = (theme) => ({
   dialogContent: {
@@ -144,6 +145,23 @@ class AddPost extends Component {
                         />
                       )}
                     </Button>
+                    <Snippets
+                      state = {this.state}
+                      className={classes.submitButton}
+                      type="submit"
+                      variant='contained'
+                      color="primary"
+                      size="medium"
+                      buttonStyle={{ justifyContent: "flex-start" }}
+                      startIcon={<SendIcon />}
+                      disabled={loading}>
+                      {loading && (
+                        <CircularProgress
+                          size={30}
+                          className={classes.progressSpinner}
+                        />
+                      )}
+                      </Snippets>
                   </Grid>
                 </Grid>
               </form>
