@@ -215,21 +215,19 @@ exports.getUserInfo = (request, response) => {
           .orderBy("createdAt", "desc")
           .get();
       } else {
-        return response
-          .status(404)
-          .json({ error: err.code, error: "User cannot be found" });
+        return response.status(404).json({ error: "User not found" });
       }
     })
     .then((data) => {
       userData.posts = [];
 
-      data.forEach((doc) => {
+      data.forEach((dataDoc) => {
         userData.posts.push({
-          username: doc.data().username,
-          content: doc.data().content,
-          imageURL: doc.data().imageURL,
-          postID: doc.id,
-          createdAt: doc.data().createdAt,
+          username: dataDoc.data().username,
+          content: dataDoc.data().content,
+          imageURL: dataDoc.data().imageURL,
+          createdAt: dataDoc.data().createdAt,
+          postID: dataDoc.id,
         });
       });
 
@@ -237,6 +235,7 @@ exports.getUserInfo = (request, response) => {
     })
     .catch((err) => {
       console.error(err);
+
       return response
         .status(500)
         .json({ error: err.code, message: "Error getting user data" });

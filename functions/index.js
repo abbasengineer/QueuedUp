@@ -37,8 +37,8 @@ app.delete("/getpost/:postID", authenticate, deletePost); // delete a post
 // user routes
 app.post("/signup", signUp); // sign up
 app.post("/login", logIn); // log in
-app.post("/user", authenticate, addUserInfo); // add a user's data
 app.get("/user/:username", getUserInfo); // get a user's data
+app.post("/user", authenticate, addUserInfo); // add a user's data
 app.get("/user", authenticate, getAuthUser); // get a user's credentials
 app.post("/user/image", authenticate, imageUpload);
 

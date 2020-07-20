@@ -2,6 +2,7 @@ const initialState = {
   posts: [],
   post: {},
   loading: false,
+  profile: [],
 };
 
 export default function (state = initialState, action) {
@@ -17,7 +18,6 @@ export default function (state = initialState, action) {
         posts: action.payload,
         loading: false,
       };
-
     case "SET_POST":
       return {
         ...state,
@@ -46,7 +46,6 @@ export default function (state = initialState, action) {
           comments: [action.payload, ...state.post.comments],
         },
       };
-
     default:
       return state;
   }

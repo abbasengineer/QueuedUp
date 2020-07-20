@@ -118,22 +118,3 @@ export const deletePost = (postID) => (dispatch) => {
       console.log(error);
     });
 };
-
-export const getUserData = (username) => (dispatch) => {
-  dispatch({ type: "LOADING_DATA" });
-
-  axios
-    .get(`/user/${username}`)
-    .then((response) => {
-      dispatch({
-        type: "SET_POSTS",
-        payload: response.data.posts,
-      });
-    })
-    .catch(() => {
-      dispatch({
-        type: "SET_POSTS",
-        payload: null,
-      });
-    });
-};

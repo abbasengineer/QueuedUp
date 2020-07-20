@@ -1,20 +1,17 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import { getProfileData } from "../redux/actions/data-actions";
 
-// mui
-import Grid from "@material-ui/core/Grid";
+// mui stuff
+import Link from "@material-ui/core/Link";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 import { Avatar } from "@material-ui/core";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import Tooltip from "@material-ui/core/Tooltip";
-import MenuItem from "@material-ui/core/MenuItem";
-import { connect } from "react-redux";
 
 // icons
 import School from "@material-ui/icons/School";
@@ -69,10 +66,15 @@ const styles = (theme) => ({
   menuItem: {
     fontFamily: "Hind",
   },
+  postUsername: {
+    fontWeight: "bold",
+    textAlign: "left",
+    fontFamily: "Hind",
+    textDecoration: "none",
+  },
 });
 
-// profile of currently logged-in user
-export class Profile extends Component {
+export class StaticProfile extends Component {
   state = {
     open: false,
   };
@@ -88,27 +90,21 @@ export class Profile extends Component {
   render() {
     const {
       classes,
-      user: {
-        credentials: {
-          username,
-          fullName,
-          createdAt,
-          imageURL,
-          aboutMe,
-          college,
-          major,
-        },
-        isAuth,
+      profile: {
+        username,
+        createdAt,
+        imageURL,
+        fullName,
+        aboutMe,
+        college,
+        major,
       },
     } = this.props;
 
-    let profileMarkup = (
+    return (
       <div>
-        <MenuItem className={classes.menuItem} onClick={this.handleOpen}>
-          Profile
-        </MenuItem>
         <Dialog
-          open={this.state.open}
+          open={this.props.open}
           onClose={this.handleClose}
           fullWidth
           maxWidth="sm">
@@ -178,20 +174,12 @@ export class Profile extends Component {
         </Dialog>
       </div>
     );
-
-    return profileMarkup;
   }
 }
 
-Profile.propTypes = {
+StaticProfile.propTypes = {
+  profile: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
 };
 
-const mapStateToProps = (state) => ({
-  classes: state.classes,
-  user: state.user,
-  open: state.open,
-});
-
-export default connect(mapStateToProps)(withStyles(styles)(Profile));
+export default withStyles(styles)(StaticProfile);

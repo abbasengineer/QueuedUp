@@ -3,6 +3,7 @@ import axios from "axios";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -11,9 +12,8 @@ import { Avatar } from "@material-ui/core";
 import DeletePost from "./delete-post";
 import EditPost from "./edit-post";
 import PostModal from "./post-modal";
-import Profile from "./profile";
+import StaticProfile from "./static-profile";
 import { connect } from "react-redux";
-import { getUserData } from "../redux/actions/data-actions";
 
 const styles = (theme) => ({
   card: {
@@ -34,6 +34,7 @@ const styles = (theme) => ({
     textAlign: "left",
     fontFamily: "Hind",
     objectFit: "cover",
+    wordWrap: "break-word",
   },
   image: {
     minWidth: 90,
@@ -43,28 +44,27 @@ const styles = (theme) => ({
 
 class Post extends Component {
   state = {
+    open: false,
     profile: null,
   };
 
-  // componentDidMount() {
-  //   //if (this.props.post) {
-  //   //const username = this.props.match.post.username;
-  //   const username = "igotrobbedlol";
-  //   this.props.getUserData(username);
-
-  //   // axios
-  //   //   .get(`/user/igotrobbedlol`)
-  //   //   .then((response) => {
-  //   //     this.setState({
-  //   //       profile: response.data.user,
-  //   //     });
-  //   //   })
-  //   //   .catch((err) => console.log(err));
-  //   //}
-  // }
+  componentDidMount() {
+    axios
+      .get(`/user/${this.props.post.username}`)
+      .then((response) => {
+        this.setState({
+          profile: response.data.user,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
 
   openProfile = () => {
-    //this.setState({ open: true });
+    this.setState({ open: true });
+  };
+
+  closeProfile = () => {
+    this.setState({ open: false });
   };
 
   render() {
@@ -88,6 +88,11 @@ class Post extends Component {
 
     let popoutButton = <PostModal postID={postID} username={username} />;
 
+    let userProfile =
+      this.state.profile === null ? null : (
+        <StaticProfile open={this.state.open} profile={this.state.profile} />
+      );
+
     return (
       <Card className={classes.card}>
         <Grid container>
@@ -99,17 +104,21 @@ class Post extends Component {
               className={classes.image}></Avatar>
           </Grid>
           <Grid item xs className={classes.postInfoGrid}>
-            <div>
-              {/* <Link onClick={this.openProfile}> */}
-              <Typography className={classes.username} color="secondary">
-                {username}
+            <Grid item>
+              <div>
+                <Button onClick={this.openProfile}>
+                  <Typography className={classes.username} color="secondary">
+                    {username}
+                  </Typography>
+                </Button>
+                {userProfile}
+              </div>
+            </Grid>
+            <Grid item>
+              <Typography className={classes.contents} component="p">
+                {content}
               </Typography>
-              {/* </Link> */}
-              {this.state.profile === null ? <CircularProgress /> : <Profile />}
-            </div>
-            <Typography className={classes.contents} component="p">
-              {content}
-            </Typography>
+            </Grid>
           </Grid>
           <Grid>
             <Grid item>
@@ -134,6 +143,4 @@ const mapStateToProps = (state) => ({
   data: state.data,
 });
 
-export default connect(mapStateToProps, { getUserData })(
-  withStyles(styles)(Post)
-);
+export default connect(mapStateToProps)(withStyles(styles)(Post));

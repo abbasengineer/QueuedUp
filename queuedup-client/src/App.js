@@ -14,7 +14,7 @@ import { logoutUser, getUserData } from "./redux/actions/user-actions";
 import dashboard from "./views/dashboard";
 import login from "./views/login";
 import signup from "./views/signup";
-import user from "./views/user";
+import post from "./components/post";
 
 const theme = createMuiTheme({
   palette: {
@@ -64,12 +64,7 @@ class App extends Component {
                   <Route exact path="/" component={dashboard} />
                   <AuthRoute exact path="/login" component={login} />
                   <AuthRoute exact path="/signup" component={signup} />
-                  <Route exact path="/users/:username" component={user} />
-                  <Route
-                    exact
-                    path="/users/:username/getpost/:postID"
-                    component={user}
-                  />
+                  <Route exact path="/users/:username" component={post} />
                 </Switch>
               </div>
             </Router>

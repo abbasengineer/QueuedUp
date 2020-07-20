@@ -42,13 +42,9 @@ const styles = (theme) => ({
 });
 
 class QueuedUpAppBar extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      anchorEl: null,
-    };
-  }
+  state = {
+    anchorEl: null,
+  };
 
   handleOpen = (event) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -75,13 +71,7 @@ class QueuedUpAppBar extends Component {
 
     const loggedInMenu = (
       <div>
-        <MenuItem
-          className={classes.menuItem}
-          open={true}
-          onClick={this.handleClose}>
-          Profile
-        </MenuItem>
-        {/* <Profile /> */}
+        <Profile />
         <MenuItem className={classes.menuItem} onClick={this.handleLogoutClose}>
           Log Out
         </MenuItem>
@@ -132,7 +122,7 @@ class QueuedUpAppBar extends Component {
             <img
               style={{ display: "flex", padding: 15 }}
               src="logo.png"
-              alt="logo"
+              alt=" "
               height="70"
               width="70"
               component={Link}

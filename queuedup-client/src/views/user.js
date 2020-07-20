@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component, Fragment } from "react";
 import axios from "axios";
-import Post from "../components/post";
+import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
+import { CircularProgress } from "@material-ui/core";
 import { connect } from "react-redux";
-import { getUserData } from "../redux/actions/data-actions";
+import StaticProfile from "../components/static-profile";
 
 export class user extends Component {
   state = {
@@ -13,7 +13,6 @@ export class user extends Component {
 
   componentDidMount() {
     const username = this.props.match.params.username;
-    this.props.getUserData(username);
 
     axios
       .get(`/user/${username}`)
@@ -26,34 +25,23 @@ export class user extends Component {
   }
 
   render() {
-    const { posts, loading } = this.props.data;
-    const postsMarkup = loading ? (
-      <p>Loading...</p>
-    ) : posts === null ? (
-      <p>No posts from this user</p>
-    ) : (
-      posts.map((post) => <Post key={post.postID} post={post} />)
-    );
-
     return (
-      <Grid container spacing={16}>
+      <Fragment>
         <Grid item sm={8} xs={12}>
-          {postsMarkup}
+          {this.state.profile === null ? (
+            <p>
+              <CircularProgress />
+            </p>
+          ) : (
+            <StaticProfile profile={this.state.profile} />
+          )}
         </Grid>
-        <Grid item sm={4} xs={12}>
-          {/* {this.state.profile === null ? (
-                  <ProfileSkeleton />
-                ) : (
-                  <StaticProfile profile={this.state.profile} />
-                )} */}
-        </Grid>
-      </Grid>
+      </Fragment>
     );
   }
 }
 
 user.propTypes = {
-  getUserData: PropTypes.func.isRequired,
   data: PropTypes.object.isRequired,
 };
 
@@ -61,4 +49,4 @@ const mapStateToProps = (state) => ({
   data: state.data,
 });
 
-export default connect(mapStateToProps, { getUserData })(user);
+export default connect(mapStateToProps)(user);
