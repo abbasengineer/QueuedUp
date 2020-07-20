@@ -47,7 +47,7 @@ class Post extends Component {
 
     let editButton;
     let deleteButton;
-
+   
     // only display edit and delete buttons for logged in users
     if (isAuth && username === credentials.username) {
       editButton = <EditPost postID={postID} />;
