@@ -1,10 +1,12 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import Post from "../components/post";
 import Grid from "@material-ui/core/Grid";
 import { connect } from "react-redux";
 import { getUserData } from "../redux/actions/data-actions";
+import StaticProfile from "../components/StaticProfile";
+import { CircularProgress } from "@material-ui/core";
 
 export class user extends Component {
   state = {
@@ -28,7 +30,9 @@ export class user extends Component {
   render() {
     const { posts, loading } = this.props.data;
     const postsMarkup = loading ? (
-      <p>Loading...</p>
+      <p>
+        <CircularProgress />
+      </p>
     ) : posts === null ? (
       <p>No posts from this user</p>
     ) : (
@@ -36,18 +40,21 @@ export class user extends Component {
     );
 
     return (
-      <Grid container spacing={16}>
+      <Fragment>
+        <Grid container spacing={16}></Grid>
         <Grid item sm={8} xs={12}>
           {postsMarkup}
         </Grid>
-        <Grid item sm={4} xs={12}>
-          {/* {this.state.profile === null ? (
-                  <ProfileSkeleton />
-                ) : (
-                  <StaticProfile profile={this.state.profile} />
-                )} */}
+        <Grid item sm={8} xs={12}>
+          {this.state.profile === null ? (
+            <p>
+              <CircularProgress />
+            </p>
+          ) : (
+            <StaticProfile profile={this.state.profile} />
+          )}
         </Grid>
-      </Grid>
+      </Fragment>
     );
   }
 }

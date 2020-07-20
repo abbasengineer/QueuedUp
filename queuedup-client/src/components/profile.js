@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 
 // mui
-import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
+import Grid from "@material-ui/core/Grid";
 import { Avatar } from "@material-ui/core";
 import MuiLink from "@material-ui/core/Link";
 import Dialog from "@material-ui/core/Dialog";
@@ -105,11 +105,13 @@ export class Profile extends Component {
           open={this.state.open}
           onClose={this.handleClose}
           fullWidth
-          maxWidth="sm">
+          maxWidth="sm"
+        >
           <IconButton
             className={classes.closeButton}
             onClick={this.handleClose}
-            alignItems="center">
+            alignItems="center"
+          >
             <CloseIcon />
           </IconButton>
           <DialogContent className={classes.dialogContent}>
@@ -119,7 +121,8 @@ export class Profile extends Component {
                   variant="rounded"
                   src={imageURL}
                   title={username}
-                  className={classes.image}></Avatar>
+                  className={classes.image}
+                ></Avatar>
               </Grid>
               <Grid item xs>
                 <Typography className={classes.username} color="secondary">

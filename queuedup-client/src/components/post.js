@@ -96,16 +96,22 @@ class Post extends Component {
               variant="rounded"
               src={imageURL}
               title={username}
-              className={classes.image}></Avatar>
+              className={classes.image}
+            ></Avatar>
           </Grid>
           <Grid item xs className={classes.postInfoGrid}>
             <div>
               {/* <Link onClick={this.openProfile}> */}
-              <Typography className={classes.username} color="secondary">
+              <Typography
+                className={classes.username}
+                color="secondary"
+                component={Link}
+                to={`/users/${username}`}
+              >
                 {username}
               </Typography>
               {/* </Link> */}
-              {this.state.profile === null ? <CircularProgress /> : <Profile />}
+              {this.state.profile === null ? null : <Profile />}
             </div>
             <Typography className={classes.contents} component="p">
               {content}
