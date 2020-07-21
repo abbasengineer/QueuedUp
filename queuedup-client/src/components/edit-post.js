@@ -103,7 +103,7 @@ class EditPost extends Component {
           open={this.state.open}
           onClose={this.handleClose}
           fullWidth
-          maxWidth="md">
+          maxWidth="sm">
           <DialogTitle>
             <span
               id="alert-dialog-title"
@@ -117,6 +117,8 @@ class EditPost extends Component {
                 className={classes.dialogContent}
                 name="content"
                 type="text"
+                multiline
+                rows={6}
                 label={
                   <span style={{ fontFamily: "Hind" }}>Choose wisely</span>
                 }
@@ -125,7 +127,6 @@ class EditPost extends Component {
                 inputProps={{
                   className: classes.textField,
                 }}
-                multiline
                 onChange={this.handleChange}
                 fullWidth
               />

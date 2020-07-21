@@ -30,8 +30,8 @@ const styles = (theme) => ({
     fontFamily: "Hind",
     textDecoration: "none",
   },
-  usernameButton: {
-    textTransform: "none",
+  usernameLink: {
+    textDecoration: "none",
   },
   contents: {
     textAlign: "left",
@@ -113,13 +113,14 @@ class Post extends Component {
           <Grid item xs className={classes.postInfoGrid}>
             <Grid item>
               <div>
-                <Button
+                <Link
+                  href="#"
                   onClick={this.openProfile}
-                  className={classes.usernameButton}>
+                  className={classes.usernameLink}>
                   <Typography className={classes.username} color="secondary">
                     {username}
                   </Typography>
-                </Button>
+                </Link>
                 {userProfile}
               </div>
             </Grid>

@@ -32,12 +32,7 @@ export const loginUser = (userData, history) => (dispatch) => {
       dispatch({ type: "CLEAR_ERRORS" });
       history.push("/");
     })
-    .catch((err) => {
-      dispatch({
-        type: "SET_ERRORS",
-        payload: err.response.data,
-      });
-    });
+    .catch((err) => console.log(err));
 };
 
 export const signupUser = (newUserData, history) => (dispatch) => {

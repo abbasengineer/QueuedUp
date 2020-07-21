@@ -120,7 +120,8 @@ class AddPost extends Component {
                   inputProps={{
                     className: classes.textField,
                   }}
-                  multiline="true"
+                  multiline
+                  rows={6}
                   onChange={this.handleChange}
                   fullWidth
                 />
