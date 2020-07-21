@@ -10,6 +10,7 @@ import DeletePost from "./delete-post";
 import EditPost from "./edit-post";
 import PostModal from "./post-modal";
 import { connect } from "react-redux";
+import Snippet from "./snippets";
 
 const styles = (theme) => ({
   card: {
@@ -80,6 +81,10 @@ class Post extends Component {
             <Typography className={classes.contents} component="p">
               {content}
             </Typography>
+            <Snippet
+            content = {content}>
+              {this.props.snippet}
+              </Snippet>
           </Grid>
           <Grid>
             <Grid item>
