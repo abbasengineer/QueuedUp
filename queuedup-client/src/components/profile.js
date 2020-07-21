@@ -23,6 +23,7 @@ import CalendarToday from "@material-ui/icons/CalendarToday";
 import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
+import { uploadImage } from "../redux/actions/user-actions";
 
 const styles = (theme) => ({
   image: {
@@ -73,6 +74,18 @@ const styles = (theme) => ({
 
 // profile of currently logged-in user
 export class Profile extends Component {
+  handleImageChange = (event) => {
+    const image = event.target.files[0];
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+    this.props.uploadImage(formData);
+  };
+
+  handleEditPicture = () => {
+    const fileInput = document.getElementById("imageInput");
+    fileInput.click();
+  };
+
   state = {
     open: false,
   };
@@ -111,10 +124,12 @@ export class Profile extends Component {
           open={this.state.open}
           onClose={this.handleClose}
           fullWidth
-          maxWidth="sm">
+          maxWidth="sm"
+        >
           <IconButton
             className={classes.closeButton}
-            onClick={this.handleClose}>
+            onClick={this.handleClose}
+          >
             <CloseIcon />
           </IconButton>
           <DialogContent className={classes.dialogContent}>
@@ -124,8 +139,21 @@ export class Profile extends Component {
                   variant="rounded"
                   src={imageURL}
                   title={username}
-                  className={classes.image}></Avatar>
+                  className={classes.image}
+                ></Avatar>
               </Grid>
+              <input
+                type="file"
+                id="imageInput"
+                onChange={this.handleImageChange}
+                accept="image/*"
+                hidden="hidden"
+              />
+              <Tooltip title="Edit profile picture" placement="bottom">
+                <IconButton onClick={this.handleEditPicture} className="button">
+                  <EditIcon color="primary" />
+                </IconButton>
+              </Tooltip>
               <Grid item xs>
                 <Typography className={classes.username} color="secondary">
                   {username}
@@ -186,6 +214,7 @@ export class Profile extends Component {
 Profile.propTypes = {
   classes: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
+  uploadImage: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -194,4 +223,9 @@ const mapStateToProps = (state) => ({
   open: state.open,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(Profile));
+const mapActionsToProps = { uploadImage };
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(Profile));
