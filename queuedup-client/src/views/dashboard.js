@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import { withStyles } from "@material-ui/styles";
 import { CircularProgress } from "@material-ui/core";
@@ -79,6 +78,7 @@ const styles = (theme) => ({
     fontWeight: "bold",
     textAlign: "left",
     textDecoration: "none",
+    float: "left",
   },
 });
 
@@ -106,7 +106,7 @@ export class dashboard extends Component {
     return (
       <div>
         <Container className={classes.root} spacing={0}>
-          <Grid container className={classes.grid} justify="flex-start">
+          <Grid container className={classes.grid}>
             <Grid item sm={2}>
               <Button
                 variant="outlined"

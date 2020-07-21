@@ -1,27 +1,25 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Link } from "react-router-dom";
 import dayjs from "dayjs";
-import { getProfileData } from "../redux/actions/data-actions";
+import { editUserDetails } from "../redux/actions/user-actions";
 
 // mui
 import Grid from "@material-ui/core/Grid";
+import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 import { Avatar } from "@material-ui/core";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
-import Tooltip from "@material-ui/core/Tooltip";
-import MenuItem from "@material-ui/core/MenuItem";
+import DialogActions from "@material-ui/core/DialogActions";
+import TextField from "@material-ui/core/TextField";
+import IconButton from "@material-ui/core/IconButton";
 import { connect } from "react-redux";
 
 // icons
-import School from "@material-ui/icons/School";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import EditIcon from "@material-ui/icons/Edit";
-import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 
 const styles = (theme) => ({
@@ -37,10 +35,10 @@ const styles = (theme) => ({
     fontSize: "35px",
     paddingLeft: 15,
   },
-  calendarButton: {
+  icon: {
     verticalAlign: "middle",
   },
-  memberSince: {
+  iconTitle: {
     fontFamily: "Hind",
     opacity: "0.6",
     paddingTop: 15,
@@ -69,38 +67,194 @@ const styles = (theme) => ({
   menuItem: {
     fontFamily: "Hind",
   },
+  editButton: {
+    fontFamily: "Hind",
+    textTransform: "none",
+  },
+  textField: {
+    fontFamily: "Hind",
+  },
 });
 
 // profile of currently logged-in user
 export class Profile extends Component {
   state = {
     open: false,
+    editing: false,
+
+    fullName: "",
+    aboutMe: "",
+    major: "",
+    college: "",
   };
+
+  componentDidMount() {
+    const { user } = this.props;
+
+    this.setState({
+      fullName: user.credentials.fullName ? user.credentials.fullName : "",
+      aboutMe: user.credentials.aboutMe ? user.credentials.aboutMe : "",
+      major: user.credentials.major ? user.credentials.major : "",
+      college: user.credentials.college ? user.credentials.college : "",
+
+      edited: false,
+    });
+  }
 
   handleClose = () => {
     this.setState({ open: false });
+
+    if (this.state.edited) {
+      window.location.href = "/"; // redirect page to dashboard to see updates
+    }
   };
 
   handleOpen = () => {
     this.setState({ open: true });
+
+    const { user } = this.props;
+
+    this.setState({
+      fullName: user.credentials.fullName ? user.credentials.fullName : "",
+      aboutMe: user.credentials.aboutMe ? user.credentials.aboutMe : "",
+      major: user.credentials.major ? user.credentials.major : "",
+      college: user.credentials.college ? user.credentials.college : "",
+    });
+  };
+
+  handleEditChange = () => {
+    this.setState({ editing: !this.state.editing });
+  };
+
+  handleChange = (event) => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
+
+  handleSubmit = () => {
+    const userDetails = {
+      fullName: this.state.fullName,
+      aboutMe: this.state.aboutMe,
+      major: this.state.major,
+      college: this.state.college,
+    };
+
+    this.props.editUserDetails(userDetails);
+    this.handleEditChange();
+
+    this.setState({ edited: true });
   };
 
   render() {
     const {
       classes,
       user: {
-        credentials: {
-          username,
-          fullName,
-          createdAt,
-          imageURL,
-          aboutMe,
-          college,
-          major,
-        },
-        isAuth,
+        credentials: { username, imageURL, createdAt },
       },
     } = this.props;
+
+    let editProfileButton = this.state.editing ? (
+      <DialogActions>
+        <Button
+          className={classes.editButton}
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="medium"
+          onClick={this.handleEditChange}>
+          Cancel
+        </Button>
+        <Button
+          className={classes.editButton}
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="medium"
+          onClick={this.handleSubmit}>
+          Edit
+        </Button>
+      </DialogActions>
+    ) : (
+      <DialogActions>
+        <Button
+          className={classes.editButton}
+          type="submit"
+          variant="contained"
+          color="primary"
+          size="medium"
+          startIcon={<EditIcon />}
+          onClick={this.handleEditChange}>
+          Edit profile
+        </Button>
+      </DialogActions>
+    );
+
+    let fullNameField = this.state.editing ? (
+      <TextField
+        name="fullName"
+        type="text"
+        placeholder="Your full name"
+        value={this.state.fullName}
+        onChange={this.handleChange}
+        inputProps={{
+          className: classes.textField,
+        }}
+      />
+    ) : (
+      <Typography className={classes.field} color="secondary">
+        {this.props.user.credentials.fullName}
+      </Typography>
+    );
+
+    let aboutMeField = this.state.editing ? (
+      <TextField
+        name="aboutMe"
+        type="text"
+        placeholder="Tell us about yourself"
+        value={this.state.aboutMe}
+        onChange={this.handleChange}
+        inputProps={{
+          className: classes.textField,
+        }}
+      />
+    ) : (
+      <Typography className={classes.field} color="secondary">
+        {this.props.user.credentials.aboutMe}
+      </Typography>
+    );
+
+    let majorField = this.state.editing ? (
+      <TextField
+        name="major"
+        type="text"
+        placeholder="What are you studying?"
+        value={this.state.major}
+        onChange={this.handleChange}
+        inputProps={{
+          className: classes.textField,
+        }}
+      />
+    ) : (
+      <Typography className={classes.field} color="secondary">
+        {this.props.user.credentials.major}
+      </Typography>
+    );
+
+    let collegeField = this.state.editing ? (
+      <TextField
+        name="college"
+        type="text"
+        placeholder="Your college at UCSC"
+        value={this.state.college}
+        onChange={this.handleChange}
+        inputProps={{
+          className: classes.textField,
+        }}
+      />
+    ) : (
+      <Typography className={classes.field} color="secondary">
+        {this.props.user.credentials.college}
+      </Typography>
+    );
 
     let profileMarkup = (
       <div>
@@ -130,11 +284,8 @@ export class Profile extends Component {
                 <Typography className={classes.username} color="secondary">
                   {username}
                 </Typography>
-                <Typography className={classes.memberSince}>
-                  <CalendarToday
-                    className={classes.calendarButton}
-                    color="primary"
-                  />{" "}
+                <Typography className={classes.iconTitle}>
+                  <CalendarToday className={classes.icon} color="primary" />
                   Member since {dayjs(createdAt).format("MMM YYYY")}
                 </Typography>
               </Grid>
@@ -145,36 +296,29 @@ export class Profile extends Component {
                 <Typography className={classes.fieldTitle} color="secondary">
                   Name
                 </Typography>
-                <Typography className={classes.field} color="secondary">
-                  {fullName}
-                </Typography>
+                {fullNameField}
               </Grid>
               <Grid item>
                 <Typography className={classes.fieldTitle} color="secondary">
                   About Me
                 </Typography>
-                <Typography className={classes.field} color="secondary">
-                  {aboutMe}
-                </Typography>
+                {aboutMeField}
               </Grid>
               <Grid item>
                 <Typography className={classes.fieldTitle} color="secondary">
                   Major
                 </Typography>
-                <Typography className={classes.field} color="secondary">
-                  {major}
-                </Typography>
+                {majorField}
               </Grid>
               <Grid item>
                 <Typography className={classes.fieldTitle} color="secondary">
                   College
                 </Typography>
-                <Typography className={classes.field} color="secondary">
-                  {college}
-                </Typography>
+                {collegeField}
               </Grid>
             </Grid>
           </DialogContent>
+          {editProfileButton}
         </Dialog>
       </div>
     );
@@ -185,13 +329,14 @@ export class Profile extends Component {
 
 Profile.propTypes = {
   classes: PropTypes.object.isRequired,
-  user: PropTypes.object.isRequired,
+  editUserDetails: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   classes: state.classes,
   user: state.user,
-  open: state.open,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(Profile));
+export default connect(mapStateToProps, { editUserDetails })(
+  withStyles(styles)(Profile)
+);

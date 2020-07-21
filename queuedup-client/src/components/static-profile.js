@@ -4,9 +4,6 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import dayjs from "dayjs";
 
 // mui stuff
-import Link from "@material-ui/core/Link";
-import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import { Avatar } from "@material-ui/core";
@@ -14,10 +11,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 
 // icons
-import School from "@material-ui/icons/School";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import CalendarToday from "@material-ui/icons/CalendarToday";
-import EditIcon from "@material-ui/icons/Edit";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 

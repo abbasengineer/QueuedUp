@@ -28,8 +28,10 @@ export const loginUser = (userData, history) => (dispatch) => {
     .post("/login", userData)
     .then((res) => {
       setAuthorizationHeader(res.data.token);
+
       dispatch(getUserData());
       dispatch({ type: "CLEAR_ERRORS" });
+
       history.push("/");
     })
     .catch((err) => console.log(err));
@@ -65,6 +67,7 @@ export const logoutUser = () => (dispatch) => {
 
 export const editUserDetails = (userDetails) => (dispatch) => {
   dispatch({ type: "LOADING_USER" });
+
   axios
     .post("/user", userDetails)
     .then(() => {
