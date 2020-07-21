@@ -75,18 +75,6 @@ const styles = (theme) => ({
 });
 
 export class StaticProfile extends Component {
-  state = {
-    open: false,
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
-  handleOpen = () => {
-    this.setState({ open: true });
-  };
-
   render() {
     const {
       classes,
@@ -105,12 +93,12 @@ export class StaticProfile extends Component {
       <div>
         <Dialog
           open={this.props.open}
-          onClose={this.handleClose}
+          onClose={this.props.close}
           fullWidth
           maxWidth="sm">
           <IconButton
             className={classes.closeButton}
-            onClick={this.handleClose}>
+            onClick={this.props.close}>
             <CloseIcon />
           </IconButton>
           <DialogContent className={classes.dialogContent}>
@@ -137,38 +125,46 @@ export class StaticProfile extends Component {
             </Grid>
             <hr className={classes.hr} />
             <Grid container direction="column" spacing={3}>
-              <Grid item>
-                <Typography className={classes.fieldTitle} color="secondary">
-                  Name
-                </Typography>
-                <Typography className={classes.field} color="secondary">
-                  {fullName}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography className={classes.fieldTitle} color="secondary">
-                  About Me
-                </Typography>
-                <Typography className={classes.field} color="secondary">
-                  {aboutMe}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography className={classes.fieldTitle} color="secondary">
-                  Major
-                </Typography>
-                <Typography className={classes.field} color="secondary">
-                  {major}
-                </Typography>
-              </Grid>
-              <Grid item>
-                <Typography className={classes.fieldTitle} color="secondary">
-                  College
-                </Typography>
-                <Typography className={classes.field} color="secondary">
-                  {college}
-                </Typography>
-              </Grid>
+              {fullName && (
+                <Grid item>
+                  <Typography className={classes.fieldTitle} color="secondary">
+                    Name
+                  </Typography>
+                  <Typography className={classes.field} color="secondary">
+                    {fullName}
+                  </Typography>
+                </Grid>
+              )}
+              {aboutMe && (
+                <Grid item>
+                  <Typography className={classes.fieldTitle} color="secondary">
+                    About Me
+                  </Typography>
+                  <Typography className={classes.field} color="secondary">
+                    {aboutMe}
+                  </Typography>
+                </Grid>
+              )}
+              {major && (
+                <Grid item>
+                  <Typography className={classes.fieldTitle} color="secondary">
+                    Major
+                  </Typography>
+                  <Typography className={classes.field} color="secondary">
+                    {major}
+                  </Typography>
+                </Grid>
+              )}
+              {college && (
+                <Grid item>
+                  <Typography className={classes.fieldTitle} color="secondary">
+                    College
+                  </Typography>
+                  <Typography className={classes.field} color="secondary">
+                    {college}
+                  </Typography>
+                </Grid>
+              )}
             </Grid>
           </DialogContent>
         </Dialog>
@@ -178,8 +174,8 @@ export class StaticProfile extends Component {
 }
 
 StaticProfile.propTypes = {
-  profile: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
+  profile: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(StaticProfile);

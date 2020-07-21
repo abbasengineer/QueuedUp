@@ -30,6 +30,9 @@ const styles = (theme) => ({
     fontFamily: "Hind",
     textDecoration: "none",
   },
+  usernameButton: {
+    textTransform: "none",
+  },
   contents: {
     textAlign: "left",
     fontFamily: "Hind",
@@ -90,7 +93,11 @@ class Post extends Component {
 
     let userProfile =
       this.state.profile === null ? null : (
-        <StaticProfile open={this.state.open} profile={this.state.profile} />
+        <StaticProfile
+          open={this.state.open}
+          close={() => this.closeProfile()}
+          profile={this.state.profile}
+        />
       );
 
     return (
@@ -106,7 +113,9 @@ class Post extends Component {
           <Grid item xs className={classes.postInfoGrid}>
             <Grid item>
               <div>
-                <Button onClick={this.openProfile}>
+                <Button
+                  onClick={this.openProfile}
+                  className={classes.usernameButton}>
                   <Typography className={classes.username} color="secondary">
                     {username}
                   </Typography>
