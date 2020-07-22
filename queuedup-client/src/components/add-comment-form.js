@@ -21,6 +21,7 @@ const styles = (theme) => ({
     fontFamily: "Hind",
     textTransform: "none",
     fontSize: "15px",
+    float: "right",
   },
 });
 
@@ -55,6 +56,7 @@ class AddCommentForm extends Component {
           <TextField
             name="content"
             type="text"
+            autoComplete="off"
             label={
               isAuth ? (
                 <span style={{ fontFamily: "Hind" }}>Comment on this post</span>
@@ -70,7 +72,8 @@ class AddCommentForm extends Component {
             fullWidth
             inputProps={{
               className: classes.textField,
-            }}></TextField>
+            }}
+          ></TextField>
           <Grid container wrap="nowrap">
             <Grid item xs={9}></Grid>
             <Grid item>
@@ -80,9 +83,9 @@ class AddCommentForm extends Component {
                 variant="contained"
                 color="primary"
                 size="medium"
-                buttonStyle={{ justifyContent: "flex-end" }}
                 startIcon={<SendIcon />}
-                disabled={!isAuth}>
+                disabled={!isAuth}
+              >
                 Submit
               </Button>
             </Grid>
@@ -96,7 +99,6 @@ class AddCommentForm extends Component {
 AddCommentForm.propTypes = {
   classes: PropTypes.object.isRequired,
   addComment: PropTypes.func.isRequired,
-  postID: PropTypes.string.isRequired,
   isAuth: PropTypes.bool.isRequired,
   UI: PropTypes.object.isRequired,
 };

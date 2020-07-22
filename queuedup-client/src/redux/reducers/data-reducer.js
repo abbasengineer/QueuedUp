@@ -5,6 +5,8 @@ const initialState = {
 };
 
 export default function (state = initialState, action) {
+  let index;
+
   switch (action.type) {
     case "LOADING_DATA":
       return {
@@ -17,16 +19,28 @@ export default function (state = initialState, action) {
         posts: action.payload,
         loading: false,
       };
-
     case "SET_POST":
       return {
         ...state,
         post: action.payload,
       };
-    case "DELETE_POST":
-      let index = state.posts.findIndex(
-        (post) => post.postID === action.payload
+    case "EDIT_POST":
+      index = state.posts.findIndex(
+        (post) => post.postID === action.payload[0]
       );
+
+      state.posts[index].content = action.payload[1].content;
+
+      state.posts[index] = {
+        ...state.posts[index],
+      };
+
+      return {
+        ...state,
+        loading: false,
+      };
+    case "DELETE_POST":
+      index = state.posts.findIndex((post) => post.postID === action.payload);
 
       state.posts.splice(index, 1);
 
@@ -46,7 +60,24 @@ export default function (state = initialState, action) {
           comments: [action.payload, ...state.post.comments],
         },
       };
+    case "INCREMENT_POST":
+    case "UNINCREMENT_POST":
+    case "DECREMENT_POST":
+    case "UNDECREMENT_POST":
+      index = state.posts.findIndex(
+        (post) => post.postID === action.payload.postID
+      );
 
+      state.posts[index].increment = action.payload.increment;
+      state.posts[index].decrement = action.payload.decrement;
+
+      state.posts[index] = {
+        ...state.posts[index],
+      };
+
+      return {
+        ...state,
+      };
     default:
       return state;
   }

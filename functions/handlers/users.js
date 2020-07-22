@@ -179,7 +179,7 @@ exports.imageUpload = (request, response) => {
 };
 
 exports.addUserInfo = (request, response) => {
-  let userData = trimUserInfo(request.content);
+  let userData = trimUserInfo(request.body);
 
   admin
     .firestore()
@@ -215,21 +215,21 @@ exports.getUserInfo = (request, response) => {
           .orderBy("createdAt", "desc")
           .get();
       } else {
-        return response
-          .status(404)
-          .json({ error: err.code, error: "User cannot be found" });
+        return response.status(404).json({ error: "User not found" });
       }
     })
     .then((data) => {
       userData.posts = [];
 
-      data.forEach((doc) => {
+      data.forEach((dataDoc) => {
         userData.posts.push({
-          username: doc.data().username,
-          content: doc.data().content,
-          imageURL: doc.data().imageURL,
-          postID: doc.id,
-          createdAt: doc.data().createdAt,
+          username: dataDoc.data().username,
+          content: dataDoc.data().content,
+          imageURL: dataDoc.data().imageURL,
+          postID: dataDoc.id,
+          createdAt: dataDoc.data().createdAt,
+          increments: dataDoc.data().increments,
+          decrements: dataDoc.data().decrements,
         });
       });
 
@@ -237,9 +237,11 @@ exports.getUserInfo = (request, response) => {
     })
     .catch((err) => {
       console.error(err);
-      return response
-        .status(500)
-        .json({ error: err.code, message: "Error getting user data" });
+
+      return response.status(500).json({
+        error: err.code,
+        message: "Error getting user data",
+      });
     });
 };
 
@@ -253,7 +255,33 @@ exports.getAuthUser = (request, response) => {
     .then((doc) => {
       if (doc.exists) {
         userData.credentials = doc.data();
+
+        return admin
+          .firestore()
+          .collection("increments")
+          .where("username", "==", request.user.username)
+          .get();
       }
+    })
+    .then((data) => {
+      userData.increments = [];
+
+      data.forEach((doc) => {
+        userData.increments.push(doc.data());
+      });
+
+      return admin
+        .firestore()
+        .collection("decrements")
+        .where("username", "==", request.user.username)
+        .get();
+    })
+    .then((data) => {
+      userData.decrements = [];
+
+      data.forEach((doc) => {
+        userData.decrements.push(doc.data());
+      });
 
       return response.json(userData);
     })

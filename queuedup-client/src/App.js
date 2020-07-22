@@ -14,7 +14,8 @@ import { logoutUser, getUserData } from "./redux/actions/user-actions";
 import dashboard from "./views/dashboard";
 import login from "./views/login";
 import signup from "./views/signup";
-import user from "./views/user";
+import post from "./components/post";
+import sammy from "./images/sammy.png";
 
 const theme = createMuiTheme({
   palette: {
@@ -33,8 +34,8 @@ const theme = createMuiTheme({
   },
 });
 
-axios.defaults.baseURL =
-  "https://us-central1-queuedup-123.cloudfunctions.net/api/";
+// axios.defaults.baseURL =
+//   "https://us-central1-queuedup-123.cloudfunctions.net/api/";
 
 const token = localStorage.firebaseIDToken;
 
@@ -64,13 +65,9 @@ class App extends Component {
                   <Route exact path="/" component={dashboard} />
                   <AuthRoute exact path="/login" component={login} />
                   <AuthRoute exact path="/signup" component={signup} />
-                  <Route exact path="/users/:username" component={user} />
-                  <Route
-                    exact
-                    path="/users/:username/getpost/:postID"
-                    component={user}
-                  />
+                  <Route exact path="/users/:username" component={post} />
                 </Switch>
+                <img width="100px" src={sammy} alt="sammy" />
               </div>
             </Router>
           </div>

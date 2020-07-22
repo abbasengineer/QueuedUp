@@ -137,9 +137,7 @@ class login extends Component {
                 Log In
               </Button>
               <Typography className={classes.signUpLink} color="secondary">
-                <medium>
-                  New to QueuedUp? <Link to="/signup">Sign up here!</Link>
-                </medium>
+                New to QueuedUp? <Link to="/signup">Sign up here!</Link>
               </Typography>
               <br />
             </Grid>

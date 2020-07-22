@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 
 const cors = require("cors");
-app.use(cors());
+app.use(cors({ origin: true }));
 
 const authenticate = require("./util/authenticate");
 
@@ -14,6 +14,10 @@ const {
   addComment,
   deletePost,
   editPost,
+  incrementPost,
+  decrementPost,
+  unincrementPost,
+  undecrementPost,
 } = require("./handlers/posts");
 
 const {
@@ -30,21 +34,27 @@ const admin = require("./util/admin");
 app.get("/getposts", getPosts); // get all posts
 app.post("/addpost", authenticate, addPost); // insert a new post
 app.get("/getpost/:postID/", getPost); // get a certain post
-app.post("/getpost/:postID/addcomment", authenticate, addComment); // add comment
 app.post("/getpost/:postID/edit", authenticate, editPost); // edit a post
 app.delete("/getpost/:postID", authenticate, deletePost); // delete a post
+app.post("/getpost/:postID/addcomment", authenticate, addComment); // add comment
+app.get("/getpost/:postID/increment", authenticate, incrementPost); // increment certain post
+app.get("/getpost/:postID/decrement", authenticate, decrementPost); // decrement certain post
+app.get("/getpost/:postID/unincrement", authenticate, unincrementPost); // un-increment a certain post
+app.get("/getpost/:postID/undecrement", authenticate, undecrementPost); // un-decrement a certain post
 
 // user routes
 app.post("/signup", signUp); // sign up
 app.post("/login", logIn); // log in
-app.post("/user", authenticate, addUserInfo); // add a user's data
 app.get("/user/:username", getUserInfo); // get a user's data
+app.post("/user", authenticate, addUserInfo); // add a user's data
 app.get("/user", authenticate, getAuthUser); // get a user's credentials
-app.post("/user/image", authenticate, imageUpload);
+app.post("/user/image", authenticate, imageUpload); // upload a user image
+
+exports.api = functions.https.onRequest(app);
 
 exports.onDeletePost = functions.firestore
   .document("/posts/{postID}")
-  .onDelete((snap, context) => {
+  .onDelete((snapshot, context) => {
     const postID = context.params.postID;
     const batch = admin.firestore().batch();
 
@@ -55,7 +65,7 @@ exports.onDeletePost = functions.firestore
       .get()
       .then((data) => {
         data.forEach((doc) => {
-          batch.delete(admin().firestore().doc(`/comments/${doc.id}`));
+          batch.delete(admin.firestore().doc(`/comments/${doc.id}`));
         });
       })
       .catch((error) => console.error(error));
@@ -67,6 +77,7 @@ exports.onImageChange = functions.firestore
     if (
       imageChange.before.data().imageUrl !== imageChange.after.data().imageURL
     ) {
+      // atomic batch of writes to multiple documents
       const writeOps = admin.firestore().batch();
 
       return admin

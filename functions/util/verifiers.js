@@ -82,9 +82,23 @@ let isLogInVerified = (data) => {
 let trimUserInfo = (data) => {
   let userInfo = {};
 
-  // if (!isBlank(data.aboutMe.trim())) {
-  //   userInfo.aboutMe = data.aboutMe;
-  // }
+  if (data.aboutMe !== null) {
+    if (!isBlank(data.aboutMe.trim())) {
+      userInfo.aboutMe = data.aboutMe;
+    }
+  }
+
+  if (data.major !== null) {
+    if (!isBlank(data.major.trim())) {
+      userInfo.major = data.major;
+    }
+  }
+
+  if (data.college !== null) {
+    if (!isBlank(data.college.trim())) {
+      userInfo.college = data.college;
+    }
+  }
 
   return userInfo;
 };

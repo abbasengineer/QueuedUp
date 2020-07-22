@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { Avatar } from "@material-ui/core";
@@ -52,11 +51,7 @@ class Comments extends Component {
                     className={classes.image}></Avatar>
                 </Grid>
                 <Grid item xs>
-                  <Typography
-                    className={classes.username}
-                    color="secondary"
-                    component={Link}
-                    to={`/users/${username}`}>
+                  <Typography className={classes.username} color="secondary">
                     {username}
                   </Typography>
                   <Typography className={classes.contents}>

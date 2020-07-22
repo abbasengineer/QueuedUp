@@ -53,59 +53,8 @@ export const addPost = (newPost) => (dispatch) => {
       });
 
       dispatch(clearErrors());
-      window.location.href = "/"; // redirect page to dashboard to see new post
     })
-    .catch((error) => {
-      console.log(error);
-
-      dispatch({
-        type: "SET_ERRORS",
-        payload: error.response.data,
-      });
-    });
-};
-
-export const editPost = (postID, editedPost) => (dispatch) => {
-  dispatch({ type: "LOADING_UI" });
-
-  axios
-    .post(`/getpost/${postID}/edit`, editedPost)
-    .then(() => {
-      dispatch({
-        type: "SET_POST",
-        payload: postID,
-      });
-
-      dispatch(clearErrors());
-      window.location.href = "/"; // redirect page to dashboard to see edited post
-    })
-    .catch((error) => {
-      console.log(error);
-
-      dispatch({
-        type: "SET_ERRORS",
-        payload: error.response.data,
-      });
-    });
-};
-
-export const addComment = (postID, commentData) => (dispatch) => {
-  axios
-    .post(`/getpost/${postID}/addcomment`, commentData)
-    .then((res) => {
-      dispatch({
-        type: "ADD_COMMENT",
-        payload: res.data,
-      });
-
-      dispatch(clearErrors());
-    })
-    .catch((err) => {
-      dispatch({
-        type: "SET_ERRORS",
-        payload: err.response.data,
-      });
-    });
+    .catch((error) => console.log(error));
 };
 
 export const deletePost = (postID) => (dispatch) => {
@@ -119,21 +68,80 @@ export const deletePost = (postID) => (dispatch) => {
     });
 };
 
-export const getUserData = (username) => (dispatch) => {
-  dispatch({ type: "LOADING_DATA" });
+export const editPost = (postID, editedPost) => (dispatch) => {
+  dispatch({ type: "LOADING_UI" });
 
   axios
-    .get(`/user/${username}`)
+    .post(`/getpost/${postID}/edit`, editedPost)
     .then((response) => {
       dispatch({
-        type: "SET_POSTS",
-        payload: response.data.posts,
+        type: "EDIT_POST",
+        payload: [postID, response.data],
+      });
+
+      dispatch(clearErrors());
+    })
+    .catch((error) => console.log(error));
+};
+
+export const incrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/increment`)
+    .then((res) => {
+      dispatch({
+        type: "INCREMENT_POST",
+        payload: res.data,
       });
     })
-    .catch(() => {
+    .catch((err) => console.log(err));
+};
+
+export const unincrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/unincrement`)
+    .then((res) => {
       dispatch({
-        type: "SET_POSTS",
-        payload: null,
+        type: "UNINCREMENT_POST",
+        payload: res.data,
       });
-    });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const decrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/decrement`)
+    .then((res) => {
+      dispatch({
+        type: "DECREMENT_POST",
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const undecrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/undecrement`)
+    .then((res) => {
+      dispatch({
+        type: "UNDECREMENT_POST",
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const addComment = (postID, commentData) => (dispatch) => {
+  axios
+    .post(`/getpost/${postID}/addcomment`, commentData)
+    .then((res) => {
+      dispatch({
+        type: "ADD_COMMENT",
+        payload: res.data,
+      });
+
+      dispatch(clearErrors());
+    })
+    .catch((error) => console.log(error));
 };

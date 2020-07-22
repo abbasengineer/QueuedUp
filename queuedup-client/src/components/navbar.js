@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import Link from "react-router-dom/Link";
@@ -12,6 +12,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import { logoutUser } from "../redux/actions/user-actions";
 import { connect } from "react-redux";
 import AddPost from "./add-post";
+import Profile from "./profile";
 
 const styles = (theme) => ({
   grow: {
@@ -41,13 +42,9 @@ const styles = (theme) => ({
 });
 
 class QueuedUpAppBar extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      anchorEl: null,
-    };
-  }
+  state = {
+    anchorEl: null,
+  };
 
   handleOpen = (event) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -73,15 +70,16 @@ class QueuedUpAppBar extends Component {
     const menuId = "queued-up-account-menu";
 
     const loggedInMenu = (
-      <Fragment>
+      <div>
+        <Profile />
         <MenuItem className={classes.menuItem} onClick={this.handleLogoutClose}>
           Log Out
         </MenuItem>
-      </Fragment>
+      </div>
     );
 
     const loggedOutMenu = (
-      <Fragment>
+      <div>
         <MenuItem
           className={classes.menuItem}
           onClick={this.handleClose}
@@ -96,7 +94,7 @@ class QueuedUpAppBar extends Component {
           to="/signup">
           Sign Up
         </MenuItem>
-      </Fragment>
+      </div>
     );
 
     const renderMenu = (
@@ -124,7 +122,7 @@ class QueuedUpAppBar extends Component {
             <img
               style={{ display: "flex", padding: 15 }}
               src="logo.png"
-              alt="logo"
+              alt=" "
               height="70"
               width="70"
               component={Link}
