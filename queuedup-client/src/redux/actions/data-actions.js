@@ -84,18 +84,6 @@ export const editPost = (postID, editedPost) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
-export const deletePost = (postID) => (dispatch) => {
-  axios
-    .delete(`/getpost/${postID}`)
-    .then(() => {
-      dispatch({
-        type: "DELETE_POST",
-        payload: postID,
-      });
-    })
-    .catch((error) => console.log(error));
-};
-
 export const incrementPost = (postID) => (dispatch) => {
   axios
     .get(`/getpost/${postID}/increment`)
