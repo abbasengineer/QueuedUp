@@ -103,7 +103,7 @@ class PostModal extends Component {
           <IconButton
             className={classes.chatButton}
             onClick={this.handleOpen}
-            size="small">
+            size="medium">
             <ChatIcon fontSize="inherit" />
           </IconButton>
         </Tooltip>

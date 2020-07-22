@@ -93,7 +93,7 @@ class EditPost extends Component {
               <IconButton
                 className={classes.editButton}
                 onClick={this.handleOpen}
-                size="small">
+                size="medium">
                 <EditIcon fontSize="inherit" />
               </IconButton>
             </Tooltip>

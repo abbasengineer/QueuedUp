@@ -57,6 +57,17 @@ export const addPost = (newPost) => (dispatch) => {
     .catch((error) => console.log(error));
 };
 
+export const deletePost = (postID) => (dispatch) => {
+  axios
+    .delete(`/getpost/${postID}`)
+    .then(() => {
+      dispatch({ type: "DELETE_POST", payload: postID });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
 export const editPost = (postID, editedPost) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
 
@@ -83,6 +94,54 @@ export const deletePost = (postID) => (dispatch) => {
       });
     })
     .catch((error) => console.log(error));
+};
+
+export const incrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/increment`)
+    .then((res) => {
+      dispatch({
+        type: "INCREMENT_POST",
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const unincrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/unincrement`)
+    .then((res) => {
+      dispatch({
+        type: "UNINCREMENT_POST",
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const decrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/decrement`)
+    .then((res) => {
+      dispatch({
+        type: "DECREMENT_POST",
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
+};
+
+export const undecrementPost = (postID) => (dispatch) => {
+  axios
+    .get(`/getpost/${postID}/undecrement`)
+    .then((res) => {
+      dispatch({
+        type: "UNDECREMENT_POST",
+        payload: res.data,
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
 export const addComment = (postID, commentData) => (dispatch) => {

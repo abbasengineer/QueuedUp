@@ -2,6 +2,8 @@ const initialState = {
   isAuth: false,
   credentials: {},
   loading: false,
+  increments: [],
+  decrements: [],
 };
 
 export default function (state = initialState, action) {
@@ -24,6 +26,42 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: true,
+      };
+    case "INCREMENT_POST":
+      return {
+        ...state,
+        increments: [
+          ...state.increments,
+          {
+            username: state.credentials.username,
+            postID: action.payload.postID,
+          },
+        ],
+      };
+    case "UNINCREMENT_POST":
+      return {
+        ...state,
+        increments: state.increments.filter(
+          (increment) => increment.postID !== action.payload.postID
+        ),
+      };
+    case "DECREMENT_POST":
+      return {
+        ...state,
+        decrements: [
+          ...state.decrements,
+          {
+            username: state.credentials.username,
+            postID: action.payload.postID,
+          },
+        ],
+      };
+    case "UNDECREMENT_POST":
+      return {
+        ...state,
+        decrements: state.decrements.filter(
+          (decrement) => decrement.postID !== action.payload.postID
+        ),
       };
     default:
       return state;

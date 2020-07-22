@@ -17,6 +17,8 @@ exports.getPosts = (request, response) => {
           content: postDoc.data().content,
           imageURL: postDoc.data().imageURL,
           createdAt: new Date().toISOString(),
+          increments: postDoc.data().increments,
+          decrements: postDoc.data().decrements,
         });
       });
 
@@ -49,6 +51,8 @@ exports.addPost = (request, response) => {
     content: request.body.content,
     imageURL: request.user.imageURL,
     createdAt: new Date().toISOString(),
+    increments: 0,
+    decrements: 0,
   };
 
   admin
@@ -212,5 +216,263 @@ exports.editPost = (request, response) => {
       return response
         .status(500)
         .json({ error: error.code, message: "Error editing the post" });
+    });
+};
+
+exports.incrementPost = (request, response) => {
+  let postData;
+  const postDoc = admin.firestore().doc(`/posts/${request.params.postID}`);
+
+  const incrementDoc = admin
+    .firestore()
+    .collection("increments")
+    .where("username", "==", request.user.username)
+    .where("postID", "==", request.params.postID)
+    .limit(1);
+
+  postDoc
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        postData = doc.data();
+        postData.postID = doc.id;
+
+        return incrementDoc.get();
+      }
+
+      return response.status(404).json({ error: "Post not found " });
+    })
+    .then((data) => {
+      // check if decremented
+      admin
+        .firestore()
+        .collection("decrements")
+        .where("username", "==", request.user.username)
+        .where("postID", "==", request.params.postID)
+        .limit(1)
+        .get()
+        .then((decData) => {
+          if (!decData.empty) {
+            return response
+              .status(400)
+              .json({ error: "Can't increment a post you decremented" });
+          } else {
+            if (postData.username === request.user.username) {
+              return response
+                .status(400)
+                .json({ error: "Can't increment your own post" });
+            }
+
+            if (data.empty) {
+              return admin
+                .firestore()
+                .collection("increments")
+                .add({
+                  postID: request.params.postID,
+                  username: request.user.username,
+                })
+                .then(() => {
+                  postData.increments++;
+
+                  return postDoc.update({ increments: postData.increments });
+                })
+                .then(() => {
+                  return response.json(postData);
+                });
+            } else {
+              return response
+                .status(400)
+                .json({ error: "Already incremented this post" });
+            }
+          }
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+
+      response
+        .status(500)
+        .json({ error: err.code, message: "Error incrementing post" });
+    });
+};
+
+exports.unincrementPost = (request, response) => {
+  let postData;
+  const postDoc = admin.firestore().doc(`/posts/${request.params.postID}`);
+
+  const incrementDoc = admin
+    .firestore()
+    .collection("increments")
+    .where("username", "==", request.user.username)
+    .where("postID", "==", request.params.postID)
+    .limit(1);
+
+  postDoc
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        postData = doc.data();
+        postData.postID = doc.id;
+
+        return incrementDoc.get();
+      }
+
+      return response.status(404).json({ error: "Post not found " });
+    })
+    .then((data) => {
+      if (data.empty) {
+        return response.status(400).json({
+          error: "Error un-incrementing: post not incremented",
+        });
+      }
+
+      return admin
+        .firestore()
+        .doc(`/increments/${data.docs[0].id}`)
+        .delete()
+        .then(() => {
+          postData.increments--;
+
+          return postDoc.update({ increments: postData.increments });
+        })
+        .then(() => {
+          response.json(postData);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+
+      response
+        .status(500)
+        .json({ error: err.code, message: "Error un-incrementing post" });
+    });
+};
+
+exports.decrementPost = (request, response) => {
+  let postData;
+  const postDoc = admin.firestore().doc(`/posts/${request.params.postID}`);
+
+  const decrementDoc = admin
+    .firestore()
+    .collection("decrements")
+    .where("username", "==", request.user.username)
+    .where("postID", "==", request.params.postID)
+    .limit(1);
+
+  postDoc
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        postData = doc.data();
+        postData.postID = doc.id;
+
+        return decrementDoc.get();
+      }
+
+      return response.status(404).json({ error: "Post not found " });
+    })
+    .then((data) => {
+      // check if incremented
+      admin
+        .firestore()
+        .collection("increments")
+        .where("username", "==", request.user.username)
+        .where("postID", "==", request.params.postID)
+        .limit(1)
+        .get()
+        .then((incData) => {
+          if (!incData.empty) {
+            return response
+              .status(400)
+              .json({ error: "Can't decrement a post you incremented" });
+          } else {
+            if (postData.username === request.user.username) {
+              return response
+                .status(400)
+                .json({ error: "Can't decrement your own post" });
+            }
+
+            if (data.empty) {
+              return admin
+                .firestore()
+                .collection("decrements")
+                .add({
+                  postID: request.params.postID,
+                  username: request.user.username,
+                })
+                .then(() => {
+                  postData.decrements++;
+
+                  return postDoc.update({ decrements: postData.decrements });
+                })
+                .then(() => {
+                  return response.json(postData);
+                });
+            } else {
+              return response
+                .status(400)
+                .json({ error: "Already decremented this post" });
+            }
+          }
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+
+      response
+        .status(500)
+        .json({ error: err.code, message: "Error decrementing post" });
+    });
+};
+
+exports.undecrementPost = (request, response) => {
+  let postData;
+  const postDoc = admin.firestore().doc(`/posts/${request.params.postID}`);
+
+  const decrementDoc = admin
+    .firestore()
+    .collection("decrements")
+    .where("username", "==", request.user.username)
+    .where("postID", "==", request.params.postID)
+    .limit(1);
+
+  postDoc
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        postData = doc.data();
+        postData.postID = doc.id;
+
+        return decrementDoc.get();
+      }
+
+      return response.status(404).json({ error: "Post not found " });
+    })
+    .then((data) => {
+      if (data.empty) {
+        return response.status(400).json({
+          error: "Error un-decrementing: post not decremented",
+        });
+      }
+
+      return admin
+        .firestore()
+        .doc(`/decrements/${data.docs[0].id}`)
+        .delete()
+        .then(() => {
+          postData.decrements--;
+
+          return postDoc.update({ decrements: postData.decrements });
+        })
+        .then(() => {
+          response.json(postData);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+
+      response
+        .status(500)
+        .json({ error: err.code, message: "Error un-decrementing post" });
     });
 };

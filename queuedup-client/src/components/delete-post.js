@@ -61,7 +61,7 @@ class DeletePost extends Component {
               <IconButton
                 className={classes.deleteButton}
                 onClick={this.handleOpen}
-                size="small">
+                size="medium">
                 <DeleteOutlineIcon fontSize="inherit" />
               </IconButton>
             </Tooltip>

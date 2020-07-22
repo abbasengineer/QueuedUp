@@ -60,6 +60,24 @@ export default function (state = initialState, action) {
           comments: [action.payload, ...state.post.comments],
         },
       };
+    case "INCREMENT_POST":
+    case "UNINCREMENT_POST":
+    case "DECREMENT_POST":
+    case "UNDECREMENT_POST":
+      index = state.posts.findIndex(
+        (post) => post.postID === action.payload.postID
+      );
+
+      state.posts[index].increment = action.payload.increment;
+      state.posts[index].decrement = action.payload.decrement;
+
+      state.posts[index] = {
+        ...state.posts[index],
+      };
+
+      return {
+        ...state,
+      };
     default:
       return state;
   }

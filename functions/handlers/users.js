@@ -226,8 +226,10 @@ exports.getUserInfo = (request, response) => {
           username: dataDoc.data().username,
           content: dataDoc.data().content,
           imageURL: dataDoc.data().imageURL,
-          createdAt: dataDoc.data().createdAt,
           postID: dataDoc.id,
+          createdAt: dataDoc.data().createdAt,
+          increments: dataDoc.data().increments,
+          decrements: dataDoc.data().decrements,
         });
       });
 
@@ -253,7 +255,33 @@ exports.getAuthUser = (request, response) => {
     .then((doc) => {
       if (doc.exists) {
         userData.credentials = doc.data();
+
+        return admin
+          .firestore()
+          .collection("increments")
+          .where("username", "==", request.user.username)
+          .get();
       }
+    })
+    .then((data) => {
+      userData.increments = [];
+
+      data.forEach((doc) => {
+        userData.increments.push(doc.data());
+      });
+
+      return admin
+        .firestore()
+        .collection("decrements")
+        .where("username", "==", request.user.username)
+        .get();
+    })
+    .then((data) => {
+      userData.decrements = [];
+
+      data.forEach((doc) => {
+        userData.decrements.push(doc.data());
+      });
 
       return response.json(userData);
     })
