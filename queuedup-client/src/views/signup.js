@@ -193,9 +193,7 @@ class signup extends Component {
                 Sign Up
               </Button>
               <Typography className={classes.logInLink} color="secondary">
-                <medium>
-                  Already have an account? <Link to="/login">Log in here!</Link>
-                </medium>
+                Already have an account? <Link to="/login">Log in here!</Link>
               </Typography>
               <br />
             </Grid>

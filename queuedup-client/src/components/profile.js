@@ -2,12 +2,14 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
 import dayjs from "dayjs";
+import { uploadImage } from "../redux/actions/user-actions";
 import { editUserDetails } from "../redux/actions/user-actions";
 
 // mui
 import Grid from "@material-ui/core/Grid";
 import MenuItem from "@material-ui/core/MenuItem";
 import Typography from "@material-ui/core/Typography";
+import Tooltip from "@material-ui/core/Tooltip";
 import Button from "@material-ui/core/Button";
 import { Avatar } from "@material-ui/core";
 import Dialog from "@material-ui/core/Dialog";
@@ -78,6 +80,18 @@ const styles = (theme) => ({
 
 // profile of currently logged-in user
 export class Profile extends Component {
+  handleImageChange = (event) => {
+    const image = event.target.files[0];
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+    this.props.uploadImage(formData);
+  };
+
+  handleEditPicture = () => {
+    const fileInput = document.getElementById("imageInput");
+    fileInput.click();
+  };
+
   state = {
     open: false,
     editing: false,
@@ -272,6 +286,13 @@ export class Profile extends Component {
                   title={username}
                   className={classes.image}></Avatar>
               </Grid>
+              <input
+                type="file"
+                id="imageInput"
+                onChange={this.handleImageChange}
+                accept="image/*"
+                hidden="hidden"
+              />
               <Grid item xs>
                 <Typography className={classes.username} color="secondary">
                   {username}
@@ -282,6 +303,11 @@ export class Profile extends Component {
                 </Typography>
               </Grid>
             </Grid>
+            <Tooltip title="Edit profile picture" placement="bottom">
+              <IconButton onClick={this.handleEditPicture} className="button">
+                <EditIcon color="primary" />
+              </IconButton>
+            </Tooltip>
             <hr className={classes.hr} />
             <Grid container direction="column" spacing={3}>
               <Grid item>
@@ -322,6 +348,8 @@ export class Profile extends Component {
 Profile.propTypes = {
   classes: PropTypes.object.isRequired,
   editUserDetails: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired,
+  uploadImage: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -329,6 +357,9 @@ const mapStateToProps = (state) => ({
   user: state.user,
 });
 
-export default connect(mapStateToProps, { editUserDetails })(
-  withStyles(styles)(Profile)
-);
+const mapActionsToProps = { uploadImage, editUserDetails };
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(Profile));

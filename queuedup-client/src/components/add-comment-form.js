@@ -72,7 +72,8 @@ class AddCommentForm extends Component {
             fullWidth
             inputProps={{
               className: classes.textField,
-            }}></TextField>
+            }}
+          ></TextField>
           <Grid container wrap="nowrap">
             <Grid item xs={9}></Grid>
             <Grid item>
@@ -83,7 +84,8 @@ class AddCommentForm extends Component {
                 color="primary"
                 size="medium"
                 startIcon={<SendIcon />}
-                disabled={!isAuth}>
+                disabled={!isAuth}
+              >
                 Submit
               </Button>
             </Grid>
