@@ -53,16 +53,8 @@ export const addPost = (newPost) => (dispatch) => {
       });
 
       dispatch(clearErrors());
-      window.location.href = "/"; // redirect page to dashboard to see new post
     })
-    .catch((error) => {
-      console.log(error);
-
-      dispatch({
-        type: "SET_ERRORS",
-        payload: error.response.data,
-      });
-    });
+    .catch((error) => console.log(error));
 };
 
 export const editPost = (postID, editedPost) => (dispatch) => {
@@ -70,23 +62,27 @@ export const editPost = (postID, editedPost) => (dispatch) => {
 
   axios
     .post(`/getpost/${postID}/edit`, editedPost)
-    .then(() => {
+    .then((response) => {
       dispatch({
-        type: "SET_POST",
-        payload: postID,
+        type: "EDIT_POST",
+        payload: [postID, response.data],
       });
 
       dispatch(clearErrors());
-      window.location.href = "/"; // redirect page to dashboard to see edited post
     })
-    .catch((error) => {
-      console.log(error);
+    .catch((error) => console.log(error));
+};
 
+export const deletePost = (postID) => (dispatch) => {
+  axios
+    .delete(`/getpost/${postID}`)
+    .then(() => {
       dispatch({
-        type: "SET_ERRORS",
-        payload: error.response.data,
+        type: "DELETE_POST",
+        payload: postID,
       });
-    });
+    })
+    .catch((error) => console.log(error));
 };
 
 export const addComment = (postID, commentData) => (dispatch) => {
@@ -100,21 +96,5 @@ export const addComment = (postID, commentData) => (dispatch) => {
 
       dispatch(clearErrors());
     })
-    .catch((err) => {
-      dispatch({
-        type: "SET_ERRORS",
-        payload: err.response.data,
-      });
-    });
-};
-
-export const deletePost = (postID) => (dispatch) => {
-  axios
-    .delete(`/getpost/${postID}`)
-    .then(() => {
-      dispatch({ type: "DELETE_POST", payload: postID });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    .catch((error) => console.log(error));
 };

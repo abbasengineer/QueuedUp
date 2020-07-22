@@ -2,10 +2,11 @@ const initialState = {
   posts: [],
   post: {},
   loading: false,
-  profile: [],
 };
 
 export default function (state = initialState, action) {
+  let index;
+
   switch (action.type) {
     case "LOADING_DATA":
       return {
@@ -23,10 +24,23 @@ export default function (state = initialState, action) {
         ...state,
         post: action.payload,
       };
-    case "DELETE_POST":
-      let index = state.posts.findIndex(
-        (post) => post.postID === action.payload
+    case "EDIT_POST":
+      index = state.posts.findIndex(
+        (post) => post.postID === action.payload[0]
       );
+
+      state.posts[index].content = action.payload[1].content;
+
+      state.posts[index] = {
+        ...state.posts[index],
+      };
+
+      return {
+        ...state,
+        loading: false,
+      };
+    case "DELETE_POST":
+      index = state.posts.findIndex((post) => post.postID === action.payload);
 
       state.posts.splice(index, 1);
 

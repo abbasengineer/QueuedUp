@@ -25,5 +25,6 @@
   "devDependencies": {
     "firebase-functions-test": "^0.2.0"
   },
-  "private": true
+  "private": true,
+  "proxy": "https://us-central1-queuedup-123.cloudfunctions.net/api"
 }

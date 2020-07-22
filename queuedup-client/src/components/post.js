@@ -37,6 +37,12 @@ const styles = (theme) => ({
     objectFit: "cover",
     wordWrap: "break-word",
   },
+  createdAt: {
+    fontFamily: "Hind",
+    textAlign: "left",
+    opacity: "0.3",
+    fontSize: "12px",
+  },
   image: {
     minWidth: 90,
     minHeight: 90,
@@ -87,7 +93,9 @@ class Post extends Component {
       deleteButton = null;
     }
 
-    let popoutButton = <PostModal postID={postID} username={username} />;
+    let popoutButton = (
+      <PostModal post={this.props.post} postID={postID} username={username} />
+    );
 
     let userProfile =
       this.state.profile === null ? null : (

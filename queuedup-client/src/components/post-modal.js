@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
@@ -73,27 +72,29 @@ class PostModal extends Component {
     } = this.props;
 
     const postDialog = (
-      <Grid container>
-        <Grid item>
-          <Avatar
-            variant="rounded"
-            src={imageURL}
-            title={username}
-            className={classes.image}></Avatar>
+      <div>
+        <Grid container>
+          <Grid item>
+            <Avatar
+              variant="rounded"
+              src={imageURL}
+              title={username}
+              className={classes.image}></Avatar>
+          </Grid>
+          <Grid item xs className={classes.postInfoGrid}>
+            <Grid item>
+              <Typography className={classes.username} component="p">
+                {username}
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Typography className={classes.contents} component="p">
+                {content}
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs className={classes.postInfoGrid}>
-          <Typography
-            className={classes.username}
-            color="secondary"
-            component={Link}
-            to={`/users/${username}`}>
-            {username}
-          </Typography>
-          <Typography className={classes.contents} noWrap="false">
-            {content}
-          </Typography>
-        </Grid>
-      </Grid>
+      </div>
     );
 
     return (
@@ -122,7 +123,7 @@ class PostModal extends Component {
           {comments && (
             <Fragment>
               <DialogContent className={classes.dialogContent}>
-                <Comments comments={comments}></Comments>
+                <Comments comments={comments} post={this.props.post}></Comments>
               </DialogContent>
             </Fragment>
           )}

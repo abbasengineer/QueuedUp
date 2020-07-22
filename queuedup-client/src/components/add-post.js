@@ -53,6 +53,7 @@ class AddPost extends Component {
         errors: nextProps.UI.errors,
       });
     }
+
     if (!nextProps.UI.errors && !nextProps.UI.loading) {
       this.setState({ content: "" });
       this.handleClose();
@@ -81,6 +82,7 @@ class AddPost extends Component {
       classes,
       UI: { loading },
     } = this.props;
+
     const { errors } = this.state;
 
     return (

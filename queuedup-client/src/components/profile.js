@@ -96,17 +96,11 @@ export class Profile extends Component {
       aboutMe: user.credentials.aboutMe ? user.credentials.aboutMe : "",
       major: user.credentials.major ? user.credentials.major : "",
       college: user.credentials.college ? user.credentials.college : "",
-
-      edited: false,
     });
   }
 
   handleClose = () => {
     this.setState({ open: false });
-
-    if (this.state.edited) {
-      window.location.href = "/"; // redirect page to dashboard to see updates
-    }
   };
 
   handleOpen = () => {
@@ -140,8 +134,6 @@ export class Profile extends Component {
 
     this.props.editUserDetails(userDetails);
     this.handleEditChange();
-
-    this.setState({ edited: true });
   };
 
   render() {
@@ -170,7 +162,7 @@ export class Profile extends Component {
           color="primary"
           size="medium"
           onClick={this.handleSubmit}>
-          Edit
+          Apply changes
         </Button>
       </DialogActions>
     ) : (

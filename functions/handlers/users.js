@@ -236,9 +236,10 @@ exports.getUserInfo = (request, response) => {
     .catch((err) => {
       console.error(err);
 
-      return response
-        .status(500)
-        .json({ error: err.code, message: "Error getting user data" });
+      return response.status(500).json({
+        error: err.code,
+        message: "Error getting user data",
+      });
     });
 };
 

@@ -55,10 +55,8 @@ exports.addPost = (request, response) => {
     .firestore()
     .collection("posts")
     .add(JSON.parse(JSON.stringify(newPost)))
-    .then((doc) => {
-      response.json({
-        message: `Created document ${doc.id}`,
-      });
+    .then(() => {
+      response.json(newPost);
     })
     .catch((err) => {
       console.error("Post creation: ", err);
@@ -206,7 +204,7 @@ exports.editPost = (request, response) => {
       return document.update(JSON.parse(JSON.stringify(editedContent)));
     })
     .then(() => {
-      response.json({ message: "Post has been edited" });
+      response.json(editedContent);
     })
     .catch((err) => {
       console.log(err);

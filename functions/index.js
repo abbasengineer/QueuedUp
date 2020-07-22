@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 
 const cors = require("cors");
-app.use(cors());
+app.use(cors({ origin: true }));
 
 const authenticate = require("./util/authenticate");
 
@@ -40,7 +40,9 @@ app.post("/login", logIn); // log in
 app.get("/user/:username", getUserInfo); // get a user's data
 app.post("/user", authenticate, addUserInfo); // add a user's data
 app.get("/user", authenticate, getAuthUser); // get a user's credentials
-app.post("/user/image", authenticate, imageUpload);
+app.post("/user/image", authenticate, imageUpload); // upload a user image
+
+exports.api = functions.https.onRequest(app);
 
 exports.onDeletePost = functions.firestore
   .document("/posts/{postID}")
@@ -55,7 +57,7 @@ exports.onDeletePost = functions.firestore
       .get()
       .then((data) => {
         data.forEach((doc) => {
-          batch.delete(admin().firestore().doc(`/comments/${doc.id}`));
+          batch.delete(admin.firestore().doc(`/comments/${doc.id}`));
         });
       })
       .catch((error) => console.error(error));
@@ -67,6 +69,7 @@ exports.onImageChange = functions.firestore
     if (
       imageChange.before.data().imageUrl !== imageChange.after.data().imageURL
     ) {
+      // atomic batch of writes to multiple documents
       const writeOps = admin.firestore().batch();
 
       return admin
