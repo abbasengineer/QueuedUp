@@ -33,8 +33,8 @@ const theme = createMuiTheme({
   },
 });
 
-axios.defaults.baseURL =
-  "https://us-central1-queuedup-123.cloudfunctions.net/api/";
+// axios.defaults.baseURL =
+//   "https://us-central1-queuedup-123.cloudfunctions.net/api/";
 
 const token = localStorage.firebaseIDToken;
 

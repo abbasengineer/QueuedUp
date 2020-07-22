@@ -53,11 +53,18 @@ export default function (state = initialState, action) {
         (post) => post.postID === action.payload.postID
       );
 
-      state.posts[index] = action.payload;
+      state.posts[index].increment = action.payload.increment;
+      state.posts[index].decrement = action.payload.decrement;
 
-      if (state.post.postID === action.payload.postID) {
-        state.post = action.payload;
-      }
+      state.posts[index] = {
+        ...state.posts[index],
+      };
+
+      // state.posts[index] = action.payload;
+
+      // if (state.post.postID === action.payload.postID) {
+      //   state.post = action.payload;
+      // }
 
       return {
         ...state,

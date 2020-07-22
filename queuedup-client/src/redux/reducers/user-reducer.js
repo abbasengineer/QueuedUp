@@ -3,6 +3,7 @@ const initialState = {
   credentials: {},
   loading: false,
   increments: [],
+  decrements: [],
 };
 
 export default function (state = initialState, action) {

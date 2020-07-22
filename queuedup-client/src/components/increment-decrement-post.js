@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { withStyles } from "@material-ui/styles";
 import PropTypes from "prop-types";
 import IconButton from "@material-ui/core/IconButton";
@@ -24,6 +24,18 @@ const styles = (theme) => ({
 });
 
 class IncrementDecrementPost extends Component {
+  state = {
+    inc: false,
+    dec: false,
+  };
+
+  componentDidMount() {
+    this.setState({
+      inc: this.isPostIncrementedByUser() ? true : false,
+      dec: this.isPostDecrementedByUser() ? true : false,
+    });
+  }
+
   isPostIncrementedByUser = () => {
     let isIncremented =
       this.props.user.increments &&
@@ -31,11 +43,7 @@ class IncrementDecrementPost extends Component {
         (increment) => increment.postID === this.props.postID
       );
 
-    if (isIncremented) {
-      return true;
-    }
-
-    return false;
+    return isIncremented;
   };
 
   isPostDecrementedByUser = () => {
@@ -45,27 +53,33 @@ class IncrementDecrementPost extends Component {
         (decrement) => decrement.postID === this.props.postID
       );
 
-    if (isDecremented) {
-      return true;
-    }
-
-    return false;
+    return isDecremented;
   };
 
   incrementPost = () => {
     this.props.incrementPost(this.props.postID);
+
+    if (!this.state.dec) {
+      this.setState({ inc: true });
+    }
   };
 
   unincrementPost = () => {
     this.props.unincrementPost(this.props.postID);
+    this.setState({ inc: false });
   };
 
   decrementPost = () => {
     this.props.decrementPost(this.props.postID);
+
+    if (!this.state.inc) {
+      this.setState({ dec: true });
+    }
   };
 
   undecrementPost = () => {
     this.props.undecrementPost(this.props.postID);
+    this.setState({ dec: false });
   };
 
   render() {
@@ -78,7 +92,7 @@ class IncrementDecrementPost extends Component {
     let decrementButton;
 
     if (isAuth) {
-      if (this.isPostIncrementedByUser()) {
+      if (this.isPostIncrementedByUser() || this.state.inc) {
         incrementButton = (
           <IconButton
             className={classes.incrementDecrementButtons}
@@ -108,7 +122,7 @@ class IncrementDecrementPost extends Component {
         );
       }
 
-      if (this.isPostDecrementedByUser()) {
+      if (this.isPostDecrementedByUser() || this.state.dec) {
         decrementButton = (
           <IconButton
             className={classes.incrementDecrementButtons}
@@ -170,7 +184,7 @@ class IncrementDecrementPost extends Component {
     }
 
     return (
-      <Fragment>
+      <div>
         <Grid container className={classes.grid}>
           <Grid item>
             <Tooltip
@@ -189,7 +203,7 @@ class IncrementDecrementPost extends Component {
             </Tooltip>
           </Grid>
         </Grid>
-      </Fragment>
+      </div>
     );
   }
 }
