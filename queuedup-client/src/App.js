@@ -15,6 +15,7 @@ import dashboard from "./views/dashboard";
 import login from "./views/login";
 import signup from "./views/signup";
 import user from "./views/user";
+import sammy from './images/sammy.png';
 
 const theme = createMuiTheme({
   palette: {
@@ -60,6 +61,7 @@ class App extends Component {
             <Router>
               <QueuedUpAppBar />
               <div>
+              
                 <Switch>
                   <Route exact path="/" component={dashboard} />
                   <AuthRoute exact path="/login" component={login} />
@@ -71,6 +73,7 @@ class App extends Component {
                     component={user}
                   />
                 </Switch>
+                <img width= "100px" src={sammy} alt="sammy"/>
               </div>
             </Router>
           </div>
